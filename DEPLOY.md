@@ -151,7 +151,7 @@ link: https://circle.so/your-event
 Events in the past disappear from the page on the next build. You never have to
 delete them.
 
-### Change copy on Manifesto, Academy or Community
+### Change copy on Manifesto, Paths or Community
 
 All of it lives in `content/data/site.json`. Beliefs, tracks, modules, house
 rules, the team, the Apply and Circle links. Edit the text between the quotes.
@@ -186,7 +186,7 @@ deploy**. Instant rollback.
 |---|---|
 | `content/skills/` | One folder per library asset |
 | `content/events/` | One file per event |
-| `content/data/site.json` | Copy for Manifesto, Academy, Community |
+| `content/data/site.json` | Copy for Manifesto, Paths, Community |
 | `src/assets/styles.css` | All styling |
 | `src/assets/fonts/` | Druk Wide and Helvetica Now, subset |
 | `scripts/build.mjs` | Turns all of the above into HTML |

@@ -91,7 +91,7 @@ function markdown(src) {
 /* ------------------------------------------------------------------ shell */
 
 const NAV = [
-  ['/', 'Manifesto'], ['/library/', 'Library'], ['/academy/', 'Academy'],
+  ['/', 'Manifesto'], ['/library/', 'Library'], ['/paths/', 'Paths'],
   ['/events/', 'Events'], ['/community/', 'Community'],
 ];
 
@@ -197,15 +197,15 @@ ${hero('Manifesto', 'Learn. Share. Grow. Together.')}
 
   return layout({
     title: 'GTM Club. A small room for operators who ship',
-    description: 'A community and academy for go-to-market operators. No gurus, no gated PDFs. Post the artifact, get a real answer.',
+    description: 'A community and hands-on paths for go-to-market operators. No gurus, no gated PDFs. Post the artifact, get a real answer.',
     canonical: '/', current: '/', body,
   });
 }
 
-/* --------------------------------------------------------- page: academy */
+/* ----------------------------------------------------------- page: paths */
 
-function academyPage() {
-  const a = data.academy;
+function pathsPage() {
+  const a = data.paths;
   const body = `
 ${hero('The courses', 'Learn the craft. On the job.', a.lede,
   { href: data.links.circle, label: 'Enter the courses' })}
@@ -259,9 +259,9 @@ ${hero('The courses', 'Learn the craft. On the job.', a.lede,
 </section>`;
 
   return layout({
-    title: 'Academy. Live GTM courses taught by operators. GTM Club',
+    title: 'Paths. Live GTM courses taught by operators. GTM Club',
     description: 'Four live tracks on outbound, RevOps, pipeline math and AI for GTM. Every module ends with a working artifact.',
-    canonical: '/academy/', current: '/academy/', body,
+    canonical: '/paths/', current: '/paths/', body,
   });
 }
 
@@ -618,7 +618,7 @@ for (const a of assets) {
 }
 
 write('.', homePage());
-write('academy', academyPage());
+write('paths', pathsPage());
 write('events', eventsPage(events));
 write('community', communityPage());
 write('library', libraryPage(assets, kinds));
@@ -628,7 +628,7 @@ write('submit/thanks', thanksPage());
 fs.writeFileSync(path.join(DIST, 'assets/library.json'), JSON.stringify(
   assets.map(({ dir, html, ...rest }) => rest), null, 2));
 
-const urls = ['/', '/library/', '/academy/', '/events/', '/community/', '/submit/', ...assets.map(a => a.url)];
+const urls = ['/', '/library/', '/paths/', '/events/', '/community/', '/submit/', ...assets.map(a => a.url)];
 fs.writeFileSync(path.join(DIST, 'sitemap.xml'),
   `<?xml version="1.0" encoding="UTF-8"?>\n<urlset xmlns="http://www.sitemaps.org/schemas/sitemap/0.9">\n` +
   urls.map(u => `  <url><loc>${SITE}${u}</loc></url>`).join('\n') + `\n</urlset>\n`);

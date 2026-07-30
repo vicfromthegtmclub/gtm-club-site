@@ -24,7 +24,7 @@
     ]
   },
 
-  "academy": {
+  "paths": {
     "lede": "Four tracks, taught live by operators still running the motion. You leave each session with a working artifact, not notes.",
     "tracks": [
       { "name": "Outbound engine", "blurb": "List, signal, sequence, reply. Build one that survives contact with a real ICP.", "modules": "6 modules", "level": "Core" },

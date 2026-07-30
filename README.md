@@ -1,7 +1,7 @@
 # GTM Club site
 
 The five Claude Design pages, ported to a plain static site: Manifesto, Library,
-Academy, Events, Community, plus the submission flow. No framework, no
+Paths, Events, Community, plus the submission flow. No framework, no
 dependencies. Node reads the content files and writes HTML.
 
 **New here? Read DEPLOY.md instead.** It has the step-by-step for getting this
@@ -11,7 +11,7 @@ live and changing things afterwards. This file is the technical reference.
 
 - `content/skills/` one folder per library asset, `SKILL.md` plus any extras
 - `content/events/` one markdown file per event, past ones drop off automatically
-- `content/data/site.json` copy for Manifesto, Academy and Community
+- `content/data/site.json` copy for Manifesto, Paths and Community
 
 ## Run it locally
 
@@ -105,6 +105,6 @@ is no, Archivo Expanded is the closest free substitute: change `--display` in
 
 ## Other pages
 
-`Academy`, `Events`, `Community` and `Manifesto` are in the nav but not built
+`Paths`, `Events`, `Community` and `Manifesto` are in the nav but not built
 yet. They port the same way: the markup is already static, only the repeated
 lists need the `sc-for` loop turned into a `.map()`.

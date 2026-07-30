@@ -22,7 +22,7 @@ localhost:3000 for a visual check.
 |---|---|
 | `content/skills/<slug>/SKILL.md` | One library asset. Frontmatter drives the card, body becomes the detail page |
 | `content/events/*.md` | One event each. Past dates are filtered out at build time |
-| `content/data/site.json` | Copy for Manifesto, Academy, Community, plus the Apply and Circle links |
+| `content/data/site.json` | Copy for Manifesto, Paths, Community, plus the Apply and Circle links |
 | `src/assets/styles.css` | All styling. Design tokens are CSS variables at the top |
 | `src/assets/fonts/` | Druk Wide + Helvetica Now, subset to Latin. Regenerate with `scripts/fonts.sh` |
 | `src/assets/filter.js` | Client-side filtering for the library grid |
