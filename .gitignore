@@ -1,0 +1,20 @@
+# Build output. Netlify generates this on every deploy, it must never be committed.
+dist/
+
+# Dependencies
+node_modules/
+
+# Local preview files
+preview*.html
+
+# OS noise
+.DS_Store
+Thumbs.db
+
+# Netlify CLI local state
+.netlify/
+
+# Editor
+.vscode/
+.idea/
+*.swp
