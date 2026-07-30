@@ -1,0 +1,82 @@
+{
+  "links": {
+    "apply": "https://tally.so",
+    "circle": "https://circle.so"
+  },
+
+  "manifesto": {
+    "intro": [
+      "Go-to-market got loud. Every feed is a screenshot of a number nobody can reproduce, sold by someone who stopped doing the job three years ago.",
+      "We wanted the opposite. A small room where you can post the sequence that failed, the dashboard that lies, the quarter that missed, and get an answer from someone who ran the same play last Tuesday.",
+      "No gurus. No gated PDFs. No content calendar. Just operators, working in public, at speed."
+    ],
+    "beliefs": [
+      { "title": "Show the work.", "body": "A claim without the sequence, the list or the query behind it is entertainment. Post the artifact." },
+      { "title": "Give before you take.", "body": "Membership is not a subscription to other people's answers. Everyone here has shipped something someone else uses." },
+      { "title": "Small beats loud.", "body": "We cap the room on purpose. A channel where every question gets answered is worth more than a channel with 40,000 people in it." },
+      { "title": "Tools change. Craft does not.", "body": "The stack you learn this year is gone in two. Positioning, timing and writing are not." },
+      { "title": "Speed is the product.", "body": "Stuck on Monday, unstuck by Tuesday. That is the whole promise." }
+    ],
+    "team": [
+      { "name": "Founder name", "role": "Runs the club. Still runs outbound." },
+      { "name": "Curator name", "role": "Reads every application." },
+      { "name": "Courses lead", "role": "Builds the tracks." }
+    ]
+  },
+
+  "academy": {
+    "lede": "Four tracks, taught live by operators still running the motion. You leave each session with a working artifact, not notes.",
+    "tracks": [
+      { "name": "Outbound engine", "blurb": "List, signal, sequence, reply. Build one that survives contact with a real ICP.", "modules": "6 modules", "level": "Core" },
+      { "name": "RevOps foundations", "blurb": "Data model, routing, attribution. Stop guessing where the pipeline went.", "modules": "5 modules", "level": "Core" },
+      { "name": "Pipeline math", "blurb": "Forecasting, capacity, conversion. The spreadsheet your board asks for.", "modules": "4 modules", "level": "Advanced" },
+      { "name": "AI for GTM", "blurb": "Agents, enrichment, research loops. Automation that does not embarrass you.", "modules": "5 modules", "level": "New" }
+    ],
+    "sampleTrack": "Outbound engine, 6 modules",
+    "modules": [
+      { "title": "Pick one ICP and defend it", "out": "Output: a one-page ICP brief", "len": "60 min" },
+      { "title": "Find the signal that means now", "out": "Output: 3 live triggers wired to a list", "len": "75 min" },
+      { "title": "Write the first touch", "out": "Output: a sequence step 1 that reads human", "len": "60 min" },
+      { "title": "Build the follow-up ladder", "out": "Output: steps 2 to 5 with distinct angles", "len": "60 min" },
+      { "title": "Handle the reply", "out": "Output: an objection playbook", "len": "45 min" },
+      { "title": "Measure it honestly", "out": "Output: a reporting view your manager trusts", "len": "45 min" }
+    ],
+    "howItRuns": [
+      { "title": "Live first", "body": "Every module runs live with 30 people max. Cameras on, work in progress." },
+      { "title": "Replays", "body": "Recorded, chaptered, searchable. Watch back before the next one." },
+      { "title": "Workbooks", "body": "One artifact per module. It ships to your library when you finish." }
+    ]
+  },
+
+  "community": {
+    "lede": "Not a Slack graveyard. Operators who ship, split by motion, with a rule that every question gets a real answer.",
+    "benefits": [
+      { "title": "Channels by motion", "body": "Outbound, RevOps, lifecycle, partnerships. You pick three, not thirty." },
+      { "title": "Weekly teardowns", "body": "Post your sequence. Get it pulled apart line by line, on the record." },
+      { "title": "Warm intros", "body": "Hiring, vendors, first customers. The directory is searchable by stack." },
+      { "title": "Numbers people share", "body": "Real reply rates, real CAC, posted with context. No screenshots of hype." }
+    ],
+    "roles": ["Founders", "Heads of Sales", "SDR leads", "RevOps", "Growth", "Agency owners"],
+    "howToJoin": [
+      { "title": "Apply", "body": "Six questions on a form. Five minutes, no calendar link." },
+      { "title": "Review", "body": "Two members read it. We look for people who give, not only take." },
+      { "title": "Onboard", "body": "You introduce yourself with one problem you're stuck on. That's the ticket." }
+    ],
+    "houseRules": [
+      "Post the actual numbers or don't post.",
+      "Answer one question for every question you ask.",
+      "No pitching in channels. There's a market channel for that.",
+      "What's said inside stays inside."
+    ]
+  },
+
+  "events": {
+    "lede": "Teardowns, office hours, build nights and one dinner a quarter. All times CET.",
+    "replays": [
+      { "title": "Signal-based prospecting, end to end", "meta": "58 min, July" },
+      { "title": "Killing your own attribution model", "meta": "46 min, July" },
+      { "title": "What 249M emails say about follow-ups", "meta": "61 min, June" },
+      { "title": "Hiring your first two SDRs", "meta": "52 min, June" }
+    ]
+  }
+}
