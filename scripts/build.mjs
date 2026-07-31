@@ -377,7 +377,7 @@ ${hero('The community', 'The room you post in first.', c.lede)}
 /* --------------------------------------------------------- page: library */
 
 function card(a) {
-  return `<a class="card" href="${a.url}">
+  return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}">
   <div class="card-top">
     <span class="pill">${esc(a.kind)}</span>
     <span class="dim">${esc(a.updatedLabel)}</span>
@@ -391,16 +391,26 @@ function card(a) {
 </a>`;
 }
 
-function libraryPage(assets, kinds) {
+function libraryPage(assets, kinds, sources) {
+  const chip = (facet, value, label, on) =>
+    `<button type="button" class="chip${on ? ' is-on' : ''}" data-facet="${facet}" data-value="${esc(value)}" aria-pressed="${on}">${esc(label)}</button>`;
   const body = `
 ${hero('Asset library', 'Take it. Ship it today.',
   'Claude skills, repos, sequences, prompts and datasets built by members. Cloned, forked, credited.')}
 
 <section class="filters">
   <div class="wrap filter-in">
-    <div class="pills" role="group" aria-label="Filter assets by type">
-      ${['All', ...kinds].map((k, i) =>
-        `<button type="button" class="chip${i === 0 ? ' is-on' : ''}" data-kind="${esc(k)}" aria-pressed="${i === 0}">${esc(k === 'All' ? 'All' : k + 's')}</button>`).join('\n      ')}
+    <div class="filter-group">
+      <span class="filter-label">Type</span>
+      <div class="pills" role="group" aria-label="Filter assets by type">
+        ${['All', ...kinds].map((k, i) => chip('kind', k, k === 'All' ? 'All' : k + 's', i === 0)).join('\n        ')}
+      </div>
+    </div>
+    <div class="filter-group">
+      <span class="filter-label">Source</span>
+      <div class="pills" role="group" aria-label="Filter assets by source">
+        ${['All', ...sources].map((s, i) => chip('source', s, s, i === 0)).join('\n        ')}
+      </div>
     </div>
     <span class="dim" id="count" aria-live="polite">${assets.length} assets</span>
   </div>
@@ -538,6 +548,7 @@ function readAssets() {
         title: fm.title || fm.name || d.name,
         description: fm.description || '',
         kind: fm.kind || 'Skill',
+        source: fm.source || 'Member',
         meta: fm.meta || '',
         author: fm.author || '',
         repo: fm.repo || '',
@@ -608,6 +619,10 @@ copyDir(path.join(ROOT, 'src/static'), DIST);
 const assets = readAssets();
 const events = readEvents();
 const kinds = [...new Set(assets.map(a => a.kind))].sort();
+// Source facet: Member first, then Lemskills, then any future source alphabetically.
+const SOURCE_ORDER = ['Member', 'Lemskills'];
+const sources = [...new Set(assets.map(a => a.source))].sort((a, b) =>
+  ((SOURCE_ORDER.indexOf(a) + 1 || 99) - (SOURCE_ORDER.indexOf(b) + 1 || 99)) || a.localeCompare(b));
 const kindOptions = [...new Set([...kinds, 'Skill', 'Repo', 'Sequence', 'Prompt', 'Dataset'])].sort();
 
 for (const a of assets) {
@@ -621,7 +636,7 @@ write('.', homePage());
 write('paths', pathsPage());
 write('events', eventsPage(events));
 write('community', communityPage());
-write('library', libraryPage(assets, kinds));
+write('library', libraryPage(assets, kinds, sources));
 write('submit', submitPage(kindOptions));
 write('submit/thanks', thanksPage());
 

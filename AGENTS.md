@@ -20,12 +20,12 @@ localhost:3000 for a visual check.
 
 | Path | Purpose |
 |---|---|
-| `content/skills/<slug>/SKILL.md` | One library asset. Frontmatter drives the card, body becomes the detail page |
+| `content/skills/<slug>/SKILL.md` | One library asset. Frontmatter drives the card, body becomes the detail page. `source:` sets the source facet (`Member` if omitted, `Lemskills` for the imported lemlist set); `kind:` sets the type facet |
 | `content/events/*.md` | One event each. Past dates are filtered out at build time |
 | `content/data/site.json` | Copy for Manifesto, Paths, Community, plus the Apply and Circle links |
 | `src/assets/styles.css` | All styling. Design tokens are CSS variables at the top |
 | `src/assets/fonts/` | Druk Wide + Helvetica Now, subset to Latin. Regenerate with `scripts/fonts.sh` |
-| `src/assets/filter.js` | Client-side filtering for the library grid |
+| `src/assets/filter.js` | Client-side filtering for the library grid (two facets, type and source, combined with AND) |
 | `scripts/build.mjs` | Page templates and build logic |
 | `dist/` | Generated. Never edit, never commit |
 

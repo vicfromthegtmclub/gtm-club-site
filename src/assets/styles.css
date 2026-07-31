@@ -113,9 +113,14 @@ h1 {
   background: rgba(10, 9, 9, .86); backdrop-filter: blur(16px);
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
 }
-.filter-in { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.filter-in { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
+.filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
+.filter-label {
+  font: 500 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase;
+  color: var(--dimmest);
+}
 .pills { display: flex; flex-wrap: wrap; gap: 8px; }
-.filter-in .dim { margin-left: auto; }
+.filter-in > .dim { margin-left: auto; }
 .chip {
   padding: 9px 16px; border-radius: 999px; border: 1px solid var(--line);
   background: transparent; color: var(--dim); cursor: pointer;
