@@ -31,8 +31,9 @@ localhost:3000 for a visual check.
 
 ## Rules
 
-- **No dependencies.** The build uses only the Node standard library plus the
-  `zip` binary. Do not add npm packages or a framework without being asked.
+- **No dependencies.** The build uses only the Node standard library (zipping is
+  done in `scripts/zip.mjs`, no external `zip` binary). Do not add npm packages
+  or a framework without being asked.
 - **Cards render server-side.** Every asset must exist in the HTML at build
   time. JS is for filtering only. Do not move rendering to the client, it breaks
   SEO, which is the point of the library.

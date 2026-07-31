@@ -2,7 +2,7 @@
 // Run: npm run build   (Netlify runs this automatically on every push)
 import fs from 'node:fs';
 import path from 'node:path';
-import { execFileSync } from 'node:child_process';
+import { zipDir } from './zip.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
 const DIST = path.join(ROOT, 'dist');
@@ -577,7 +577,7 @@ function readEvents() {
 
 function zipSkill(a, outDir) {
   try {
-    execFileSync('zip', ['-qr', path.join(outDir, `${a.slug}.zip`), a.slug], { cwd: SKILLS });
+    zipDir(a.dir, path.join(outDir, `${a.slug}.zip`));
     return `${a.url}${a.slug}.zip`;
   } catch (e) {
     console.warn(`  zip failed for ${a.slug}: ${e.message}`);
