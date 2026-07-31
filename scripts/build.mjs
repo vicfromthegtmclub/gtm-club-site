@@ -637,9 +637,11 @@ const FILTER_JS_HREF = fingerprint('filter.js');
 const assets = readAssets();
 const events = readEvents();
 const kinds = [...new Set(assets.map(a => a.kind))].sort();
-// Source facet: Member first, then Lemskills, then any future source alphabetically.
+// Source facet: Member and Lemskills are always shown (pinned), even with zero
+// skills, so the chips stay stable as the library fills in. Any future source
+// value in the data is appended after them, alphabetically.
 const SOURCE_ORDER = ['Member', 'Lemskills'];
-const sources = [...new Set(assets.map(a => a.source))].sort((a, b) =>
+const sources = [...new Set([...SOURCE_ORDER, ...assets.map(a => a.source)])].sort((a, b) =>
   ((SOURCE_ORDER.indexOf(a) + 1 || 99) - (SOURCE_ORDER.indexOf(b) + 1 || 99)) || a.localeCompare(b));
 const kindOptions = [...new Set([...kinds, 'Skill', 'Repo', 'Sequence', 'Prompt', 'Dataset'])].sort();
 
