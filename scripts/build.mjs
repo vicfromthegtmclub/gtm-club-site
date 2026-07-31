@@ -2,6 +2,7 @@
 // Run: npm run build   (Netlify runs this automatically on every push)
 import fs from 'node:fs';
 import path from 'node:path';
+import crypto from 'node:crypto';
 import { zipDir } from './zip.mjs';
 
 const ROOT = path.resolve(import.meta.dirname, '..');
@@ -113,7 +114,7 @@ function layout({ title, description, body, canonical, current }) {
 <link rel="icon" href="/assets/logo-96.png">
 <link rel="preload" href="/assets/fonts/druk-wide-bold.woff2" as="font" type="font/woff2" crossorigin>
 <link rel="preload" href="/assets/fonts/helvetica-now-text-400.woff2" as="font" type="font/woff2" crossorigin>
-<link rel="stylesheet" href="/assets/styles.css">
+<link rel="stylesheet" href="${CSS_HREF}">
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -431,7 +432,7 @@ ${hero('Asset library', 'Take it. Ship it today.',
   </div>
 </section>
 
-<script src="/assets/filter.js" defer></script>`;
+<script src="${FILTER_JS_HREF}" defer></script>`;
 
   return layout({
     title: 'Asset library. Claude skills, sequences and prompts for GTM teams. GTM Club',
@@ -615,6 +616,23 @@ fs.rmSync(DIST, { recursive: true, force: true });
 fs.mkdirSync(DIST, { recursive: true });
 copyDir(path.join(ROOT, 'src/assets'), path.join(DIST, 'assets'));
 copyDir(path.join(ROOT, 'src/static'), DIST);
+
+// Content-hash the CSS and JS so a change ships under a new URL. Without this the
+// filenames are stable, and the immutable cache header on /assets/* (vercel.json)
+// pins the old file on returning visitors: new HTML runs against stale JS and the
+// filters silently break. Hashed names make the immutable header correct instead.
+function fingerprint(name) {
+  const dir = path.join(DIST, 'assets');
+  const buf = fs.readFileSync(path.join(dir, name));
+  const hash = crypto.createHash('sha1').update(buf).digest('hex').slice(0, 8);
+  const ext = path.extname(name);
+  const hashed = `${name.slice(0, -ext.length)}.${hash}${ext}`;
+  fs.writeFileSync(path.join(dir, hashed), buf);
+  fs.rmSync(path.join(dir, name)); // drop the un-fingerprinted copy so nothing stale ships
+  return `/assets/${hashed}`;
+}
+const CSS_HREF = fingerprint('styles.css');
+const FILTER_JS_HREF = fingerprint('filter.js');
 
 const assets = readAssets();
 const events = readEvents();
