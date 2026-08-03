@@ -4,6 +4,12 @@
     "circle": "https://circle.so"
   },
 
+  "social": [
+    { "label": "X", "url": "https://x.com/Vicfromlemlist" },
+    { "label": "LinkedIn", "url": "https://www.linkedin.com/company/the-gtm-club/" },
+    { "label": "YouTube", "url": "https://www.youtube.com/@TheGTMClub" }
+  ],
+
   "manifesto": {
     "intro": [
       "Go-to-market got loud. Every feed is a screenshot of a number nobody can reproduce, sold by someone who stopped doing the job three years ago.",

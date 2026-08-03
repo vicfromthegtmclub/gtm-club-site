@@ -222,6 +222,13 @@ form .btn { margin-top: 32px; }
 /* footer */
 .foot { border-top: 1px solid var(--line); padding: 48px 24px; text-align: center; }
 .foot p { color: var(--dimmest); font-size: 13px; margin: 0; }
+.foot-social { display: flex; justify-content: center; flex-wrap: wrap; gap: 24px; margin: 0 0 24px; }
+.foot-social a {
+  color: var(--dim); text-decoration: none;
+  font: 500 12px/1 var(--body); letter-spacing: .18em; text-transform: uppercase;
+  transition: color 120ms ease;
+}
+.foot-social a:hover { color: var(--ink); }
 
 @media (max-width: 700px) {
   .nav-in { gap: 16px; }

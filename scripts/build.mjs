@@ -131,6 +131,10 @@ function layout({ title, description, body, canonical, current }) {
 ${body}
 </main>
 <footer class="foot">
+  <nav class="foot-social" aria-label="Social links">
+    ${(data.social || []).map(s =>
+      `<a href="${esc(s.url)}" target="_blank" rel="noopener">${esc(s.label)}</a>`).join('\n    ')}
+  </nav>
   <p>GTM Club. Assets are shared by members, credited to their authors.</p>
 </footer>
 </body>
