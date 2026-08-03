@@ -146,8 +146,16 @@
   .theme-btn:hover { border-color: var(--hair-strong); background: var(--surface-glass); }
 
   /* layout */
-  .grid { display: grid; grid-template-columns: 366px 1fr; gap: 22px; align-items: start; }
-  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .panel.inputs { position: static; } }
+  .grid { display: grid; grid-template-columns: 366px minmax(0, 1fr); gap: 22px; align-items: start; }
+  @media (max-width: 900px) {
+    .grid { grid-template-columns: minmax(0, 1fr); }
+    .panel.inputs { position: static; }
+    /* Let the stacked columns and their nested grids shrink below content width
+       so nothing forces horizontal scroll on a phone. */
+    .panel, .results, .card, .tile, .section { min-width: 0; }
+    /* The numeric summary is wide; let it scroll inside its own box, not the page. */
+    table.summary { display: block; overflow-x: auto; }
+  }
 
   /* card base */
   .panel, .tile, .card {
