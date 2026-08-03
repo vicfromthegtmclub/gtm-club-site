@@ -553,6 +553,8 @@ function readAssets() {
         meta: fm.meta || '',
         author: fm.author || '',
         repo: fm.repo || '',
+        // A Tool ships a self-contained tool.html that IS the detail page.
+        tool: fs.existsSync(path.join(dir, 'tool.html')) ? path.join(dir, 'tool.html') : null,
         updated, updatedLabel: relativeDate(updated),
         url: `/library/${d.name}/`,
         html: markdown(body),
@@ -643,13 +645,18 @@ const kinds = [...new Set(assets.map(a => a.kind))].sort();
 const SOURCE_ORDER = ['Member', 'Lemskills'];
 const sources = [...new Set([...SOURCE_ORDER, ...assets.map(a => a.source)])].sort((a, b) =>
   ((SOURCE_ORDER.indexOf(a) + 1 || 99) - (SOURCE_ORDER.indexOf(b) + 1 || 99)) || a.localeCompare(b));
-const kindOptions = [...new Set([...kinds, 'Skill', 'Repo', 'Sequence', 'Prompt', 'Dataset'])].sort();
+const kindOptions = [...new Set([...kinds, 'Skill', 'Repo', 'Tool', 'Sequence', 'Prompt', 'Dataset'])].sort();
 
 for (const a of assets) {
   const outDir = path.join(DIST, 'library', a.slug);
   fs.mkdirSync(outDir, { recursive: true });
-  a.zip = zipSkill(a, outDir);
-  fs.writeFileSync(path.join(outDir, 'index.html'), detailPage(a));
+  if (a.tool) {
+    // The tool page is self-contained; serve it verbatim as the detail page.
+    fs.copyFileSync(a.tool, path.join(outDir, 'index.html'));
+  } else {
+    a.zip = zipSkill(a, outDir);
+    fs.writeFileSync(path.join(outDir, 'index.html'), detailPage(a));
+  }
 }
 
 write('.', homePage());

@@ -1,0 +1,672 @@
+<!DOCTYPE html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Quota Math · GTM Club</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Archivo:wght@600;700;800;900&display=swap" rel="stylesheet">
+<style>
+  /* ============ GTM CLUB DESIGN SYSTEM ============ */
+  :root {
+    color-scheme: dark;
+    /* core palette */
+    --ink: #0A0909;
+    --grey: #848484;
+    --paper: #FFFFFF;
+    --accent: #CB3D00;        /* action accent — burnt red */
+    --accent-text: #F0501C;   /* brighter red for text/numbers on dark */
+    --accent-glow: rgba(203,61,0,0.40);
+
+    /* semantic surfaces (dark = default) */
+    --surface-page: #0A0909;
+    --surface-card: #141312;
+    --surface-inset: #1C1B19;
+    --surface-glass: rgba(255,255,255,0.05);
+
+    --text-primary: #FFFFFF;
+    --text-secondary: #C9C8C4;
+    --text-muted: #848484;
+
+    --hair: rgba(255,255,255,0.12);
+    --hair-strong: rgba(255,255,255,0.28);
+    --hair-top: rgba(255,255,255,0.06);
+
+    /* channel colors: monochrome + the one accent */
+    --ch-email: #FFFFFF;
+    --ch-linkedin: #8C8C8A;
+    --ch-calls: #CB3D00;
+    --track: rgba(255,255,255,0.08);
+
+    /* shape */
+    --r-sm: 6px; --r-md: 10px; --r-lg: 16px; --r-xl: 24px;
+    --shadow-lg: 0 24px 60px rgba(0,0,0,0.55);
+    --shadow-glow: 0 0 0 1px rgba(203,61,0,0.35), 0 16px 48px rgba(203,61,0,0.20);
+
+    /* type */
+    --display: "Druk Wide Bold", "Archivo", "Arial Black", "Helvetica Neue", sans-serif;
+    --text: "Helvetica Now Text", "Helvetica Neue", Helvetica, Arial, sans-serif;
+    --label-tracking: 0.18em;
+    --eyebrow-tracking: 0.24em;
+
+    /* motion */
+    --dur-fast: 120ms; --dur: 200ms; --dur-slow: 360ms;
+    --ease-drive: cubic-bezier(.16,1,.3,1);
+    --ease-out: cubic-bezier(.2,.6,.2,1);
+
+    --page-max: 1180px;
+  }
+  :root[data-theme="light"] {
+    color-scheme: light;
+    --surface-page: #F4F3F0;
+    --surface-card: #FFFFFF;
+    --surface-inset: #F0EFEC;
+    --surface-glass: rgba(10,9,9,0.04);
+    --text-primary: #0A0909;
+    --text-secondary: #3C3B39;
+    --text-muted: #6E6D6A;
+    --hair: rgba(10,9,9,0.12);
+    --hair-strong: rgba(10,9,9,0.28);
+    --hair-top: rgba(10,9,9,0.03);
+    --ch-email: #0A0909;
+    --ch-linkedin: #9A9996;
+    --ch-calls: #CB3D00;
+    --track: rgba(10,9,9,0.07);
+    --accent-text: #CB3D00;
+    --shadow-lg: 0 24px 60px rgba(10,9,9,0.14);
+  }
+
+  * { box-sizing: border-box; }
+  html, body { margin: 0; padding: 0; }
+  body {
+    background: var(--surface-page);
+    color: var(--text-primary);
+    font-family: var(--text);
+    line-height: 1.55;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+  ::selection { background: var(--accent); color: #fff; }
+
+  /* focus — always a red ring, never removed */
+  a:focus-visible, button:focus-visible, input:focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+  }
+  input[type="number"]:focus { outline: 2px solid var(--accent); outline-offset: 2px; }
+
+  .wrap { max-width: var(--page-max); margin: 0 auto; padding: 0 20px 80px; position: relative; }
+
+  /* grain-gradient hero backdrop (full-bleed, brand treatment) */
+  .backdrop { position: absolute; inset: 0 0 auto 0; height: 520px; z-index: 0; pointer-events: none; overflow: hidden; }
+  .backdrop .field {
+    position: absolute; inset: -20% -10% auto -10%; height: 620px;
+    background:
+      radial-gradient(700px 380px at 18% -8%, rgba(203,61,0,0.34), transparent 62%),
+      radial-gradient(680px 420px at 96% -4%, rgba(111,123,176,0.14), transparent 58%),
+      radial-gradient(500px 300px at 60% 0%, rgba(30,110,122,0.12), transparent 60%);
+    filter: blur(6px);
+  }
+  :root[data-theme="light"] .backdrop .field { opacity: 0.5; }
+  .backdrop .grain {
+    position: absolute; inset: 0; mix-blend-mode: soft-light; opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  }
+  .content { position: relative; z-index: 1; padding-top: 34px; }
+
+  /* speed stripes motif */
+  .stripes { display: inline-flex; gap: 5px; }
+  .stripes i { display: block; width: 15px; height: 11px; transform: skewX(-20deg); border-radius: 1.5px; }
+  .stripes i:nth-child(1){ background: var(--accent); }
+  .stripes i:nth-child(2){ background: var(--text-primary); }
+  .stripes i:nth-child(3){ background: var(--text-primary); }
+  .stripes i:nth-child(4){ background: var(--text-primary); }
+
+  /* header */
+  header.top { display: flex; align-items: flex-start; justify-content: space-between; gap: 20px; margin-bottom: 34px; flex-wrap: wrap; }
+  .eyebrow { font-size: 11.5px; font-weight: 700; letter-spacing: var(--eyebrow-tracking); text-transform: uppercase; color: var(--text-muted); margin: 0 0 16px; display: flex; align-items: center; gap: 12px; }
+  .eyebrow .sep { color: var(--accent-text); }
+  h1 {
+    font-family: var(--display); font-weight: 900; font-stretch: 125%;
+    font-size: clamp(34px, 6.2vw, 68px); line-height: 0.92; letter-spacing: -0.01em;
+    text-transform: uppercase; margin: 0 0 18px; color: var(--text-primary);
+  }
+  h1 .red { color: var(--accent-text); }
+  .h1-underline { margin: 0 0 20px; }
+  .sub { color: var(--text-secondary); font-size: 16px; max-width: 600px; margin: 0; line-height: 1.6; }
+  .sub b { color: var(--text-primary); font-weight: 600; }
+
+  .theme-btn {
+    border: 1px solid var(--hair); background: var(--surface-glass); color: var(--text-secondary);
+    border-radius: 999px; padding: 9px 16px; font-family: var(--text); font-size: 11px; font-weight: 600;
+    letter-spacing: var(--label-tracking); text-transform: uppercase; cursor: pointer;
+    display: inline-flex; align-items: center; gap: 8px; white-space: nowrap; transition: border-color var(--dur-fast), background var(--dur-fast);
+  }
+  .theme-btn:hover { border-color: var(--hair-strong); background: var(--surface-glass); }
+
+  /* layout */
+  .grid { display: grid; grid-template-columns: 366px 1fr; gap: 22px; align-items: start; }
+  @media (max-width: 900px) { .grid { grid-template-columns: 1fr; } .panel.inputs { position: static; } }
+
+  /* card base */
+  .panel, .tile, .card {
+    background: var(--surface-card);
+    border: 1px solid var(--hair);
+    border-radius: var(--r-lg);
+    box-shadow: inset 0 1px 0 var(--hair-top);
+  }
+  .panel.inputs { position: sticky; top: 18px; overflow: hidden; }
+
+  .section { padding: 20px 22px; border-bottom: 1px solid var(--hair); }
+  .section:last-child { border-bottom: none; }
+  .section h2 { font-size: 11px; font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-muted); margin: 0 0 16px; }
+  .section h2 .thin { color: var(--text-muted); opacity: 0.7; letter-spacing: 0.02em; text-transform: none; font-weight: 400; }
+
+  .field { margin-bottom: 15px; }
+  .field:last-child { margin-bottom: 0; }
+  .field label { display: block; font-size: 11px; font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-secondary); margin-bottom: 8px; }
+  .field .hint { font-weight: 400; color: var(--text-muted); letter-spacing: 0.02em; text-transform: none; }
+  input[type="number"] {
+    width: 100%; padding: 11px 13px; font-size: 17px; font-family: var(--text); font-weight: 700;
+    color: var(--text-primary); background: var(--surface-inset); border: 1px solid var(--hair); border-radius: var(--r-md);
+    -moz-appearance: textfield; font-variant-numeric: tabular-nums; transition: border-color var(--dur-fast);
+  }
+  input[type="number"]::-webkit-outer-spin-button, input[type="number"]::-webkit-inner-spin-button { -webkit-appearance: none; margin: 0; }
+  input[type="number"]:hover { border-color: var(--hair-strong); }
+
+  /* period toggle */
+  .toggle { display: inline-flex; width: 100%; background: var(--surface-inset); border-radius: var(--r-md); padding: 3px; border: 1px solid var(--hair); }
+  .toggle button {
+    flex: 1; border: none; background: transparent; color: var(--text-muted); font-family: var(--text);
+    font-weight: 700; font-size: 11px; letter-spacing: var(--label-tracking); text-transform: uppercase;
+    padding: 9px 8px; border-radius: 7px; cursor: pointer; transition: all var(--dur-fast);
+  }
+  .toggle button.active { background: var(--paper); color: var(--ink); }
+  :root[data-theme="light"] .toggle button.active { background: var(--ink); color: var(--paper); }
+
+  /* channel dot = speed-stripe unit */
+  .dot { width: 13px; height: 10px; transform: skewX(-20deg); border-radius: 1.5px; flex: none; display: inline-block; }
+  .dot.email { background: var(--ch-email); }
+  .dot.linkedin { background: var(--ch-linkedin); }
+  .dot.calls { background: var(--ch-calls); }
+
+  /* channel mix */
+  .mix-row { display: grid; grid-template-columns: 1fr 78px; gap: 10px; align-items: center; margin-bottom: 11px; }
+  .mix-label { display: flex; align-items: center; gap: 10px; font-size: 13.5px; font-weight: 600; }
+  .mix-sum { display: flex; align-items: center; justify-content: space-between; font-size: 11px; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-muted); margin-top: 8px; font-weight: 700; }
+  .mix-sum #mixSum.ok { color: var(--text-primary); }
+  .mix-sum #mixSum.bad { color: var(--accent-text); }
+
+  /* assumption accordion */
+  .assump { border: 1px solid var(--hair); border-radius: var(--r-md); margin-bottom: 10px; overflow: hidden; }
+  .assump:last-child { margin-bottom: 0; }
+  .assump-head { display: flex; align-items: center; gap: 10px; padding: 12px 14px; cursor: pointer; user-select: none; background: var(--surface-inset); transition: background var(--dur-fast); }
+  .assump-head:hover { background: var(--surface-glass); }
+  .assump-head .name { font-size: 11px; font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; flex: 1; }
+  .assump-head .rate-tag { font-size: 10.5px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; letter-spacing: 0.02em; }
+  .chev { transition: transform var(--dur) var(--ease-drive); color: var(--text-muted); font-size: 10px; }
+  .assump.open .chev { transform: rotate(90deg); }
+  .assump-body { padding: 8px 14px 15px; display: none; }
+  .assump.open .assump-body { display: block; }
+
+  .slider { margin-top: 14px; }
+  .slider:first-child { margin-top: 5px; }
+  .slider .top { display: flex; justify-content: space-between; align-items: baseline; margin-bottom: 5px; gap: 8px; }
+  .slider .top .lab { font-size: 12px; font-weight: 600; color: var(--text-secondary); }
+  .slider .top .lab .hint { color: var(--text-muted); font-weight: 400; }
+  .slider .top .val { font-size: 13px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+  input[type="range"] { width: 100%; margin: 0; height: 18px; accent-color: var(--accent); cursor: pointer; }
+
+  .reset {
+    width: 100%; border: 1px solid var(--hair); background: transparent; color: var(--text-secondary);
+    font-family: var(--text); font-weight: 700; font-size: 11px; letter-spacing: var(--label-tracking); text-transform: uppercase;
+    padding: 12px; border-radius: 999px; cursor: pointer; transition: all var(--dur-fast); display: inline-flex; align-items: center; justify-content: center; gap: 8px;
+  }
+  .reset:hover { border-color: var(--hair-strong); color: var(--text-primary); background: var(--surface-glass); }
+
+  /* results */
+  .results { display: flex; flex-direction: column; gap: 22px; }
+  .hero-tiles { display: grid; grid-template-columns: repeat(2, 1fr); gap: 18px; }
+  @media (max-width: 520px) { .hero-tiles { grid-template-columns: 1fr; } }
+  .tile { padding: 22px 24px; position: relative; overflow: hidden; }
+  .tile .stripe-accent { position: absolute; left: 0; top: 22px; bottom: 22px; width: 4px; border-radius: 0 3px 3px 0; }
+  .tile.primary { box-shadow: var(--shadow-glow), inset 0 1px 0 var(--hair-top); border-color: rgba(203,61,0,0.30); }
+  .tile.primary .stripe-accent { background: var(--accent); }
+  .tile.secondary .stripe-accent { background: var(--text-primary); }
+  .tile .tlabel { font-size: 10.5px; font-weight: 700; color: var(--text-muted); text-transform: uppercase; letter-spacing: var(--label-tracking); margin: 0 0 14px; padding-left: 14px; }
+  .tile .tval { font-family: var(--display); font-weight: 900; font-stretch: 125%; font-size: clamp(38px, 7vw, 60px); letter-spacing: -0.01em; line-height: 0.9; padding-left: 14px; font-variant-numeric: tabular-nums; }
+  .tile.primary .tval { color: var(--accent-text); }
+  .tile .tval .unit { font-family: var(--text); font-size: 15px; font-weight: 700; color: var(--text-muted); letter-spacing: var(--label-tracking); text-transform: uppercase; }
+  .tile .tsub { font-size: 12.5px; color: var(--text-secondary); margin-top: 12px; padding-left: 14px; line-height: 1.5; }
+
+  .card { padding: 24px; }
+  .card > .chead { display: flex; align-items: baseline; gap: 12px; margin-bottom: 4px; }
+  .card > .chead h3 { margin: 0; font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: 17px; letter-spacing: 0.01em; text-transform: uppercase; }
+  .card > .csub { margin: 6px 0 20px; font-size: 13px; color: var(--text-secondary); max-width: 640px; }
+
+  /* daily activity bars */
+  .actbar { display: flex; flex-direction: column; gap: 15px; }
+  .abar-row { display: grid; grid-template-columns: 120px 1fr auto; gap: 14px; align-items: center; }
+  .abar-name { font-size: 11px; font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; display: flex; align-items: center; gap: 9px; }
+  .abar-track { background: var(--track); border-radius: var(--r-sm); height: 30px; position: relative; overflow: hidden; }
+  .abar-fill { height: 100%; border-radius: var(--r-sm); min-width: 4px; transition: width var(--dur-slow) var(--ease-drive); }
+  .abar-fill.email { background: var(--ch-email); }
+  .abar-fill.linkedin { background: var(--ch-linkedin); }
+  .abar-fill.calls { background: var(--ch-calls); }
+  .abar-num { font-size: 17px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); min-width: 74px; text-align: right; }
+  .abar-num .u { font-size: 10px; font-weight: 600; color: var(--text-muted); letter-spacing: 0.03em; display: block; text-transform: uppercase; margin-top: -2px; }
+
+  /* funnels */
+  .funnels { display: grid; grid-template-columns: repeat(3, 1fr); gap: 16px; }
+  @media (max-width: 760px) { .funnels { grid-template-columns: 1fr; } }
+  .fcard { border: 1px solid var(--hair); border-radius: var(--r-md); padding: 18px; background: var(--surface-inset); position: relative; overflow: hidden; }
+  .fcard .top-stripe { position: absolute; top: 0; left: 0; right: 0; height: 3px; }
+  .fcard[data-ch="email"] .top-stripe { background: var(--ch-email); }
+  .fcard[data-ch="linkedin"] .top-stripe { background: var(--ch-linkedin); }
+  .fcard[data-ch="calls"] .top-stripe { background: var(--ch-calls); }
+  .fhead { display: flex; align-items: center; gap: 9px; margin-bottom: 5px; }
+  .fhead .name { font-size: 11px; font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; }
+  .fhead .share { margin-left: auto; font-size: 10px; font-weight: 700; color: var(--text-muted); font-variant-numeric: tabular-nums; letter-spacing: 0.04em; text-transform: uppercase; }
+  .fgoal { font-size: 12px; color: var(--text-secondary); margin-bottom: 16px; }
+  .fgoal b { color: var(--text-primary); font-weight: 800; font-variant-numeric: tabular-nums; }
+  .stage { margin-bottom: 10px; }
+  .stage .srow { display: flex; justify-content: space-between; font-size: 11.5px; margin-bottom: 4px; }
+  .stage .sname { color: var(--text-secondary); font-weight: 600; }
+  .stage .sval { font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+  .stage .strack { height: 7px; background: var(--track); border-radius: 4px; overflow: hidden; }
+  .stage .sfill { height: 100%; border-radius: 4px; transition: width var(--dur-slow) var(--ease-drive); }
+  .fcard[data-ch="email"] .sfill { background: var(--ch-email); }
+  .fcard[data-ch="linkedin"] .sfill { background: var(--ch-linkedin); }
+  .fcard[data-ch="calls"] .sfill { background: var(--ch-calls); }
+  .fdaily { margin-top: 15px; padding-top: 14px; border-top: 1px solid var(--hair); display: flex; justify-content: space-between; align-items: baseline; }
+  .fdaily .fd-lab { font-size: 10px; color: var(--text-muted); font-weight: 700; letter-spacing: var(--label-tracking); text-transform: uppercase; }
+  .fdaily .fd-val { font-size: 22px; font-weight: 800; font-variant-numeric: tabular-nums; color: var(--text-primary); }
+
+  /* summary table */
+  table.summary { width: 100%; border-collapse: collapse; font-size: 13.5px; }
+  table.summary th, table.summary td { text-align: right; padding: 11px 8px; border-bottom: 1px solid var(--hair); font-variant-numeric: tabular-nums; }
+  table.summary th:first-child, table.summary td:first-child { text-align: left; }
+  table.summary thead th { font-size: 10px; text-transform: uppercase; letter-spacing: var(--label-tracking); color: var(--text-muted); font-weight: 700; }
+  table.summary tbody td { color: var(--text-secondary); }
+  table.summary tbody td:first-child { font-weight: 700; color: var(--text-primary); display: flex; align-items: center; gap: 10px; font-size: 12px; letter-spacing: 0.04em; text-transform: uppercase; }
+  table.summary tfoot td { font-weight: 800; color: var(--text-primary); border-top: 2px solid var(--hair-strong); border-bottom: none; padding-top: 13px; font-size: 14px; }
+  table.summary tfoot td:first-child { font-size: 12px; letter-spacing: var(--label-tracking); text-transform: uppercase; }
+
+  .note { font-size: 12px; color: var(--text-muted); margin-top: 16px; line-height: 1.6; }
+
+  /* footer */
+  .foot { margin-top: 46px; padding-top: 30px; border-top: 1px solid var(--hair); display: flex; flex-direction: column; align-items: center; gap: 16px; text-align: center; }
+  .foot .tagline { font-family: var(--display); font-weight: 800; font-stretch: 125%; font-size: clamp(15px, 2.4vw, 20px); letter-spacing: 0.02em; text-transform: uppercase; color: var(--text-primary); }
+  .foot .credit { font-size: 11px; letter-spacing: var(--label-tracking); text-transform: uppercase; color: var(--text-muted); font-weight: 600; }
+  .foot .credit .c { color: var(--accent-text); }
+
+  /* Added for the library: link back to the grid. */
+  .lib-back{display:inline-flex;align-items:center;gap:.5em;margin-bottom:28px;color:var(--text-muted);text-decoration:none;font-weight:700;font-size:12px;letter-spacing:.14em;text-transform:uppercase;transition:color .15s ease}
+  .lib-back:hover{color:var(--text-primary)}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <div class="backdrop"><div class="field"></div><div class="grain"></div></div>
+
+  <div class="content">
+  <a href="/library/" class="lib-back">&larr; Library</a>
+  <header class="top">
+    <div>
+      <p class="eyebrow">Outbound planning <span class="sep">/</span> Members tool</p>
+      <h1>Do the<br><span class="red">quota</span> math.</h1>
+      <div class="stripes h1-underline"><i></i><i></i><i></i><i></i></div>
+      <p class="sub">Stop guessing your daily numbers. Enter your meeting target and your rates. See exactly how many contacts and touches you need per day. <b>Email. LinkedIn. Calls.</b></p>
+    </div>
+    <button class="theme-btn" id="themeToggle" aria-label="Toggle theme"><span id="themeLabel">Light</span></button>
+  </header>
+
+  <div class="grid">
+    <!-- INPUTS -->
+    <div class="panel inputs">
+      <div class="section">
+        <h2>Your goal</h2>
+        <div class="field">
+          <label for="goal">Meetings booked target</label>
+          <input type="number" id="goal" value="20" min="0" step="1">
+        </div>
+        <div class="field">
+          <label>Time period</label>
+          <div class="toggle" id="periodToggle">
+            <button data-period="month" class="active">Per month</button>
+            <button data-period="week">Per week</button>
+          </div>
+        </div>
+        <div class="field">
+          <label for="days">Working days <span class="hint" id="daysHint">/ month</span></label>
+          <input type="number" id="days" value="21" min="1" step="1">
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Channel mix <span class="thin">/ share of meetings</span></h2>
+        <div class="mix-row">
+          <span class="mix-label"><span class="dot email"></span>Email</span>
+          <input type="number" id="mixEmail" value="60" min="0" max="100" step="5">
+        </div>
+        <div class="mix-row">
+          <span class="mix-label"><span class="dot linkedin"></span>LinkedIn</span>
+          <input type="number" id="mixLinkedin" value="30" min="0" max="100" step="5">
+        </div>
+        <div class="mix-row">
+          <span class="mix-label"><span class="dot calls"></span>Calls</span>
+          <input type="number" id="mixCalls" value="10" min="0" max="100" step="5">
+        </div>
+        <div class="mix-sum">
+          <span>Total allocation</span>
+          <span id="mixSum">100%</span>
+        </div>
+      </div>
+
+      <div class="section">
+        <h2>Conversion assumptions</h2>
+
+        <div class="assump open" data-ch="email">
+          <div class="assump-head"><span class="dot email"></span><span class="name">Email</span><span class="rate-tag" id="tagEmail"></span><span class="chev">▶</span></div>
+          <div class="assump-body">
+            <div class="slider"><div class="top"><span class="lab">Reply rate</span><span class="val" id="v_rE">8%</span></div><input type="range" id="rE" min="0.5" max="30" step="0.5" value="8"></div>
+            <div class="slider"><div class="top"><span class="lab">Positive reply rate <span class="hint">/ of replies</span></span><span class="val" id="v_pE">30%</span></div><input type="range" id="pE" min="5" max="100" step="1" value="30"></div>
+            <div class="slider"><div class="top"><span class="lab">Meeting booked <span class="hint">/ of positives</span></span><span class="val" id="v_bE">70%</span></div><input type="range" id="bE" min="5" max="100" step="1" value="70"></div>
+            <div class="slider"><div class="top"><span class="lab">Emails per contact <span class="hint">/ steps</span></span><span class="val" id="v_stepsE">3</span></div><input type="range" id="stepsE" min="1" max="8" step="1" value="3"></div>
+          </div>
+        </div>
+
+        <div class="assump" data-ch="linkedin">
+          <div class="assump-head"><span class="dot linkedin"></span><span class="name">LinkedIn</span><span class="rate-tag" id="tagLinkedin"></span><span class="chev">▶</span></div>
+          <div class="assump-body">
+            <div class="slider"><div class="top"><span class="lab">Connection acceptance</span><span class="val" id="v_aL">35%</span></div><input type="range" id="aL" min="5" max="100" step="1" value="35"></div>
+            <div class="slider"><div class="top"><span class="lab">Reply rate <span class="hint">/ of accepted</span></span><span class="val" id="v_rL">40%</span></div><input type="range" id="rL" min="1" max="100" step="1" value="40"></div>
+            <div class="slider"><div class="top"><span class="lab">Positive reply rate <span class="hint">/ of replies</span></span><span class="val" id="v_pL">30%</span></div><input type="range" id="pL" min="5" max="100" step="1" value="30"></div>
+            <div class="slider"><div class="top"><span class="lab">Meeting booked <span class="hint">/ of positives</span></span><span class="val" id="v_bL">70%</span></div><input type="range" id="bL" min="5" max="100" step="1" value="70"></div>
+          </div>
+        </div>
+
+        <div class="assump" data-ch="calls">
+          <div class="assump-head"><span class="dot calls"></span><span class="name">Calls</span><span class="rate-tag" id="tagCalls"></span><span class="chev">▶</span></div>
+          <div class="assump-body">
+            <div class="slider"><div class="top"><span class="lab">Dials per contact</span><span class="val" id="v_dC">4</span></div><input type="range" id="dC" min="1" max="12" step="1" value="4"></div>
+            <div class="slider"><div class="top"><span class="lab">Connect rate <span class="hint">/ pick-ups per dial</span></span><span class="val" id="v_cC">20%</span></div><input type="range" id="cC" min="1" max="60" step="1" value="20"></div>
+            <div class="slider"><div class="top"><span class="lab">Meeting set rate <span class="hint">/ of connects</span></span><span class="val" id="v_mC">15%</span></div><input type="range" id="mC" min="1" max="60" step="1" value="15"></div>
+          </div>
+        </div>
+      </div>
+
+      <div class="section">
+        <button class="reset" id="resetBtn">↺ Reset to benchmarks</button>
+      </div>
+    </div>
+
+    <!-- RESULTS -->
+    <div class="results">
+      <div class="hero-tiles">
+        <div class="tile primary">
+          <div class="stripe-accent"></div>
+          <p class="tlabel">Total touches / day</p>
+          <div class="tval" id="heroTouches">0</div>
+          <div class="tsub" id="heroTouchesSub"></div>
+        </div>
+        <div class="tile secondary">
+          <div class="stripe-accent"></div>
+          <p class="tlabel">New contacts / day</p>
+          <div class="tval" id="heroContacts">0</div>
+          <div class="tsub" id="heroContactsSub"></div>
+        </div>
+      </div>
+
+      <div class="card">
+        <div class="chead"><span class="stripes" style="transform:scale(.8);transform-origin:left"><i></i><i></i><i></i><i></i></span><h3>Daily activity by channel</h3></div>
+        <p class="csub" id="actSub">What each rep-day looks like to hit the target.</p>
+        <div class="actbar" id="actBar"></div>
+      </div>
+
+      <div class="card">
+        <div class="chead"><span class="stripes" style="transform:scale(.8);transform-origin:left"><i></i><i></i><i></i><i></i></span><h3>How the goal back-solves</h3></div>
+        <p class="csub">Each channel's funnel, from contacts needed down to booked meetings for the period.</p>
+        <div class="funnels" id="funnels"></div>
+      </div>
+
+      <div class="card">
+        <div class="chead"><span class="stripes" style="transform:scale(.8);transform-origin:left"><i></i><i></i><i></i><i></i></span><h3>Full breakdown</h3></div>
+        <p class="csub" id="tableSub"></p>
+        <table class="summary" id="summaryTable"></table>
+        <p class="note">Contacts and touches are rounded up. You can't send half an email. "Contacts" are new prospects entering a channel. Reply, acceptance and connect rates compound down each funnel, so small gains at the top move the daily number a lot. Swap in your own historical rates for the sharpest plan.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="foot">
+    <div class="stripes"><i></i><i></i><i></i><i></i></div>
+    <div class="tagline">Learn. Share. Grow. Together.</div>
+    <div class="credit">A GTM Club tool <span class="c">/</span> plug in your real rates and make it yours</div>
+  </div>
+  </div>
+</div>
+
+<script>
+"use strict";
+
+var DEFAULTS = {
+  goal: 20, period: "month", days: 21,
+  mixEmail: 60, mixLinkedin: 30, mixCalls: 10,
+  rE: 8, pE: 30, bE: 70, stepsE: 3,
+  aL: 35, rL: 40, pL: 30, bL: 70,
+  dC: 4, cC: 20, mC: 15
+};
+
+var $ = function(id){ return document.getElementById(id); };
+var num = function(id){ return parseFloat($(id).value) || 0; };
+var fmt = function(n){ return Math.round(n).toLocaleString("en-US"); };
+var ceil = function(n){ return Math.ceil(n - 1e-9); };
+
+var state = { period: "month" };
+
+function readInputs(){
+  return {
+    goal: num("goal"),
+    days: Math.max(1, num("days")),
+    period: state.period,
+    mix: { email: num("mixEmail"), linkedin: num("mixLinkedin"), calls: num("mixCalls") },
+    rE: num("rE")/100, pE: num("pE")/100, bE: num("bE")/100, stepsE: num("stepsE"),
+    aL: num("aL")/100, rL: num("rL")/100, pL: num("pL")/100, bL: num("bL")/100,
+    dC: num("dC"), cC: num("cC")/100, mC: num("mC")/100
+  };
+}
+
+function compute(i){
+  var mixTotal = i.mix.email + i.mix.linkedin + i.mix.calls;
+  if (mixTotal <= 0) mixTotal = 1;
+  var sh = { email: i.mix.email/mixTotal, linkedin: i.mix.linkedin/mixTotal, calls: i.mix.calls/mixTotal };
+
+  var mpcE = i.rE * i.pE * i.bE;
+  var mpcL = i.aL * i.rL * i.pL * i.bL;
+  var mpcC = i.dC * i.cC * i.mC;
+
+  var out = { days: i.days, period: i.period, goal: i.goal, share: sh };
+
+  var mE = i.goal * sh.email;
+  var cE = mpcE > 0 ? mE / mpcE : 0;
+  out.email = {
+    meetings: mE, contacts: cE, activity: cE * i.stepsE,
+    activityLabel: "Emails sent", mpc: mpcE,
+    stages: [
+      { name: "Contacts", val: cE },
+      { name: "Replies", val: cE * i.rE },
+      { name: "Positive replies", val: cE * i.rE * i.pE },
+      { name: "Meetings", val: mE }
+    ]
+  };
+
+  var mL = i.goal * sh.linkedin;
+  var cL = mpcL > 0 ? mL / mpcL : 0;
+  out.linkedin = {
+    meetings: mL, contacts: cL, activity: cL,
+    activityLabel: "Invites sent", mpc: mpcL,
+    stages: [
+      { name: "Invites", val: cL },
+      { name: "Accepted", val: cL * i.aL },
+      { name: "Replies", val: cL * i.aL * i.rL },
+      { name: "Meetings", val: mL }
+    ]
+  };
+
+  var mCh = i.goal * sh.calls;
+  var cCh = mpcC > 0 ? mCh / mpcC : 0;
+  out.calls = {
+    meetings: mCh, contacts: cCh, activity: cCh * i.dC,
+    activityLabel: "Dials made", mpc: mpcC,
+    stages: [
+      { name: "Dials", val: cCh * i.dC },
+      { name: "Connects", val: cCh * i.dC * i.cC },
+      { name: "Meetings", val: mCh }
+    ]
+  };
+
+  out.totalContacts = cE + cL + cCh;
+  out.totalActivity = out.email.activity + out.linkedin.activity + out.calls.activity;
+  return out;
+}
+
+function perDay(v, days){ return v / days; }
+
+function render(){
+  var i = readInputs();
+  var o = compute(i);
+  var d = o.days;
+  var pLabel = o.period === "month" ? "month" : "week";
+
+  $("heroTouches").innerHTML = fmt(ceil(perDay(o.totalActivity, d))) + ' <span class="unit">/ day</span>';
+  $("heroTouchesSub").textContent = fmt(o.totalActivity) + " touches per " + pLabel + " to book " + fmt(o.goal) + " meetings.";
+  $("heroContacts").innerHTML = fmt(ceil(perDay(o.totalContacts, d))) + ' <span class="unit">/ day</span>';
+  $("heroContactsSub").textContent = fmt(ceil(o.totalContacts)) + " new prospects per " + pLabel + " across all channels.";
+
+  var chData = [
+    { key:"email", label:"Email", cls:"email", act:o.email.activity, unit:"emails" },
+    { key:"linkedin", label:"LinkedIn", cls:"linkedin", act:o.linkedin.activity, unit:"invites" },
+    { key:"calls", label:"Calls", cls:"calls", act:o.calls.activity, unit:"dials" }
+  ];
+  var maxDay = Math.max(1, ceil(perDay(o.email.activity,d)), ceil(perDay(o.linkedin.activity,d)), ceil(perDay(o.calls.activity,d)));
+  var actHtml = "";
+  chData.forEach(function(c){
+    var perD = ceil(perDay(c.act, d));
+    var w = Math.max(3, (perD / maxDay) * 100);
+    actHtml += '<div class="abar-row"><div class="abar-name"><span class="dot '+c.cls+'"></span>'+c.label+'</div>'
+      + '<div class="abar-track"><div class="abar-fill '+c.cls+'" style="width:'+w+'%"></div></div>'
+      + '<div class="abar-num">'+fmt(perD)+'<span class="u">'+c.unit+' / day</span></div></div>';
+  });
+  $("actBar").innerHTML = actHtml;
+  $("actSub").textContent = "What each rep-day looks like to hit " + fmt(o.goal) + " meetings / " + pLabel + ".";
+
+  var fHtml = "";
+  chData.forEach(function(c){
+    var ch = o[c.key];
+    var maxStage = ch.stages[0].val || 1;
+    ch.stages.forEach(function(s){ if (s.val > maxStage) maxStage = s.val; });
+    var sharePct = Math.round(o.share[c.key]*100);
+    var stagesHtml = "";
+    ch.stages.forEach(function(s){
+      var w = maxStage>0 ? Math.max(2, (s.val/maxStage)*100) : 2;
+      stagesHtml += '<div class="stage"><div class="srow"><span class="sname">'+s.name+'</span><span class="sval">'+fmt(s.val)+'</span></div>'
+        + '<div class="strack"><div class="sfill" style="width:'+w+'%"></div></div></div>';
+    });
+    var dailyAct = ceil(perDay(ch.activity, d));
+    fHtml += '<div class="fcard" data-ch="'+c.key+'"><div class="top-stripe"></div>'
+      + '<div class="fhead"><span class="dot '+c.cls+'"></span><span class="name">'+c.label+'</span><span class="share">'+sharePct+'% of goal</span></div>'
+      + '<div class="fgoal"><b>'+fmt(ch.meetings)+'</b> meetings from this channel</div>'
+      + stagesHtml
+      + '<div class="fdaily"><span class="fd-lab">'+ch.activityLabel+' / day</span><span class="fd-val">'+fmt(dailyAct)+'</span></div>'
+      + '</div>';
+  });
+  $("funnels").innerHTML = fHtml;
+
+  $("tableSub").textContent = "Everything you need to hit " + fmt(o.goal) + " meetings per " + pLabel + " (" + fmt(d) + " working days).";
+  var pInit = pLabel.charAt(0);
+  var rows = [
+    { cls:"email", label:"Email", contacts:o.email.contacts, act:o.email.activity },
+    { cls:"linkedin", label:"LinkedIn", contacts:o.linkedin.contacts, act:o.linkedin.activity },
+    { cls:"calls", label:"Calls", contacts:o.calls.contacts, act:o.calls.activity }
+  ];
+  var tHead = '<thead><tr><th>Channel</th><th>Contacts / '+pInit+'</th><th>Touches / '+pInit+'</th><th>Contacts / day</th><th>Touches / day</th></tr></thead>';
+  var tBody = "<tbody>";
+  rows.forEach(function(r){
+    tBody += '<tr><td><span class="dot '+r.cls+'"></span>'+r.label+'</td>'
+      + '<td>'+fmt(ceil(r.contacts))+'</td><td>'+fmt(ceil(r.act))+'</td>'
+      + '<td>'+fmt(ceil(perDay(r.contacts,d)))+'</td><td>'+fmt(ceil(perDay(r.act,d)))+'</td></tr>';
+  });
+  tBody += "</tbody>";
+  var tFoot = '<tfoot><tr><td>Total</td>'
+    + '<td>'+fmt(ceil(o.totalContacts))+'</td><td>'+fmt(ceil(o.totalActivity))+'</td>'
+    + '<td>'+fmt(ceil(perDay(o.totalContacts,d)))+'</td><td>'+fmt(ceil(perDay(o.totalActivity,d)))+'</td></tr></tfoot>';
+  $("summaryTable").innerHTML = tHead + tBody + tFoot;
+
+  $("tagEmail").textContent = (o.email.mpc*100).toFixed(2) + "% lead→mtg";
+  $("tagLinkedin").textContent = (o.linkedin.mpc*100).toFixed(2) + "% lead→mtg";
+  $("tagCalls").textContent = (o.calls.mpc*100).toFixed(2) + "% lead→mtg";
+}
+
+var sliderMap = { rE:"v_rE", pE:"v_pE", bE:"v_bE", stepsE:"v_stepsE", aL:"v_aL", rL:"v_rL", pL:"v_pL", bL:"v_bL", dC:"v_dC", cC:"v_cC", mC:"v_mC" };
+var pctSliders = { rE:1,pE:1,bE:1,aL:1,rL:1,pL:1,cC:1,mC:1 };
+function syncSliderLabels(){
+  Object.keys(sliderMap).forEach(function(id){
+    var val = $(id).value;
+    $(sliderMap[id]).textContent = pctSliders[id] ? val + "%" : val;
+  });
+}
+function updateMixSum(){
+  var sum = num("mixEmail") + num("mixLinkedin") + num("mixCalls");
+  var el = $("mixSum");
+  el.textContent = Math.round(sum) + "%";
+  el.className = (Math.round(sum) === 100) ? "ok" : "bad";
+}
+function refresh(){ syncSliderLabels(); updateMixSum(); render(); }
+
+["goal","days","mixEmail","mixLinkedin","mixCalls"].forEach(function(id){ $(id).addEventListener("input", refresh); });
+Object.keys(sliderMap).forEach(function(id){ $(id).addEventListener("input", refresh); });
+
+$("periodToggle").addEventListener("click", function(e){
+  var btn = e.target.closest("button");
+  if (!btn) return;
+  state.period = btn.getAttribute("data-period");
+  Array.prototype.forEach.call(this.querySelectorAll("button"), function(b){ b.classList.remove("active"); });
+  btn.classList.add("active");
+  $("daysHint").textContent = "/ " + (state.period === "month" ? "month" : "week");
+  if (state.period === "week" && num("days") > 7) $("days").value = 5;
+  if (state.period === "month" && num("days") <= 7) $("days").value = 21;
+  refresh();
+});
+
+Array.prototype.forEach.call(document.querySelectorAll(".assump-head"), function(h){
+  h.addEventListener("click", function(){ this.parentElement.classList.toggle("open"); });
+});
+
+$("resetBtn").addEventListener("click", function(){
+  $("goal").value = DEFAULTS.goal;
+  $("days").value = DEFAULTS.days;
+  $("mixEmail").value = DEFAULTS.mixEmail;
+  $("mixLinkedin").value = DEFAULTS.mixLinkedin;
+  $("mixCalls").value = DEFAULTS.mixCalls;
+  ["rE","pE","bE","stepsE","aL","rL","pL","bL","dC","cC","mC"].forEach(function(id){ $(id).value = DEFAULTS[id]; });
+  state.period = "month";
+  Array.prototype.forEach.call($("periodToggle").querySelectorAll("button"), function(b){
+    b.classList.toggle("active", b.getAttribute("data-period") === "month");
+  });
+  $("daysHint").textContent = "/ month";
+  refresh();
+});
+
+$("themeToggle").addEventListener("click", function(){
+  var root = document.documentElement;
+  var dark = root.getAttribute("data-theme") === "dark";
+  root.setAttribute("data-theme", dark ? "light" : "dark");
+  $("themeLabel").textContent = dark ? "Dark" : "Light";
+});
+
+refresh();
+</script>
+</body>
+</html>

@@ -21,6 +21,7 @@ localhost:3000 for a visual check.
 | Path | Purpose |
 |---|---|
 | `content/skills/<slug>/SKILL.md` | One library asset. Frontmatter drives the card, body becomes the detail page. `source:` sets the source facet (`Member` if omitted, `Lemskills` for the imported lemlist set); `kind:` sets the type facet |
+| `content/skills/<slug>/tool.html` | Optional. With `kind: Tool`, this self-contained page is served verbatim as the asset's detail page (no markdown render, no zip). The card still links to it |
 | `content/events/*.md` | One event each. Past dates are filtered out at build time |
 | `content/data/site.json` | Copy for Manifesto, Paths, Community, plus the Apply and Circle links |
 | `src/assets/styles.css` | All styling. Design tokens are CSS variables at the top |
