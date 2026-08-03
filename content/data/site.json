@@ -18,9 +18,30 @@
       { "title": "Speed is the product.", "body": "Stuck on Monday, unstuck by Tuesday. That is the whole promise." }
     ],
     "team": [
-      { "name": "Founder name", "role": "Runs the club. Still runs outbound." },
-      { "name": "Curator name", "role": "Reads every application." },
-      { "name": "Courses lead", "role": "Builds the tracks." }
+      {
+        "name": "Victor Delcambre",
+        "role": "Co-founder",
+        "note": "Ex-outbound consultant / intrapreneur",
+        "img": "/assets/team/victor-delcambre.jpg",
+        "initials": "VD",
+        "url": "https://www.linkedin.com/in/victor-delcambre/"
+      },
+      {
+        "name": "Rémi Kokabi",
+        "role": "Co-founder",
+        "note": "Ex-full-cycle AE / intrapreneur",
+        "img": "/assets/team/remi-kokabi.jpg",
+        "initials": "RK",
+        "url": "https://www.linkedin.com/in/remi-kokabi/"
+      },
+      {
+        "name": "You :)",
+        "role": "Co-founder",
+        "note": "GTM enthusiast",
+        "img": "",
+        "initials": "+",
+        "url": "https://www.linkedin.com/company/the-gtm-club/"
+      }
     ]
   },
 

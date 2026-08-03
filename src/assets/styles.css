@@ -268,6 +268,14 @@ form .btn { margin-top: 32px; }
   display: block; width: 56px; height: 56px; border-radius: 999px;
   background: #2B2A2A; border: 1px solid var(--line);
 }
+img.avatar { object-fit: cover; }
+.avatar-mono {
+  display: flex; align-items: center; justify-content: center;
+  color: var(--dim); font: 700 18px/1 var(--body); letter-spacing: .02em;
+}
+.team-card { display: block; text-decoration: none; color: inherit; }
+.team-card:hover .avatar { border-color: var(--line-hi); }
+.card-note { font-size: 13px; line-height: 1.5; color: var(--dimmest); margin: 6px 0 0; }
 .art {
   display: flex; align-items: center; justify-content: center; height: 120px;
   border-radius: 10px; background: var(--bg); border: 1px dashed rgba(255, 255, 255, .18);

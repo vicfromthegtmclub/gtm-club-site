@@ -179,11 +179,18 @@ ${hero('Manifesto', 'Learn. Share. Grow. Together.')}
   <div class="wrap">
     ${sectionLabel('Who runs it')}
     <div class="cards-3">
-      ${m.team.map(p => `<div class="card-static">
-        <span class="avatar"></span>
+      ${m.team.map(p => {
+        const hasImg = p.img && fs.existsSync(path.join(ROOT, 'src', p.img));
+        const avatar = hasImg
+          ? `<img class="avatar" src="${esc(p.img)}" alt="" width="56" height="56" loading="lazy">`
+          : `<span class="avatar avatar-mono" aria-hidden="true">${esc(p.initials || '')}</span>`;
+        return `<a class="card-static hoverable team-card" href="${esc(p.url)}" target="_blank" rel="noopener">
+        ${avatar}
         <p class="card-name">${esc(p.name)}</p>
         <p class="card-sub">${esc(p.role)}</p>
-      </div>`).join('\n      ')}
+        ${p.note ? `<p class="card-note">${esc(p.note)}</p>` : ''}
+      </a>`;
+      }).join('\n      ')}
     </div>
   </div>
 </section>
