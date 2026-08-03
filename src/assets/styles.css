@@ -47,6 +47,10 @@
 }
 
 * { box-sizing: border-box; }
+/* The [hidden] attribute must always win. Cards set display:flex, which would
+   otherwise override the UA [hidden]{display:none} and leave filtered-out cards
+   (and the empty-state message) visible. filter.js relies on this. */
+[hidden] { display: none !important; }
 
 body {
   margin: 0;
