@@ -1,0 +1,533 @@
+<!-- GTM Club / library / pain-to-value-messaging-matrix
+     Drop this in as /library/pain-to-value-messaging-matrix/index.html
+     All design tokens live in the :root block below. Swap them for your site tokens. -->
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Pain to value matrix · GTM Club</title>
+<meta name="description" content="Map every buyer pain to the exact line that gets a reply. Fill it in the browser, get a live check on every row, copy it straight into your Sheet.">
+<script>try{if(localStorage.getItem("gtm-theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+
+<style>
+/* Site fonts, self-hosted (same origin as this page). */
+@font-face{font-family:'Druk Wide';src:url('/assets/fonts/druk-wide-bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-500.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{
+  /* GTM Club design tokens */
+  --bg:#0A0909;
+  --surface:#141313;
+  --surface-2:#1F1E1C;
+  --line:rgba(255,255,255,.12);
+  --text:#FFFFFF;
+  --muted:#A9A9A9;
+  --faint:#706E6A;
+  --accent:#CB3D00;
+  --accent-ink:#FFFFFF;
+  --pass:#5BD98A;
+  --fail:#FF6B5E;
+  --radius:14px;
+  --display:'Druk Wide','Arial Black',sans-serif;
+  --body:'Helvetica Now Text',Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="light"]{
+  --bg:#F4F3F0; --surface:#FFFFFF; --surface-2:#F0EFEC; --line:rgba(10,9,9,.14);
+  --text:#0A0909; --muted:#4B4A48; --faint:#8A8884;
+}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{
+  margin:0;background:var(--bg);color:var(--text);font-family:var(--body);
+  font-size:16px;line-height:1.5;-webkit-font-smoothing:antialiased;
+}
+.wrap{max-width:1180px;margin:0 auto;padding:0 24px}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- header ---------- */
+.top{display:flex;justify-content:space-between;align-items:center;padding:22px 0}
+.back{font-size:14px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--text)}
+.theme{
+  background:none;border:1px solid var(--line);color:var(--muted);
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 12px;border-radius:99px;cursor:pointer
+}
+.theme:hover{color:var(--text);border-color:var(--muted)}
+
+.hero{padding:26px 0 40px;border-bottom:1px solid var(--line)}
+.eyebrow{
+  font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;
+  color:var(--faint);margin:0 0 18px
+}
+h1{
+  font-family:var(--display);font-size:clamp(34px,6vw,64px);line-height:.96;
+  letter-spacing:-.01em;text-transform:uppercase;font-weight:700;margin:0 0 18px;max-width:15ch
+}
+h1 em{font-style:normal;color:var(--accent)}
+.lede{font-size:18px;color:var(--muted);max-width:60ch;margin:0}
+.lede b{color:var(--text);font-weight:600}
+
+/* ---------- layout ---------- */
+.build{display:grid;grid-template-columns:1fr 360px;gap:28px;padding:38px 0}
+@media(max-width:900px){.build{grid-template-columns:1fr}}
+
+.step{border-top:1px solid var(--line);padding:22px 0 4px}
+.step:first-child{border-top:0;padding-top:0}
+.step-head{display:flex;align-items:baseline;gap:12px;margin-bottom:16px}
+.step-n{font-family:var(--mono);font-size:11px;color:var(--accent);letter-spacing:.1em}
+.step-t{font-size:17px;font-weight:650;letter-spacing:-.01em}
+.field{margin-bottom:18px}
+.field label{display:block;font-size:14px;font-weight:600;margin-bottom:3px}
+.hint{font-size:12.5px;color:var(--faint);margin:0 0 7px;line-height:1.45}
+input[type=text],textarea,select{
+  width:100%;background:var(--surface);border:1px solid var(--line);color:var(--text);
+  border-radius:10px;padding:11px 13px;font-family:var(--body);font-size:14.5px;
+  line-height:1.5;resize:vertical
+}
+textarea{min-height:74px}
+input::placeholder,textarea::placeholder{color:var(--faint)}
+input:focus,textarea:focus,select:focus{border-color:var(--accent);outline:none}
+.count{font-family:var(--mono);font-size:11px;color:var(--faint);float:right;font-weight:400}
+.count.over{color:var(--fail)}
+.two{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+@media(max-width:560px){.two{grid-template-columns:1fr}}
+
+/* ---------- check panel ---------- */
+.panel{position:sticky;top:20px;align-self:start}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.score{display:flex;align-items:baseline;gap:10px;margin-bottom:4px}
+.score b{font-family:var(--display);font-size:38px;letter-spacing:-.03em;line-height:1}
+.score span{font-family:var(--mono);font-size:11px;color:var(--faint);letter-spacing:.1em;text-transform:uppercase}
+.bar{height:4px;background:var(--surface-2);border-radius:99px;margin:14px 0 18px;overflow:hidden}
+.bar i{display:block;height:100%;background:var(--accent);width:0;transition:width .25s ease}
+.checks{list-style:none;margin:0;padding:0}
+.checks li{
+  display:flex;gap:9px;align-items:flex-start;font-size:13px;color:var(--muted);
+  padding:6px 0;border-top:1px solid var(--line)
+}
+.checks li:first-child{border-top:0}
+.checks .m{font-family:var(--mono);font-size:12px;width:14px;flex:none;color:var(--faint);line-height:1.5}
+.checks li.ok{color:var(--text)}
+.checks li.ok .m{color:var(--pass)}
+.checks li.no .m{color:var(--fail)}
+.checks li.no{color:var(--text)}
+.flagged{color:var(--fail);font-family:var(--mono);font-size:11.5px}
+
+button{font-family:var(--body)}
+.btn{
+  display:inline-block;background:var(--accent);color:var(--accent-ink);border:0;
+  border-radius:10px;padding:11px 16px;font-size:14px;font-weight:650;cursor:pointer
+}
+.btn:hover{filter:brightness(1.07)}
+.btn.ghost{background:none;color:var(--muted);border:1px solid var(--line);font-weight:550}
+.btn.ghost:hover{color:var(--text);border-color:var(--muted);filter:none}
+.btn:disabled{opacity:.45;cursor:not-allowed}
+.row-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+
+/* ---------- matrix ---------- */
+.section{padding:40px 0;border-top:1px solid var(--line)}
+h2{font-family:var(--display);font-size:24px;letter-spacing:-.01em;text-transform:uppercase;margin:0 0 6px;font-weight:700}
+.sub{color:var(--muted);font-size:15px;margin:0 0 22px;max-width:62ch}
+.tablewrap{overflow-x:auto;border:1px solid var(--line);border-radius:var(--radius);background:var(--surface)}
+table{border-collapse:collapse;width:100%;min-width:1500px;font-size:13px}
+th{
+  text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;
+  color:var(--faint);font-weight:400;padding:12px 14px;border-bottom:1px solid var(--line);white-space:nowrap;
+  background:var(--surface-2)
+}
+td{padding:12px 14px;border-bottom:1px solid var(--line);vertical-align:top;color:var(--muted);min-width:150px}
+td.wide{min-width:260px}
+tr:last-child td{border-bottom:0}
+.tag{font-family:var(--mono);font-size:10px;letter-spacing:.08em;text-transform:uppercase;padding:3px 7px;border-radius:99px;border:1px solid var(--line);white-space:nowrap}
+.tag.v{color:var(--pass);border-color:color-mix(in srgb,var(--pass) 40%,transparent)}
+.tag.h{color:var(--accent);border-color:color-mix(in srgb,var(--accent) 40%,transparent)}
+.linkbtn{background:none;border:0;color:var(--faint);cursor:pointer;font-size:12px;padding:0;text-decoration:underline}
+.linkbtn:hover{color:var(--text)}
+.empty{padding:40px 24px;text-align:center;color:var(--faint);font-size:14.5px}
+.exports{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.note{font-size:12.5px;color:var(--faint);margin-top:14px}
+
+/* ---------- prompt ---------- */
+.prompt{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:20px}
+.prompt pre{
+  font-family:var(--mono);font-size:12px;line-height:1.6;color:var(--muted);
+  max-height:260px;overflow:auto;margin:14px 0 0;white-space:pre-wrap
+}
+.foot{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
+.foot b{color:var(--text);font-weight:600}
+@media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+</style>
+
+<div class="wrap">
+  <div class="top">
+    <a class="back" href="/library/">← Library</a>
+    <button class="theme" id="themeBtn" type="button">Light</button>
+  </div>
+
+  <header class="hero">
+    <p class="eyebrow">Messaging / Members tool</p>
+    <h1>Say it in <em>their words.</em></h1>
+    <p class="lede">One row per buyer pain, mapped to the proof and the exact line that earns a reply. Fill a row, get it checked against the rules that kill most cold outreach, then copy the whole matrix into your Sheet. <b>Nothing to download. Nothing to sign up for.</b></p>
+  </header>
+
+  <div class="build">
+    <div>
+      <section class="step">
+        <div class="step-head"><span class="step-n">01</span><span class="step-t">Who feels it</span></div>
+        <div class="two">
+          <div class="field">
+            <label for="f-icp">ICP</label>
+            <p class="hint">Segment, not industry. Add a size band and one qualifier.</p>
+            <input type="text" id="f-icp" data-k="icp" placeholder="B2B SaaS, 50 to 300 employees, self serve plus sales assisted">
+          </div>
+          <div class="field">
+            <label for="f-persona">Persona</label>
+            <p class="hint">The title that feels the pain, not the one who signs.</p>
+            <input type="text" id="f-persona" data-k="persona" placeholder="Head of Support, Director of CX">
+          </div>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head"><span class="step-n">02</span><span class="step-t">Why now</span></div>
+        <div class="field">
+          <label for="f-trigger">Trigger</label>
+          <p class="hint">Something observable this quarter, with a time window. If you cannot detect it, it is not a trigger.</p>
+          <textarea id="f-trigger" data-k="trigger" placeholder="Posted 2+ Tier 1 support agent roles in the last 30 days"></textarea>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head"><span class="step-n">03</span><span class="step-t">What hurts</span></div>
+        <div class="field">
+          <label for="f-pain">Pain in their words</label>
+          <p class="hint">Lift it from a call, a review or a support ticket. If it sounds like your website, rewrite it.</p>
+          <textarea id="f-pain" data-k="pain" placeholder="Every time we add customers we add headcount. Tier 1 is 70% password resets and my best agents quit out of boredom."></textarea>
+        </div>
+        <div class="field">
+          <label for="f-cost">What it costs them</label>
+          <p class="hint">A number, a headcount, or a deadline. Vague cost means a weak row.</p>
+          <textarea id="f-cost" data-k="cost" placeholder="Each Tier 1 hire is around 45k fully loaded. That is 4 hires this year just to hold response time flat."></textarea>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head"><span class="step-n">04</span><span class="step-t">What you say</span></div>
+        <div class="field">
+          <label for="f-value">Value prop</label>
+          <p class="hint">The outcome after you. No feature names, no adjectives.</p>
+          <textarea id="f-value" data-k="value" placeholder="Resolve the repetitive 60% of Tier 1 without hiring, so the team you have covers next year's volume."></textarea>
+        </div>
+        <div class="field">
+          <label for="f-proof">Proof</label>
+          <p class="hint">Name, number, date, source. No proof means the row is a hypothesis.</p>
+          <textarea id="f-proof" data-k="proof" placeholder="Northbeam cut Tier 1 volume 58% in 9 weeks and cancelled 3 open reqs. Case study, Mar 2026."></textarea>
+        </div>
+        <div class="field">
+          <label for="f-email">Email hook <span class="count" id="c-email">0 / 60 words</span></label>
+          <p class="hint">Opens on the trigger or the pain, carries the proof, ends on a question that is easy to answer.</p>
+          <textarea id="f-email" data-k="email" style="min-height:110px" placeholder="Saw the 2 Tier 1 openings. Support leads tell us 60% of those tickets are password resets and billing. Northbeam cut that volume 58% and cancelled 3 reqs. Is the hiring about backlog, or about coverage hours?"></textarea>
+        </div>
+        <div class="field">
+          <label for="f-linkedin">LinkedIn opener <span class="count" id="c-linkedin">0 / 30 words</span></label>
+          <p class="hint">One observation, one question. No pitch.</p>
+          <textarea id="f-linkedin" data-k="linkedin" placeholder="Two Tier 1 openings in a month usually means backlog, not growth. Curious which one it is for you."></textarea>
+        </div>
+      </section>
+
+      <section class="step">
+        <div class="step-head"><span class="step-n">05</span><span class="step-t">What they push back with</span></div>
+        <div class="two">
+          <div class="field">
+            <label for="f-objection">Likely objection</label>
+            <p class="hint">The real one you hear, not the polite one.</p>
+            <textarea id="f-objection" data-k="objection" placeholder="We already have a chatbot and it made things worse."></textarea>
+          </div>
+          <div class="field">
+            <label for="f-comeback">Comeback</label>
+            <p class="hint">A question that reframes. Never a pitch.</p>
+            <textarea id="f-comeback" data-k="comeback" placeholder="What share of your chats end in a human handoff? Above 40% means the bot is a queue, not a resolution."></textarea>
+          </div>
+        </div>
+        <div class="field" style="max-width:280px">
+          <label for="f-confidence">Confidence</label>
+          <p class="hint">Validated means you heard this on a call.</p>
+          <select id="f-confidence" data-k="confidence">
+            <option>Hypothesis</option>
+            <option>Validated</option>
+            <option>Retired</option>
+          </select>
+        </div>
+      </section>
+    </div>
+
+    <aside class="panel">
+      <div class="card">
+        <div class="score"><b id="scoreN">0</b><span>of 12 checks passed</span></div>
+        <div class="bar"><i id="bar"></i></div>
+        <ul class="checks" id="checks"></ul>
+        <div class="row-actions">
+          <button class="btn" id="addBtn" type="button">Add row to matrix</button>
+          <button class="btn ghost" id="clearBtn" type="button">Clear</button>
+        </div>
+      </div>
+    </aside>
+  </div>
+
+  <section class="section">
+    <h2>Your matrix</h2>
+    <p class="sub">Every row you add lands here. Load the examples to see the difference between the row most people write and the row that gets answered.</p>
+    <div class="tablewrap">
+      <table>
+        <thead><tr id="thead"></tr></thead>
+        <tbody id="tbody"></tbody>
+      </table>
+    </div>
+    <div class="exports">
+      <button class="btn" id="copyTsv" type="button">Copy for Sheets</button>
+      <button class="btn ghost" id="copyMd" type="button">Copy as Markdown</button>
+      <button class="btn ghost" id="dlCsv" type="button">Download CSV</button>
+      <button class="btn ghost" id="loadEx" type="button">Load examples</button>
+      <button class="btn ghost" id="wipe" type="button">Clear matrix</button>
+    </div>
+    <p class="note" id="note">Copy for Sheets puts every row on your clipboard as tab separated text. Open a blank Sheet, click a cell, paste. Your rows stay in this browser and are never sent anywhere.</p>
+  </section>
+
+  <section class="section">
+    <h2>Or let AI write the first draft</h2>
+    <p class="sub">Drop your domain in, copy the prompt, paste it into Claude or ChatGPT. It researches the site, the reviews and the case studies, then returns rows you can paste straight into the matrix. Then you edit. The draft is never the finished thing.</p>
+    <div class="prompt">
+      <div class="two">
+        <div class="field" style="margin:0">
+          <label for="dom">Your domain</label>
+          <input type="text" id="dom" placeholder="yourcompany.com">
+        </div>
+        <div class="field" style="margin:0;display:flex;align-items:flex-end">
+          <button class="btn" id="copyPrompt" type="button">Copy the prompt</button>
+        </div>
+      </div>
+      <pre id="promptText"></pre>
+    </div>
+  </section>
+
+  <footer class="foot">
+    <span><b>Learn. Share. Grow. Together.</b></span>
+    <span>A GTM Club tool / one row per pain, in your buyer's words</span>
+  </footer>
+</div>
+
+<script>
+(function(){
+  var KEYS=["icp","persona","trigger","pain","cost","value","proof","email","linkedin","objection","comeback","confidence"];
+  var HEAD=["ICP","Persona","Trigger","Pain in their words","What it costs them","Value prop","Proof","Email hook","LinkedIn opener","Objection","Comeback","Confidence"];
+  var WIDE={pain:1,cost:1,value:1,proof:1,email:1,linkedin:1,comeback:1};
+
+  var MARKETING=["seamless","leverage","robust","best-in-class","best in class","cutting-edge","cutting edge","innovative","empower","streamline","synergy","world-class","world class","game-changer","revolutionary","ai-powered","ai powered","next-generation","holistic","turnkey","state-of-the-art","end-to-end","one-stop"];
+  var OPENERS=["i hope this finds you well","hope this finds you well","hope you are doing well","hope you're doing well","hope all is well","i am reaching out","i'm reaching out","just reaching out","wanted to reach out","my name is","touching base","quick question","let me introduce"];
+  var CONCRETE=/\d|headcount|hires?|fte|quarter|renewal|deadline|weeks?|months?|days?|hours?/i;
+  var TIMEY=/\d|last|past|recent|posted|hiring|raised|launched|joined|switched|migrated|renewal|announced|review/i;
+
+  var state={rows:[],form:blank()};
+  function blank(){var o={};KEYS.forEach(function(k){o[k]=""});o.confidence="Hypothesis";return o}
+  function words(s){return (s||"").trim()?s.trim().split(/\s+/).length:0}
+  function has(s,list){s=(s||"").toLowerCase();return list.filter(function(w){return s.indexOf(w)>-1})}
+
+  /* storage is best effort: if the browser blocks it, the tool still works for the session */
+  var store={
+    get:function(){try{return JSON.parse(localStorage.getItem("gtm-matrix")||"[]")}catch(e){return[]}},
+    set:function(v){try{localStorage.setItem("gtm-matrix",JSON.stringify(v))}catch(e){}}
+  };
+
+  function checks(f){
+    var pain=f.pain, mk=has(pain,MARKETING), op=has(f.email,OPENERS), mkv=has(f.value,MARKETING);
+    return [
+      {t:"ICP is a segment, not a whole industry", done:!!f.icp.trim(), ok:words(f.icp)>=3},
+      {t:"Persona is a real title", done:!!f.persona.trim(), ok:words(f.persona)>=2},
+      {t:"Trigger is observable, with a time window", done:!!f.trigger.trim(), ok:TIMEY.test(f.trigger)},
+      {t:"Pain sounds spoken, not written", done:!!pain.trim(), ok:words(pain)>=10&&mk.length===0, flag:mk},
+      {t:"Pain is in first person", done:!!pain.trim(), ok:/\b(we|our|us|my|i)\b/i.test(pain)},
+      {t:"Cost is concrete", done:!!f.cost.trim(), ok:CONCRETE.test(f.cost)},
+      {t:"Value prop is an outcome, no buzzwords", done:!!f.value.trim(), ok:mkv.length===0&&words(f.value)<=35, flag:mkv},
+      {t:"Proof has a name and a number", done:!!f.proof.trim()||f.confidence==="Hypothesis", ok:(/\d/.test(f.proof)&&words(f.proof)>=5)||f.confidence==="Hypothesis"},
+      {t:"Email hook is 60 words or under", done:!!f.email.trim(), ok:words(f.email)>0&&words(f.email)<=60},
+      {t:"Email hook ends on a question", done:!!f.email.trim(), ok:/\?\s*$/.test(f.email.trim())},
+      {t:"Email hook skips the dead openers", done:!!f.email.trim(), ok:op.length===0, flag:op},
+      {t:"LinkedIn opener is 30 words or under", done:!!f.linkedin.trim(), ok:words(f.linkedin)>0&&words(f.linkedin)<=30}
+    ];
+  }
+
+  function renderChecks(){
+    var f=state.form, list=checks(f), ul=document.getElementById("checks"), n=0;
+    ul.innerHTML="";
+    list.forEach(function(c){
+      var li=document.createElement("li");
+      var st=!c.done?"":(c.ok?"ok":"no");
+      if(c.ok&&c.done)n++;
+      li.className=st;
+      var mark=!c.done?"·":(c.ok?"✓":"✗");
+      li.innerHTML='<span class="m">'+mark+'</span><span>'+c.t+
+        (c.flag&&c.flag.length&&c.done&&!c.ok?' <span class="flagged">'+c.flag.join(", ")+'</span>':'')+'</span>';
+      ul.appendChild(li);
+    });
+    document.getElementById("scoreN").textContent=n;
+    document.getElementById("bar").style.width=(n/12*100)+"%";
+    document.getElementById("addBtn").disabled=!(f.pain.trim()&&f.email.trim());
+    setCount("email",60);setCount("linkedin",30);
+  }
+  function setCount(k,max){
+    var el=document.getElementById("c-"+k);if(!el)return;
+    var w=words(state.form[k]);
+    el.textContent=w+" / "+max+" words";
+    el.className="count"+(w>max?" over":"");
+  }
+
+  function esc(s){return (s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;")}
+  function renderTable(){
+    var th=document.getElementById("thead"), tb=document.getElementById("tbody");
+    th.innerHTML="<th>#</th>"+HEAD.map(function(h){return "<th>"+h+"</th>"}).join("")+"<th></th>";
+    if(!state.rows.length){
+      tb.innerHTML='<tr><td colspan="14"><div class="empty">No rows yet. Fill a row on the left, or load the examples to see what a strong one looks like.</div></td></tr>';
+      return;
+    }
+    tb.innerHTML=state.rows.map(function(r,i){
+      var cells=KEYS.map(function(k){
+        if(k==="confidence"){
+          var cl=r.confidence==="Validated"?"v":"h";
+          return '<td><span class="tag '+cl+'">'+esc(r.confidence)+'</span></td>';
+        }
+        return '<td class="'+(WIDE[k]?"wide":"")+'">'+esc(r[k])+'</td>';
+      }).join("");
+      return '<tr><td>'+(i+1)+'</td>'+cells+'<td><button class="linkbtn" data-del="'+i+'">remove</button></td></tr>';
+    }).join("");
+  }
+
+  function save(){store.set(state.rows);renderTable()}
+
+  /* ---------- exports ---------- */
+  function tsv(){
+    return [HEAD.join("\t")].concat(state.rows.map(function(r){
+      return KEYS.map(function(k){return (r[k]||"").replace(/\s+/g," ").trim()}).join("\t");
+    })).join("\n");
+  }
+  function csv(){
+    var q=function(v){return '"'+(v||"").replace(/"/g,'""')+'"'};
+    return [HEAD.map(q).join(",")].concat(state.rows.map(function(r){
+      return KEYS.map(function(k){return q(r[k])}).join(",");
+    })).join("\n");
+  }
+  function md(){
+    return "| "+HEAD.join(" | ")+" |\n|"+HEAD.map(function(){return "---"}).join("|")+"|\n"+
+      state.rows.map(function(r){return "| "+KEYS.map(function(k){return (r[k]||"").replace(/\|/g,"/")}).join(" | ")+" |"}).join("\n");
+  }
+  function copy(text,btn,label){
+    var done=function(){var o=btn.textContent;btn.textContent="Copied";setTimeout(function(){btn.textContent=o},1400)};
+    if(navigator.clipboard&&navigator.clipboard.writeText){navigator.clipboard.writeText(text).then(done,fallback)}else{fallback()}
+    function fallback(){
+      var ta=document.createElement("textarea");ta.value=text;ta.style.position="fixed";ta.style.opacity=0;
+      document.body.appendChild(ta);ta.select();try{document.execCommand("copy");done()}catch(e){}document.body.removeChild(ta);
+    }
+  }
+
+  var PROMPT_BODY=[
+"You are a senior outbound strategist. Fill a pain to value messaging matrix from a single input: a company domain. One row per buyer pain. Every row must end in a line that could be sent today.",
+"",
+"Input",
+"- Domain: __DOMAIN__",
+"",
+"Research first, write second",
+"1. What they sell. Category, pricing signals, the 3 to 6 use cases the site leads with, integrations. Sources: home, product and pricing pages, docs, help center, changelog.",
+"2. Who buys. Daily user versus economic buyer, which teams feel the pain, which industries are named or implied. Sources: case studies, logos, careers page, LinkedIn company page.",
+"3. What customers actually say. Pull verbatim language from G2, Capterra, Trustpilot, case study quotes and community threads. Collect the complaints too: they tell you what the alternative fails at.",
+"4. What they are up against. Direct competitors and the real alternatives: do nothing, build in house, spreadsheets, an agency, the incumbent nobody likes. Note the switching trigger for each.",
+"",
+"Hard rules",
+"- Pain in their words means their words. Lift the phrasing from a review, a quote or a call. If a sentence could appear on the company's own website, it is marketing, not a pain. Rewrite it.",
+"- One row per pain, never per feature. If two rows would earn the same reply, they are one row.",
+"- A trigger must be detectable. Name where you would see it: job boards, funding databases, BuiltWith, Similarweb, review sites, LinkedIn activity, press, a specific page. \"They are growing\" is not a trigger.",
+"- Cost must be concrete: a number, a headcount, a deadline, a renewal date. If you cannot ground it, write Assumption plus the one question that would confirm it, and set Confidence to Hypothesis.",
+"- Proof must be citable: customer name, number, date, source. If none exists, write what proof you would need and where to get it, and set Confidence to Hypothesis. Never invent a customer or a percentage.",
+"- Value prop is the outcome after the product, not the product. No feature names, no adjectives.",
+"- Email hook: 60 words max, opens on the trigger or the pain, carries one proof point, ends on an easy question. Never opens with I hope this finds you well, I am reaching out, or your company name.",
+"- LinkedIn opener: 30 words max. One observation, one question.",
+"- Comeback is a question that reframes, not a rebuttal and not a pitch.",
+"- Never use em dashes. Plain spoken English, short sentences.",
+"",
+"Output",
+"Return 10 to 14 rows as TSV, tab separated, no markdown table, no preamble. Exactly these 12 columns in this order:",
+"ICP | Persona | Trigger | Pain in their words | What it costs them | Value prop | Proof | Email hook | LinkedIn opener | Likely objection | Comeback | Confidence",
+"",
+"Cover at least: one row per major ICP, one row for the build in house alternative, one row for switching off an incumbent, and one row for a pain the buyer has not yet connected to your category.",
+"",
+"Then add two short blocks.",
+"Research notes: sources used and what each gave you, and which pains came from real customer language versus inference.",
+"What to validate first: the 3 rows you are least sure about, and the single question that would confirm or kill each one."
+  ].join("\n");
+
+  function promptText(){
+    var d=(document.getElementById("dom").value||"").trim();
+    return PROMPT_BODY.replace("__DOMAIN__", d||"[your domain]");
+  }
+
+  var EXAMPLES=[
+    {icp:"SaaS companies",persona:"Decision makers",trigger:"They exist",pain:"They need better support efficiency",cost:"Wasted time and money",value:"AI powered platform with seamless automation and world class integrations",proof:"Trusted by 500+ companies",email:"Hi {{firstName}}, hope you are doing well. I am reaching out because we help companies like yours improve support efficiency with our AI powered platform. Would you have 15 minutes this week?",linkedin:"Hi {{firstName}}, would love to connect and share how we help companies like yours.",objection:"Not interested",comeback:"Are you sure? We could really help.",confidence:"Hypothesis"},
+    {icp:"B2B SaaS, 50 to 300 employees, self serve plus sales assisted",persona:"Head of Support, Director of CX",trigger:"Posted 2+ Tier 1 support agent roles in the last 30 days",pain:"Every time we add customers we add headcount. Tier 1 is 70% password resets and billing questions, and my best agents quit out of boredom.",cost:"Each Tier 1 hire is around 45k fully loaded. At their growth rate that is 4 hires this year just to hold first response time flat.",value:"Resolve the repetitive 60% of Tier 1 without hiring, so the team you have covers the volume you get next year.",proof:"Northbeam cut Tier 1 volume 58% in 9 weeks and cancelled 3 open reqs. Case study Mar 2026, confirmed with their Head of Support.",email:"Saw the 2 Tier 1 openings. Support leads tell us 60% of those tickets are password resets and billing. Northbeam cut that volume 58% and cancelled 3 reqs. Is the hiring about backlog, or about coverage hours?",linkedin:"Two Tier 1 openings in a month usually means backlog, not growth. Curious which one it is for you.",objection:"We already have a chatbot and it made things worse.",comeback:"Most bots deflect and dump. What share of your chats end in a human handoff? Above 40% means the bot is a queue, not a resolution.",confidence:"Validated"},
+    {icp:"DTC e-commerce, 20M to 200M GMV, seasonal peaks",persona:"Head of CX, COO",trigger:"Q4 seasonal support hiring posts, or a Trustpilot drop in the last 60 days mentioning response time",pain:"In November our response time goes from 4 hours to 2 days, and refund requests double because people cannot get an answer.",cost:"Peak temps cost around 60k for the quarter and still miss SLA. The refunds triggered by slow replies cost more than the tickets.",value:"Absorb the Q4 spike without temps, so response time holds at peak and where is my order never reaches a human.",proof:"Maison Rouge held a 12 minute first response through Black Friday at 3x volume, zero temp hires. Case study Jan 2026.",email:"Your Trustpilot went 4.6 to 4.1 in 60 days and 8 of the last 10 one star reviews mention waiting on support. That usually starts before peak, not during. How are you staffing November this year?",linkedin:"The last 10 one star reviews on your Trustpilot all mention response time. Is peak staffing already locked for November?",objection:"We handle it with temps and it works fine.",comeback:"Temps work until the training window. What was your first response time the Monday after Black Friday versus a normal Monday?",confidence:"Validated"}
+  ];
+
+  /* ---------- wiring ---------- */
+  KEYS.forEach(function(k){
+    var el=document.getElementById("f-"+k);if(!el)return;
+    el.addEventListener("input",function(){state.form[k]=el.value;renderChecks()});
+    el.addEventListener("change",function(){state.form[k]=el.value;renderChecks()});
+  });
+  function fillForm(){KEYS.forEach(function(k){var el=document.getElementById("f-"+k);if(el)el.value=state.form[k]})}
+
+  document.getElementById("addBtn").addEventListener("click",function(){
+    var r={};KEYS.forEach(function(k){r[k]=state.form[k]});
+    state.rows.push(r);save();state.form=blank();fillForm();renderChecks();
+    document.getElementById("f-icp").focus();
+  });
+  document.getElementById("clearBtn").addEventListener("click",function(){
+    state.form=blank();fillForm();renderChecks();
+  });
+  document.getElementById("tbody").addEventListener("click",function(e){
+    var i=e.target.getAttribute("data-del");
+    if(i!==null&&i!==undefined){state.rows.splice(+i,1);save()}
+  });
+  document.getElementById("loadEx").addEventListener("click",function(){
+    EXAMPLES.forEach(function(r){state.rows.push(Object.assign({},r))});save();
+  });
+  document.getElementById("wipe").addEventListener("click",function(){
+    if(state.rows.length&&!confirm("Remove every row from the matrix?"))return;
+    state.rows=[];save();
+  });
+  document.getElementById("copyTsv").addEventListener("click",function(){copy(tsv(),this)});
+  document.getElementById("copyMd").addEventListener("click",function(){copy(md(),this)});
+  document.getElementById("copyPrompt").addEventListener("click",function(){copy(promptText(),this)});
+  document.getElementById("dlCsv").addEventListener("click",function(){
+    var b=new Blob([csv()],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");
+    a.href=u;a.download="pain-to-value-matrix.csv";document.body.appendChild(a);a.click();
+    document.body.removeChild(a);URL.revokeObjectURL(u);
+  });
+  document.getElementById("dom").addEventListener("input",function(){
+    document.getElementById("promptText").textContent=promptText();
+  });
+  var tb=document.getElementById("themeBtn");
+  function syncTheme(){
+    tb.textContent=document.documentElement.getAttribute("data-theme")==="light"?"Dark":"Light";
+  }
+  tb.addEventListener("click",function(){
+    var next=document.documentElement.getAttribute("data-theme")==="light"?"dark":"light";
+    document.documentElement.setAttribute("data-theme",next);
+    try{localStorage.setItem("gtm-theme",next)}catch(e){}
+    syncTheme();
+  });
+  syncTheme();
+
+  state.rows=store.get();
+  document.getElementById("promptText").textContent=promptText();
+  fillForm();renderChecks();renderTable();
+})();
+</script>
