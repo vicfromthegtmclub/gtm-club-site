@@ -2,6 +2,7 @@
 <html lang="en" data-theme="dark">
 <head>
 <meta charset="UTF-8">
+<script>try{if(localStorage.getItem("gtm-theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Quota Math · GTM Club</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -673,10 +674,13 @@ $("resetBtn").addEventListener("click", function(){
 
 $("themeToggle").addEventListener("click", function(){
   var root = document.documentElement;
-  var dark = root.getAttribute("data-theme") === "dark";
-  root.setAttribute("data-theme", dark ? "light" : "dark");
-  $("themeLabel").textContent = dark ? "Dark" : "Light";
+  var next = root.getAttribute("data-theme") === "light" ? "dark" : "light";
+  root.setAttribute("data-theme", next);
+  $("themeLabel").textContent = next === "light" ? "Dark" : "Light";
+  try { localStorage.setItem("gtm-theme", next); } catch (e) {}
 });
+// Reflect the theme the no-flash script applied (the site choice may be light).
+$("themeLabel").textContent = document.documentElement.getAttribute("data-theme") === "light" ? "Dark" : "Light";
 
 refresh();
 </script>
