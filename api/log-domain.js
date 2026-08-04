@@ -3,8 +3,9 @@
 // so the function has no npm dependencies. It is called fire-and-forget from the
 // client and always answers 200, so a missing store or a junk input never
 // surfaces an error in the browser. Reads live in api/domains.js, behind a secret.
-const KV_URL = process.env.KV_REST_API_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+// Accept either the Vercel KV or the Upstash Marketplace env var names.
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const KEY = 'gtm-domains';
 const MAX = 5000; // keep the list bounded
 

@@ -1,7 +1,8 @@
 // Returns the logged domains (oldest first). Gated by ?key=<LOG_SECRET> so the
 // list is not public. Add ?format=csv for a spreadsheet-friendly dump.
-const KV_URL = process.env.KV_REST_API_URL;
-const KV_TOKEN = process.env.KV_REST_API_TOKEN;
+// Accept either the Vercel KV or the Upstash Marketplace env var names.
+const KV_URL = process.env.KV_REST_API_URL || process.env.UPSTASH_REDIS_REST_URL;
+const KV_TOKEN = process.env.KV_REST_API_TOKEN || process.env.UPSTASH_REDIS_REST_TOKEN;
 const SECRET = process.env.LOG_SECRET;
 const KEY = 'gtm-domains';
 
