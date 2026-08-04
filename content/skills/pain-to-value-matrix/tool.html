@@ -157,6 +157,27 @@ tr:last-child td{border-bottom:0}
 }
 .foot{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .foot b{color:var(--text);font-weight:600}
+
+/* ---------- expansion ---------- */
+.grow{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:18px;margin-bottom:26px}
+.grow.draft{border-color:var(--accent);background:color-mix(in srgb,var(--accent) 7%,var(--surface))}
+.grow h3{font-size:15px;font-weight:650;margin:0 0 4px;letter-spacing:-.01em}
+.grow p{font-size:13px;color:var(--muted);margin:0 0 12px;line-height:1.5}
+.grow select{margin-bottom:14px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.chip{
+  background:var(--surface-2);border:1px solid var(--line);color:var(--text);
+  font-size:12.5px;padding:7px 11px;border-radius:99px;cursor:pointer;text-align:left
+}
+.chip:hover{border-color:var(--accent);color:var(--accent)}
+.axis{font-family:var(--mono);font-size:10.5px;letter-spacing:.1em;text-transform:uppercase;color:var(--accent);margin:0 0 6px}
+.ask{font-size:13px;color:var(--text);border-left:2px solid var(--accent);padding-left:11px;margin:0 0 14px;line-height:1.55}
+.needs{border-color:color-mix(in srgb,var(--accent) 55%,var(--line))!important;background:color-mix(in srgb,var(--accent) 5%,var(--surface))!important}
+.hint.live{color:var(--accent)}
+.import{margin-top:26px;border:1px solid var(--line);border-radius:var(--radius);padding:18px;background:var(--surface)}
+.import h3{font-size:15px;font-weight:650;margin:0 0 4px}
+.import p{font-size:13px;color:var(--muted);margin:0 0 12px}
+.import textarea{min-height:80px;font-family:var(--mono);font-size:12px}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
 
 /* info dot + hover/focus tooltip (transparency: we log the domain on copy) */
@@ -191,6 +212,8 @@ tr:last-child td{border-bottom:0}
 
   <div class="build">
     <div>
+      <div id="growZone"></div>
+
       <section class="step">
         <div class="step-head"><span class="step-n">01</span><span class="step-t">Who feels it</span></div>
         <div class="two">
@@ -309,6 +332,15 @@ tr:last-child td{border-bottom:0}
       <button class="btn ghost" id="loadEx" type="button">Load examples</button>
       <button class="btn ghost" id="wipe" type="button">Clear matrix</button>
     </div>
+    <div class="import">
+      <h3>Paste rows back in</h3>
+      <p>Tab separated, one row per line, 12 columns in the order above. This is what the AI prompts return.</p>
+      <textarea id="importBox" placeholder="ICP&#9;Persona&#9;Trigger&#9;Pain&#9;..."></textarea>
+      <div class="exports" style="margin-top:12px">
+        <button class="btn" id="importBtn" type="button">Add these rows</button>
+        <span class="note" id="importMsg" style="margin:0;align-self:center"></span>
+      </div>
+    </div>
     <p class="note" id="note">Copy for Sheets puts every row on your clipboard as tab separated text. Open a blank Sheet, click a cell, paste. Your rows stay in this browser and are never sent anywhere.</p>
   </section>
 
@@ -421,7 +453,7 @@ tr:last-child td{border-bottom:0}
     }).join("");
   }
 
-  function save(){store.set(state.rows);renderTable()}
+  function save(){store.set(state.rows);renderTable();renderGrow()}
 
   /* ---------- exports ---------- */
   function tsv(){
@@ -494,21 +526,187 @@ tr:last-child td{border-bottom:0}
     {icp:"DTC e-commerce, 20M to 200M GMV, seasonal peaks",persona:"Head of CX, COO",trigger:"Q4 seasonal support hiring posts, or a Trustpilot drop in the last 60 days mentioning response time",pain:"In November our response time goes from 4 hours to 2 days, and refund requests double because people cannot get an answer.",cost:"Peak temps cost around 60k for the quarter and still miss SLA. The refunds triggered by slow replies cost more than the tickets.",value:"Absorb the Q4 spike without temps, so response time holds at peak and where is my order never reaches a human.",proof:"Maison Rouge held a 12 minute first response through Black Friday at 3x volume, zero temp hires. Case study Jan 2026.",email:"Your Trustpilot went 4.6 to 4.1 in 60 days and 8 of the last 10 one star reviews mention waiting on support. That usually starts before peak, not during. How are you staffing November this year?",linkedin:"The last 10 one star reviews on your Trustpilot all mention response time. Is peak staffing already locked for November?",objection:"We handle it with temps and it works fine.",comeback:"Temps work until the training window. What was your first response time the Monday after Black Friday versus a normal Monday?",confidence:"Validated"}
   ];
 
+
+  /* ---------- expansion axes ---------- */
+  var AXES=[
+    {id:"segment",label:"Same pain, new segment",
+     carry:["persona","pain","cost","value","proof","objection","comeback"],
+     ask:function(r){return "Who else says this, word for word, outside "+short(r.icp,6)+"? Not the neighbour of that segment. A different buyer with the same sentence."},
+     hints:{icp:"The other segment that lives this exact pain. If you have to soften the pain to make it fit, it does not fit.",
+            trigger:"The moment this pain goes live in that new segment. Different segment, different signal.",
+            email:"Same proof, their language. Rewrite the opener around the new trigger.",
+            linkedin:"One observation about the new segment, one question."}},
+    {id:"persona",label:"Same account, new persona",
+     carry:["icp","trigger","value","proof"],
+     ask:function(r){return "Who else in that account is on the hook for this? The person who feels it and the person who funds it never describe it the same way."},
+     hints:{persona:"One level up, or the team next door. The one who pays for the consequence.",
+            pain:"Their version of it. A Head of Support says my agents quit. A CFO says support cost per ticket is up 30%.",
+            cost:"The cost in the currency this persona is measured on.",
+            objection:"This persona's objection is usually about priority, not about your product.",
+            comeback:"A question that lands in their world, not the user's.",
+            email:"Same problem, their altitude. Never send the user's email to their boss.",
+            linkedin:"One observation, one question, at their altitude."}},
+    {id:"trigger",label:"Same pain, new trigger",
+     carry:["icp","persona","pain","cost","value","proof","objection","comeback"],
+     ask:function(r){return "Where else can you see this pain go live? Name the source you would detect it in: job board, review site, changelog, funding news, a page on their site."},
+     hints:{trigger:"A second detectable moment. If you cannot name where you would see it, it is not a trigger.",
+            email:"Open on the new trigger. Everything after it can stay.",
+            linkedin:"Lead with the new signal."}},
+    {id:"alternative",label:"The fix they already chose",
+     carry:["icp","persona","trigger","proof"],
+     ask:function(r){return "They did not sit on this pain. They built something, hired someone, or made a spreadsheet. The new pain is what that fix costs them now."},
+     hints:{pain:"The pain of the workaround, in their words. The spreadsheet nobody updates. The intern who left. The internal tool with one maintainer.",
+            cost:"Maintenance, not the original problem. Engineering time, key person risk, the thing that breaks when volume doubles.",
+            value:"The outcome of retiring the workaround, not of solving the original pain.",
+            objection:"We already built this ourselves.",
+            comeback:"A question about what the workaround costs to keep alive, never a comparison.",
+            email:"Never call their build a mistake. Ask what it costs to run.",
+            linkedin:"One observation about the workaround, one question."}},
+    {id:"downstream",label:"The consequence, one step later",
+     carry:["icp","proof"],
+     ask:function(r){return "What breaks two steps after "+short(r.pain,8)+"? The consequence usually lands with a more senior title and a bigger budget."},
+     hints:{persona:"Whoever owns the thing that breaks downstream. Often not the same team.",
+            trigger:"The signal that the consequence is already showing: churn, a bad review, a missed target, a reorg.",
+            pain:"The consequence stated as their problem, not as your problem.",
+            cost:"Revenue, retention or a missed number. Downstream pains are usually more expensive.",
+            value:"The outcome measured on the consequence, not on the original pain.",
+            objection:"Usually a doubt that your category can move their number at all.",
+            comeback:"A question that connects your pain to their number.",
+            email:"Lead with the consequence. Mention the original pain only as the cause.",
+            linkedin:"One observation about the consequence, one question."}},
+    {id:"upstream",label:"The cause, one step earlier",
+     carry:["icp","proof"],
+     ask:function(r){return "What causes this in the first place? The team that owns the cause is a different buyer, with a different budget and no idea you exist."},
+     hints:{persona:"The team upstream that creates the problem without feeling it.",
+            trigger:"A signal that the cause is getting worse: a launch, a migration, a new hire, a volume jump.",
+            pain:"They may not see it as a pain yet. Write the sentence they would agree with anyway.",
+            cost:"What it costs them, not what it costs the team downstream.",
+            value:"The outcome for the upstream owner.",
+            objection:"Usually that this belongs to another team.",
+            comeback:"A question that shows the cost lands on them too.",
+            email:"Never open by blaming their team for someone else's pain.",
+            linkedin:"One observation, one question."}}
+  ];
+
+  function short(s,n){var w=(s||"").trim().split(/\s+/).slice(0,n).join(" ");return w?'"'+w+'"':"the row above"}
+  var draft=null;
+  var baseHints={};
+  KEYS.forEach(function(k){
+    var el=document.getElementById("f-"+k);
+    if(el&&el.parentNode.querySelector(".hint"))baseHints[k]=el.parentNode.querySelector(".hint").textContent;
+  });
+
+  function applyHints(){
+    KEYS.forEach(function(k){
+      var el=document.getElementById("f-"+k);if(!el)return;
+      var h=el.parentNode.querySelector(".hint");
+      var custom=draft&&draft.axis.hints[k];
+      if(h){h.textContent=custom||baseHints[k]||h.textContent;h.className="hint"+(custom?" live":"")}
+      el.className=(draft&&draft.blanks.indexOf(k)>-1&&!state.form[k].trim())?"needs":"";
+    });
+  }
+
+  function startDraft(rowIndex,axisId){
+    var src=state.rows[rowIndex], axis=null;
+    AXES.forEach(function(a){if(a.id===axisId)axis=a});
+    if(!src||!axis)return;
+    var f=blank();
+    axis.carry.forEach(function(k){f[k]=src[k]});
+    f.confidence="Hypothesis";
+    var blanks=KEYS.filter(function(k){return k!=="confidence"&&axis.carry.indexOf(k)===-1});
+    state.form=f;
+    draft={axis:axis,src:src,srcIndex:rowIndex,blanks:blanks};
+    fillForm();renderChecks();renderGrow();applyHints();
+    var first=document.getElementById("f-"+blanks[0]);
+    if(first){first.focus();if(first.scrollIntoView)first.scrollIntoView({block:"center",behavior:"smooth"})}
+  }
+  function endDraft(){draft=null;renderGrow();applyHints()}
+
+  function draftPrompt(){
+    if(!draft)return "";
+    var src=draft.src;
+    var lines=["You are a senior outbound strategist. Here is one row of a pain to value messaging matrix that already works.",""];
+    KEYS.forEach(function(k,i){lines.push(HEAD[i]+": "+(src[k]||"(blank)"))});
+    lines.push("");
+    lines.push("Task: "+draft.axis.label+".");
+    lines.push(draft.axis.ask(src));
+    lines.push("");
+    lines.push("Keep these fields exactly as they are: "+draft.axis.carry.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ")+".");
+    lines.push("Write these from scratch: "+draft.blanks.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ")+".");
+    lines.push("");
+    lines.push("Rules. Pain must sound like something said out loud on a call, never like website copy. The trigger must name where you would detect it. The cost needs a number, a headcount or a deadline. The email hook is 60 words max, opens on the trigger or the pain, ends on an easy question, and never opens with I hope this finds you well or I am reaching out. The LinkedIn opener is 30 words max. The comeback is a question, not a rebuttal. No em dashes. Set Confidence to Hypothesis.");
+    lines.push("");
+    lines.push("Return 2 candidate rows as TSV, tab separated, 12 columns in this order, no header, no preamble:");
+    lines.push(HEAD.join(" | "));
+    lines.push("");
+    lines.push("Then one line per row: the single question I should ask on a call to confirm or kill it.");
+    return lines.join("\n");
+  }
+
+  function renderGrow(){
+    var z=document.getElementById("growZone");
+    if(draft){
+      z.innerHTML='<div class="grow draft">'+
+        '<p class="axis">Draft from row '+(draft.srcIndex+1)+' / '+draft.axis.label+'</p>'+
+        '<p class="ask">'+esc(draft.axis.ask(draft.src))+'</p>'+
+        '<p>Carried over from the source row, edit anything that no longer fits. The highlighted fields are the ones that have to change. This row stays a hypothesis until you have heard it on a call.</p>'+
+        '<div class="chips"><button class="btn" id="askAi" type="button">Copy a prompt for this</button>'+
+        '<button class="btn ghost" id="dropDraft" type="button">Discard draft</button></div></div>';
+      document.getElementById("askAi").addEventListener("click",function(){copy(draftPrompt(),this)});
+      document.getElementById("dropDraft").addEventListener("click",function(){state.form=blank();fillForm();endDraft();renderChecks()});
+      return;
+    }
+    if(!state.rows.length){z.innerHTML="";return}
+    var opts=state.rows.map(function(r,i){
+      return '<option value="'+i+'">'+(i+1)+" / "+esc((r.icp||"row").slice(0,42))+" / "+esc((r.persona||"").slice(0,28))+'</option>';
+    }).join("");
+    z.innerHTML='<div class="grow"><h3>Grow the matrix from a row you already have</h3>'+
+      '<p>One good row points at five others. Pick a row, pick a direction, and the fields that carry over are filled for you.</p>'+
+      '<select id="growSrc">'+opts+'</select><div class="chips">'+
+      AXES.map(function(a){return '<button class="chip" type="button" data-axis="'+a.id+'">'+a.label+'</button>'}).join("")+
+      '</div></div>';
+    z.querySelector(".chips").addEventListener("click",function(e){
+      var a=e.target.getAttribute("data-axis");if(!a)return;
+      startDraft(+document.getElementById("growSrc").value,a);
+    });
+  }
+
+  /* ---------- import ---------- */
+  function importRows(text){
+    var lines=text.split(/\r?\n/).filter(function(l){return l.trim().indexOf("\t")>-1});
+    var added=0;
+    lines.forEach(function(l){
+      var c=l.split("\t");
+      if(c.length<10)return;
+      if(/^\s*icp\s*$/i.test(c[0]))return;
+      var r=blank();
+      KEYS.forEach(function(k,i){r[k]=(c[i]||"").trim()});
+      if(["Validated","Hypothesis","Retired"].indexOf(r.confidence)===-1)r.confidence="Hypothesis";
+      state.rows.push(r);added++;
+    });
+    return added;
+  }
+
   /* ---------- wiring ---------- */
   KEYS.forEach(function(k){
     var el=document.getElementById("f-"+k);if(!el)return;
-    el.addEventListener("input",function(){state.form[k]=el.value;renderChecks()});
+    el.addEventListener("input",function(){state.form[k]=el.value;renderChecks();if(draft)applyHints()});
     el.addEventListener("change",function(){state.form[k]=el.value;renderChecks()});
   });
   function fillForm(){KEYS.forEach(function(k){var el=document.getElementById("f-"+k);if(el)el.value=state.form[k]})}
 
   document.getElementById("addBtn").addEventListener("click",function(){
     var r={};KEYS.forEach(function(k){r[k]=state.form[k]});
-    state.rows.push(r);save();state.form=blank();fillForm();renderChecks();
+    state.rows.push(r);save();state.form=blank();fillForm();endDraft();renderChecks();
     document.getElementById("f-icp").focus();
   });
   document.getElementById("clearBtn").addEventListener("click",function(){
-    state.form=blank();fillForm();renderChecks();
+    state.form=blank();fillForm();endDraft();renderChecks();
+  });
+  document.getElementById("importBtn").addEventListener("click",function(){
+    var box=document.getElementById("importBox"), n=importRows(box.value);
+    document.getElementById("importMsg").textContent=n?n+(n>1?" rows added":" row added"):"Nothing to import. Rows must be tab separated.";
+    if(n){box.value="";save()}
   });
   document.getElementById("tbody").addEventListener("click",function(e){
     var i=e.target.getAttribute("data-del");
@@ -550,6 +748,6 @@ tr:last-child td{border-bottom:0}
 
   state.rows=store.get();
   document.getElementById("promptText").textContent=promptText();
-  fillForm();renderChecks();renderTable();
+  fillForm();renderChecks();renderTable();renderGrow();applyHints();
 })();
 </script>
