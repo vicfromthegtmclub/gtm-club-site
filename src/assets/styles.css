@@ -154,6 +154,7 @@ h1 {
 }
 .search-input::placeholder { color: var(--dimmer); }
 .search-input:focus { outline: none; border-color: var(--line-hi); }
+.searchhint { margin: 9px 4px 0; font-size: 12.5px; line-height: 1.4; color: var(--dimmest); max-width: 540px; }
 .filter-in { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .filter-label {

@@ -10,6 +10,21 @@
     { "label": "YouTube", "url": "https://www.youtube.com/@TheGTMClub" }
   ],
 
+  "searchSynonyms": {
+    "match": ["matrix"],
+    "map": ["matrix"],
+    "boss": ["vp", "manager", "director", "head"],
+    "exec": ["vp", "executive", "director", "chief"],
+    "followup": ["follow-up", "follow up", "bump"],
+    "outreach": ["email", "sequence", "cold"],
+    "prospect": ["lead", "contact", "persona"],
+    "competitor": ["competition", "alternative", "rival"],
+    "crm": ["hubspot", "salesforce", "duplicate"],
+    "ai": ["prompt", "claude", "agent"],
+    "call": ["cold call", "phone", "script"],
+    "objection": ["pushback", "rebuttal", "reply"]
+  },
+
   "manifesto": {
     "intro": [
       "Go-to-market got loud. Every feed is a screenshot of a number nobody can reproduce, sold by someone who stopped doing the job three years ago.",

@@ -12,6 +12,19 @@
   var input = document.getElementById('q');
   var state = { kind: 'All', source: 'All', q: '' };
 
+  // Curated synonyms (content/data/site.json), so "match" finds the matrix, etc.
+  var SYN = {};
+  var synEl = document.getElementById('synonyms');
+  if (synEl) { try { SYN = JSON.parse(synEl.textContent) || {}; } catch (e) {} }
+
+  // A token matches if it, or any of its synonyms, appears in the card text.
+  function tokenHits(t, hay) {
+    if (hay.indexOf(t) > -1) return true;
+    var syns = SYN[t];
+    if (syns) { for (var i = 0; i < syns.length; i++) { if (hay.indexOf(syns[i]) > -1) return true; } }
+    return false;
+  }
+
   function apply() {
     var toks = state.q.toLowerCase().split(/\s+/).filter(Boolean);
     var shown = 0;
@@ -19,7 +32,7 @@
       var hay = c.dataset.search || '';
       var on = (state.kind === 'All' || c.dataset.kind === state.kind) &&
                (state.source === 'All' || c.dataset.source === state.source) &&
-               toks.every(function (t) { return hay.indexOf(t) > -1; });
+               toks.every(function (t) { return tokenHits(t, hay); });
       c.hidden = !on;
       if (on) shown++;
     });

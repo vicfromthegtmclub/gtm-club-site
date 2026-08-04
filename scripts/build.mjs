@@ -419,6 +419,8 @@ ${hero('Asset library', 'Take it. Ship it today.',
     <div class="searchrow">
       <input type="search" id="q" class="search-input" placeholder="Search the library"
         aria-label="Search the library" autocomplete="off" spellcheck="false">
+      <p class="searchhint">Add words to narrow it down. Each one filters further, and common synonyms work too.</p>
+      <script type="application/json" id="synonyms">${JSON.stringify(data.searchSynonyms || {})}</script>
     </div>
     <div class="filter-in">
       <div class="filter-group">
