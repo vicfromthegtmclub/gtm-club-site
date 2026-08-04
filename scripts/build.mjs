@@ -392,7 +392,8 @@ ${hero('The community', 'The room you post in first.', c.lede)}
 /* --------------------------------------------------------- page: library */
 
 function card(a) {
-  return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}">
+  const search = esc([a.title, a.description, a.kind, a.source, a.author, a.meta].join(' ').toLowerCase());
+  return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}" data-search="${search}">
   <div class="card-top">
     <span class="pill">${esc(a.kind)}</span>
     <span class="dim">${esc(a.updatedLabel)}</span>
@@ -414,20 +415,26 @@ ${hero('Asset library', 'Take it. Ship it today.',
   'Claude skills, repos, sequences, prompts and datasets built by members. Cloned, forked, credited.')}
 
 <section class="filters">
-  <div class="wrap filter-in">
-    <div class="filter-group">
-      <span class="filter-label">Type</span>
-      <div class="pills" role="group" aria-label="Filter assets by type">
-        ${['All', ...kinds].map((k, i) => chip('kind', k, k === 'All' ? 'All' : k + 's', i === 0)).join('\n        ')}
-      </div>
+  <div class="wrap">
+    <div class="searchrow">
+      <input type="search" id="q" class="search-input" placeholder="Search the library"
+        aria-label="Search the library" autocomplete="off" spellcheck="false">
     </div>
-    <div class="filter-group">
-      <span class="filter-label">Source</span>
-      <div class="pills" role="group" aria-label="Filter assets by source">
-        ${['All', ...sources].map((s, i) => chip('source', s, s, i === 0)).join('\n        ')}
+    <div class="filter-in">
+      <div class="filter-group">
+        <span class="filter-label">Type</span>
+        <div class="pills" role="group" aria-label="Filter assets by type">
+          ${['All', ...kinds].map((k, i) => chip('kind', k, k === 'All' ? 'All' : k + 's', i === 0)).join('\n          ')}
+        </div>
       </div>
+      <div class="filter-group">
+        <span class="filter-label">Source</span>
+        <div class="pills" role="group" aria-label="Filter assets by source">
+          ${['All', ...sources].map((s, i) => chip('source', s, s, i === 0)).join('\n          ')}
+        </div>
+      </div>
+      <span class="dim" id="count" aria-live="polite">${assets.length} assets</span>
     </div>
-    <span class="dim" id="count" aria-live="polite">${assets.length} assets</span>
   </div>
 </section>
 
@@ -435,7 +442,7 @@ ${hero('Asset library', 'Take it. Ship it today.',
   <div class="wrap grid" id="grid">
     ${assets.map(card).join('\n    ')}
   </div>
-  <p class="wrap empty" id="empty" hidden>Nothing here yet. Be the first to add one.</p>
+  <p class="wrap empty" id="empty" hidden>No matches. Try fewer words, or clear a filter.</p>
 </section>
 
 <section class="cta">

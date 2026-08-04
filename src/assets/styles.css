@@ -144,6 +144,16 @@ h1 {
   background: rgba(10, 9, 9, .86); backdrop-filter: blur(16px);
   border-top: 1px solid var(--line); border-bottom: 1px solid var(--line);
 }
+.searchrow { margin-bottom: 16px; }
+.search-input {
+  width: 100%; max-width: 540px; display: block;
+  background: var(--surface); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 999px;
+  padding: 12px 20px; font: 400 15px/1.2 var(--body);
+  transition: border-color 120ms ease;
+}
+.search-input::placeholder { color: var(--dimmer); }
+.search-input:focus { outline: none; border-color: var(--line-hi); }
 .filter-in { display: flex; flex-wrap: wrap; align-items: center; gap: 12px 20px; }
 .filter-group { display: flex; flex-wrap: wrap; align-items: center; gap: 8px; }
 .filter-label {
