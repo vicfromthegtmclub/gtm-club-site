@@ -20,11 +20,11 @@ npm run dev      # builds, then serves dist/ on http://localhost:3000
 npm run build    # just build into dist/
 ```
 
-## Deploy to Netlify
+## Deploy to Vercel
 
 1. Push this folder to a GitHub repo
-2. Netlify, Add new site, Import an existing project, pick the repo
-3. Netlify reads `netlify.toml`, so leave the build settings alone
+2. Vercel, Add New, Project, import the repo
+3. Vercel reads `vercel.json`, so leave the build settings alone
 4. Deploy
 
 Every push to `main` rebuilds and redeploys. Pull requests get their own preview
@@ -70,9 +70,9 @@ Filter types are derived from the content. You never edit a list by hand.
 
 ## Submissions
 
-`/submit/` posts to Netlify Forms. Nothing to configure in code. In the Netlify
-dashboard, go to Forms and turn on email notifications, or add an outgoing
-webhook pointing at n8n so submissions land in Notion.
+`/submit/` still carries Netlify Forms markup, which does nothing on Vercel, so
+submissions currently go nowhere. It needs a real handler (a small `api/`
+function like `api/log-domain.js`, or a form service) before it works again.
 
 File uploads count against your plan's form storage, so if people start sending
 large datasets, switch the file field for a link field.

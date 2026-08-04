@@ -1,7 +1,7 @@
 // Minimal ZIP writer, standard library only.
-// The build used to shell out to the `zip` binary. Netlify's build image has it,
-// other hosts may not, and a missing binary silently dropped every download link.
-// This keeps output identical everywhere.
+// The build used to shell out to the `zip` binary. Not every host's build image
+// has it, and a missing binary silently dropped every download link. Doing it in
+// Node keeps output identical everywhere.
 import fs from 'node:fs';
 import path from 'node:path';
 import zlib from 'node:zlib';

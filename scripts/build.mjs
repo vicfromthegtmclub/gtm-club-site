@@ -1,5 +1,5 @@
 // Builds the whole GTM Club site into /dist as plain static HTML.
-// Run: npm run build   (Netlify runs this automatically on every push)
+// Run: npm run build   (Vercel runs this automatically on every push)
 import fs from 'node:fs';
 import path from 'node:path';
 import crypto from 'node:crypto';
@@ -9,7 +9,7 @@ const ROOT = path.resolve(import.meta.dirname, '..');
 const DIST = path.join(ROOT, 'dist');
 const SKILLS = path.join(ROOT, 'content/skills');
 const EVENTS = path.join(ROOT, 'content/events');
-const SITE = process.env.URL || 'https://gtmclub.netlify.app'; // Netlify sets URL at build time
+const SITE = process.env.SITE_URL || 'https://www.thegtmclub.com'; // canonical/og/sitemap base; override with SITE_URL
 
 const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/data/site.json'), 'utf8'));
 

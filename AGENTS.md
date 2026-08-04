@@ -1,8 +1,8 @@
 # GTM Club site
 
 Static site for GTM Club. Zero dependencies. `scripts/build.mjs` reads the
-content files and writes plain HTML into `dist/`. Netlify and Vercel both run
-the build on every push to `main`.
+content files and writes plain HTML into `dist/`. Hosted on **Vercel**, which
+runs the build on every push to `main`.
 
 ## Verify before committing
 
@@ -30,7 +30,7 @@ localhost:3000 for a visual check.
 | `src/assets/theme.js` | Light/dark nav toggle. Persists the choice in the `gtm-theme` localStorage key |
 | `scripts/build.mjs` | Page templates and build logic |
 | `vercel.json` | Vercel build config and the immutable cache headers on `/assets/*` |
-| `api/*.js` | Vercel serverless functions (**Vercel only**, not Netlify). No npm deps; they call the KV REST API with `fetch`. `log-domain` records domains from the matrix tool; `domains` reads them back behind `?key=<LOG_SECRET>` |
+| `api/*.js` | Vercel serverless functions. No npm deps; they call the KV REST API with `fetch`, reading secrets (KV tokens, `LOG_SECRET`) from Vercel env vars. `log-domain` records domains from the matrix tool; `domains` reads them back behind `?key=<LOG_SECRET>` |
 | `dist/` | Generated. Never edit, never commit |
 
 ## Adding a library asset
@@ -94,12 +94,13 @@ sync. Default stays dark unless asked otherwise.
 
 ## Deploys
 
-Both **Netlify and Vercel** build from `main` (Vercel via `vercel.json`), so a
-push to `main` publishes to production on both. Push any other branch and
-Netlify builds it to its own preview URL, which is the safe way to review
-anything structural. Rollback is Netlify, Deploys, pick a previous one, Publish
-deploy.
+Hosted on **Vercel** (`vercel.json` configures the build). A push to `main`
+publishes to production; every branch or PR gets its own Vercel preview
+deployment, which is the safe way to review anything structural. Rollback is
+Vercel, Deployments, open a previous one, Promote to Production. Secrets live in
+Vercel env vars, never in the repo.
 
-The submit form is Netlify Forms. The form must stay in the static HTML with
-`data-netlify="true"`, `name="asset"`, and the hidden `form-name` field, or
-detection breaks silently.
+**Known gap:** the `/submit/` form still carries Netlify Forms markup
+(`data-netlify="true"`, `name="asset"`, hidden `form-name`), which does nothing
+on Vercel, so asset submissions currently go nowhere. It needs a real handler (a
+small `api/` function like `log-domain`, or a form service) before it works.
