@@ -30,6 +30,7 @@ localhost:3000 for a visual check.
 | `src/assets/theme.js` | Light/dark nav toggle. Persists the choice in the `gtm-theme` localStorage key |
 | `scripts/build.mjs` | Page templates and build logic |
 | `vercel.json` | Vercel build config and the immutable cache headers on `/assets/*` |
+| `api/*.js` | Vercel serverless functions (**Vercel only**, not Netlify). No npm deps; they call the KV REST API with `fetch`. `log-domain` records domains from the matrix tool; `domains` reads them back behind `?key=<LOG_SECRET>` |
 | `dist/` | Generated. Never edit, never commit |
 
 ## Adding a library asset

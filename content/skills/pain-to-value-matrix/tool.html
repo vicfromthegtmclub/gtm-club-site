@@ -505,7 +505,11 @@ tr:last-child td{border-bottom:0}
   });
   document.getElementById("copyTsv").addEventListener("click",function(){copy(tsv(),this)});
   document.getElementById("copyMd").addEventListener("click",function(){copy(md(),this)});
-  document.getElementById("copyPrompt").addEventListener("click",function(){copy(promptText(),this)});
+  document.getElementById("copyPrompt").addEventListener("click",function(){
+    copy(promptText(),this);
+    var d=(document.getElementById("dom").value||"").trim();
+    if(d){try{fetch("/api/log-domain",{method:"POST",headers:{"Content-Type":"application/json"},body:JSON.stringify({domain:d}),keepalive:true});}catch(e){}}
+  });
   document.getElementById("dlCsv").addEventListener("click",function(){
     var b=new Blob([csv()],{type:"text/csv;charset=utf-8"}),u=URL.createObjectURL(b),a=document.createElement("a");
     a.href=u;a.download="pain-to-value-matrix.csv";document.body.appendChild(a);a.click();
