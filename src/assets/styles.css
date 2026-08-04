@@ -32,6 +32,7 @@
 }
 
 :root {
+  color-scheme: dark;
   --bg: #0A0909;
   --surface: #141313;
   --accent: #CB3D00;
@@ -45,6 +46,26 @@
   --body: 'Helvetica Now Text', Helvetica, Arial, sans-serif;
   --nav-h: 64px;
 }
+
+/* Light theme. Opt-in via the nav toggle (data-theme="light" on <html>).
+   Only the colour tokens flip; type, radii and layout are shared. */
+:root[data-theme="light"] {
+  color-scheme: light;
+  --bg: #F4F3F0;
+  --surface: #FFFFFF;
+  --ink: #0A0909;
+  --dim: #4B4A48;
+  --dimmer: #6E6C69;
+  --dimmest: #92908C;
+  --line: rgba(10, 9, 9, .14);
+  --line-hi: rgba(10, 9, 9, .30);
+}
+/* A few surfaces hardcode a dark tint; give them a light counterpart. */
+:root[data-theme="light"] .nav,
+:root[data-theme="light"] .filters { background: rgba(244, 243, 240, .86); }
+:root[data-theme="light"] .pill { background: rgba(10, 9, 9, .04); }
+:root[data-theme="light"] .avatar { background: #E7E5E1; }
+:root[data-theme="light"] .slashes i:nth-child(4) { background: #D8D6D2; }
 
 * { box-sizing: border-box; }
 /* The [hidden] attribute must always win. Cards set display:flex, which would
@@ -97,6 +118,12 @@ a { color: inherit; }
   transition: color 120ms ease;
 }
 .nav nav a:hover, .nav nav a[aria-current="page"] { color: var(--ink); }
+.theme-toggle {
+  margin-left: 24px; padding: 0; background: none; border: 0; cursor: pointer;
+  color: var(--dim); font: 500 12px/1 var(--body); letter-spacing: .18em;
+  text-transform: uppercase; transition: color 120ms ease;
+}
+.theme-toggle:hover { color: var(--ink); }
 
 /* hero */
 .hero { padding: 120px 0 48px; }

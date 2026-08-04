@@ -98,9 +98,10 @@ const NAV = [
 
 function layout({ title, description, body, canonical, current }) {
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" data-theme="dark">
 <head>
 <meta charset="utf-8">
+<script>(function(){try{if(localStorage.getItem('gtm-theme')==='light')document.documentElement.setAttribute('data-theme','light')}catch(e){}})();</script>
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
@@ -125,6 +126,7 @@ function layout({ title, description, body, canonical, current }) {
       ${NAV.map(([href, label]) =>
         `<a href="${href}"${href === current ? ' aria-current="page"' : ''}>${label}</a>`).join('\n      ')}
     </nav>
+    <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Light</button>
   </div>
 </header>
 <main id="main">
@@ -137,6 +139,7 @@ ${body}
   </nav>
   <p>GTM Club. Assets are shared by members, credited to their authors.</p>
 </footer>
+<script src="${THEME_JS_HREF}" defer></script>
 </body>
 </html>`;
 }
@@ -646,6 +649,7 @@ function fingerprint(name) {
 }
 const CSS_HREF = fingerprint('styles.css');
 const FILTER_JS_HREF = fingerprint('filter.js');
+const THEME_JS_HREF = fingerprint('theme.js');
 
 const assets = readAssets();
 const events = readEvents();
