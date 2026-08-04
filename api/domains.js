@@ -15,7 +15,7 @@ function kv(command) {
 }
 
 export default async function handler(req, res) {
-  if (!SECRET || req.query.key !== SECRET) { res.status(401).json({ error: 'unauthorized' }); return; }
+  if (!SECRET || req.query.key !== SECRET) { res.status(401).json({ error: 'unauthorized', configured: !!SECRET }); return; }
   if (!KV_URL || !KV_TOKEN) { res.status(200).json({ error: 'store not configured' }); return; }
   const data = await kv(['LRANGE', KEY, '0', '-1']);
   const items = (data.result || []).map((s) => { try { return JSON.parse(s); } catch { return { raw: s }; } });
