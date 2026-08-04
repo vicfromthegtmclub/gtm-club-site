@@ -158,6 +158,23 @@ tr:last-child td{border-bottom:0}
 .foot{padding:40px 0 60px;border-top:1px solid var(--line);color:var(--faint);font-size:13px;display:flex;justify-content:space-between;gap:16px;flex-wrap:wrap}
 .foot b{color:var(--text);font-weight:600}
 @media(prefers-reduced-motion:reduce){*{transition:none!important;animation:none!important}}
+
+/* info dot + hover/focus tooltip (transparency: we log the domain on copy) */
+.info{
+  display:inline-flex;align-items:center;justify-content:center;flex:none;
+  width:19px;height:19px;border-radius:50%;border:1px solid var(--line);
+  color:var(--faint);font-family:var(--mono);font-size:11px;font-style:normal;
+  cursor:help;position:relative;user-select:none
+}
+.info:hover,.info:focus{color:var(--text);border-color:var(--muted);outline:none}
+.info::after{
+  content:attr(data-tip);position:absolute;bottom:calc(100% + 9px);right:-6px;
+  width:210px;padding:9px 11px;border-radius:9px;background:var(--surface-2);
+  border:1px solid var(--line);color:var(--muted);font-family:var(--body);
+  font-size:12px;line-height:1.45;text-align:left;
+  opacity:0;visibility:hidden;transition:opacity .12s ease;pointer-events:none;z-index:6
+}
+.info:hover::after,.info:focus::after{opacity:1;visibility:visible}
 </style>
 
 <div class="wrap">
@@ -304,8 +321,9 @@ tr:last-child td{border-bottom:0}
           <label for="dom">Your domain</label>
           <input type="text" id="dom" placeholder="yourcompany.com">
         </div>
-        <div class="field" style="margin:0;display:flex;align-items:flex-end">
+        <div class="field" style="margin:0;display:flex;align-items:flex-end;gap:10px">
           <button class="btn" id="copyPrompt" type="button">Copy the prompt</button>
+          <span class="info" tabindex="0" aria-label="We'll need to store your domain name on submission." data-tip="We'll need to store your domain name on submission.">i</span>
         </div>
       </div>
       <pre id="promptText"></pre>
