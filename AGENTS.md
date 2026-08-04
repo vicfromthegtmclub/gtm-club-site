@@ -26,9 +26,34 @@ localhost:3000 for a visual check.
 | `content/data/site.json` | Copy for Manifesto, Paths, Community, plus the Apply and Circle links |
 | `src/assets/styles.css` | All styling. Design tokens are CSS variables at the top |
 | `src/assets/fonts/` | Druk Wide + Helvetica Now, subset to Latin. Regenerate with `scripts/fonts.sh` |
-| `src/assets/filter.js` | Client-side filtering for the library grid (two facets, type and source, combined with AND) |
+| `src/assets/filter.js` | Client-side search + filtering for the library grid (a text query plus the type and source facets, all combined with AND) |
 | `scripts/build.mjs` | Page templates and build logic |
 | `dist/` | Generated. Never edit, never commit |
+
+## Adding a library asset
+
+Whenever you add an asset to the library, it is not done until it is browsable
+and searchable. Run this checklist:
+
+1. **Create `content/skills/<slug>/SKILL.md`** with full frontmatter:
+   - `title` — sentence case, acronyms kept (e.g. "ICP definer").
+   - `kind` — `Skill`, `Repo`, `Tool`, `Sequence`, `Prompt` or `Dataset`. Sets
+     the type facet, so a new kind adds a filter chip automatically.
+   - `description` — one crisp line, no em dashes. This is the card copy **and**
+     the main search signal, so make it descriptive.
+   - `source` — `Member` (default, GTM Club / member built) or `Lemskills`, etc.
+   - `author`, `meta` (optional), `updated` (`YYYY-MM-DD`, sorts newest first).
+2. **For a `Tool`**, also add `tool.html`: self-contained, GTM Club design
+   tokens, a `← Library` link back to `/library/`, and the `gtm-theme`
+   localStorage sync (read on load, persist on toggle) so it matches the site.
+3. **Make it findable.** The card's hidden `data-search` string is built from
+   title, description, kind, source and author, so a good title and description
+   already make it searchable. Then add likely alternate words and typos to
+   `searchSynonyms` in `content/data/site.json` (key = what a user types, value =
+   what to also match), so the asset surfaces under natural queries.
+4. **Build and verify.** Run `npm run build`, confirm the asset count went up,
+   and search the running site for a couple of natural queries to confirm the
+   new asset appears (and only when it should).
 
 ## Rules
 
