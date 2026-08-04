@@ -151,7 +151,12 @@ const hero = (eyebrow, h1, lede, cta) => `
     <h1>${esc(h1)}</h1>
     ${lede ? `<p class="lede">${esc(lede)}</p>` : ''}
     ${cta ? `<p class="hero-cta"><a class="btn btn-solid" href="${esc(cta.href)}">${esc(cta.label)}</a></p>` : ''}
-  </div>
+  </div>${lede ? `
+  <script>/* cap the lede to the title's widest wrapped line, so it ends where the title does */
+(function(){var s=document.currentScript,h=s.closest('.hero'),t=h.querySelector('h1'),l=h.querySelector('.lede');if(!t||!l)return;
+function fit(){var r=document.createRange();r.selectNodeContents(t);var m=0,c=r.getClientRects();for(var i=0;i<c.length;i++)if(c[i].width>m)m=c[i].width;l.style.maxWidth=Math.ceil(m)+'px';}
+fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+var to;addEventListener('resize',function(){clearTimeout(to);to=setTimeout(fit,120);});})();</script>` : ''}
 </section>`;
 
 const sectionLabel = t => `<p class="section-label">${esc(t)}</p>`;
