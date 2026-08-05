@@ -26,6 +26,7 @@ localhost:3000 for a visual check.
 | `content/data/site.json` | Copy for Manifesto, Paths, Community, the Apply/Circle links, the footer socials, and the library `searchSynonyms` map |
 | `src/assets/styles.css` | All styling. Design tokens are CSS variables at the top; light theme overrides under `:root[data-theme="light"]` |
 | `src/assets/fonts/` | Druk Wide + Helvetica Now, subset to Latin. Regenerate with `scripts/fonts.sh` |
+| `src/static/` | Files copied verbatim to the site root. Holds `admin/index.html`, the key-gated dashboard at `/admin/` that reads `api/submissions` + `api/domains` |
 | `src/assets/filter.js` | Client-side search + filtering for the library grid (a text query plus the type and source facets, all combined with AND) |
 | `src/assets/theme.js` | Light/dark nav toggle. Persists the choice in the `gtm-theme` localStorage key |
 | `scripts/build.mjs` | Page templates and build logic |

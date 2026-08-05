@@ -1,0 +1,176 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>Admin · GTM Club</title>
+<link rel="icon" href="/assets/logo-96.png">
+<style>
+@font-face{font-family:'Druk Wide';src:url('/assets/fonts/druk-wide-bold.woff2') format('woff2');font-weight:700;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-400.woff2') format('woff2');font-weight:400;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-500.woff2') format('woff2');font-weight:500;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-700.woff2') format('woff2');font-weight:700;font-display:swap}
+:root{
+  --bg:#0A0909;--surface:#141313;--surface-2:#1F1E1C;--line:rgba(255,255,255,.12);--line-hi:rgba(255,255,255,.24);
+  --ink:#fff;--dim:#A9A9A9;--dimmer:#848484;--dimmest:#6E6C69;--accent:#CB3D00;
+  --body:'Helvetica Now Text',Helvetica,Arial,sans-serif;--display:'Druk Wide','Arial Black',sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:var(--body);font-size:15px;line-height:1.5;-webkit-font-smoothing:antialiased}
+a{color:inherit}
+.wrap{max-width:1100px;margin:0 auto;padding:0 24px}
+header{position:sticky;top:0;background:rgba(10,9,9,.86);backdrop-filter:blur(16px);border-bottom:1px solid var(--line);z-index:10}
+.bar{display:flex;align-items:center;gap:16px;height:60px}
+.brand{display:flex;align-items:center;gap:10px;font-weight:700;letter-spacing:.02em}
+.brand img{width:26px;height:26px;border-radius:6px}
+.badge{font-family:var(--mono);font-size:11px;letter-spacing:.14em;text-transform:uppercase;color:var(--dimmest);border:1px solid var(--line);border-radius:99px;padding:5px 10px}
+.bar .right{margin-left:auto;display:flex;gap:10px;align-items:center}
+.btn{background:none;border:1px solid var(--line);color:var(--dim);border-radius:99px;padding:8px 14px;font:500 12px/1 var(--body);letter-spacing:.06em;text-transform:uppercase;cursor:pointer;text-decoration:none;display:inline-block;transition:.12s}
+.btn:hover{color:var(--ink);border-color:var(--line-hi)}
+.btn.solid{background:var(--accent);border-color:var(--accent);color:#fff}
+.btn.solid:hover{filter:brightness(1.08)}
+h1{font-family:var(--display);text-transform:uppercase;font-size:clamp(28px,4vw,44px);letter-spacing:-.01em;margin:36px 0 6px}
+.sub{color:var(--dim);margin:0 0 28px}
+.tabs{display:flex;gap:8px;margin:0 0 22px}
+.tab{background:none;border:1px solid var(--line);color:var(--dim);border-radius:99px;padding:9px 16px;font:500 13px/1 var(--body);cursor:pointer}
+.tab.on{background:var(--ink);color:var(--bg);border-color:var(--ink)}
+.gate{max-width:420px;margin:70px auto;text-align:center}
+.gate input{width:100%;background:var(--surface);border:1px solid var(--line);color:var(--ink);border-radius:10px;padding:12px 14px;font:400 15px var(--body);margin:14px 0}
+.gate input:focus{outline:none;border-color:var(--line-hi)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:14px}
+.card .ct{display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.pill{font-family:var(--mono);font-size:10px;letter-spacing:.1em;text-transform:uppercase;border:1px solid var(--line);border-radius:99px;padding:3px 8px;color:var(--dim)}
+.card h3{margin:0;font-size:17px;font-weight:600}
+.card .meta{color:var(--dimmer);font-size:13px;margin:6px 0 0}
+.card .desc{margin:12px 0 0;color:var(--dim)}
+.card .details{margin:10px 0 0;color:var(--dim);font-size:14px;white-space:pre-wrap}
+.link{color:var(--accent);text-decoration:none;word-break:break-all}
+.link:hover{text-decoration:underline}
+table{width:100%;border-collapse:collapse;font-size:14px}
+th{text-align:left;font-family:var(--mono);font-size:10.5px;letter-spacing:.09em;text-transform:uppercase;color:var(--dimmest);font-weight:400;padding:10px 12px;border-bottom:1px solid var(--line)}
+td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--dim)}
+td.n{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
+.stat{display:flex;gap:28px;align-items:flex-end;margin:0 0 18px}
+.stat b{font-family:var(--display);font-size:28px;display:block;line-height:1.1}
+.stat span{color:var(--dimmest);font-family:var(--mono);font-size:11px;letter-spacing:.1em;text-transform:uppercase}
+.stat .grow{margin-left:auto}
+.muted{color:var(--dimmest)}
+.empty{padding:40px;text-align:center;color:var(--dimmest)}
+</style>
+</head>
+<body>
+<header><div class="wrap bar">
+  <span class="brand"><img src="/assets/logo-96.png" alt=""> GTM Club <span class="badge">Admin</span></span>
+  <span class="right">
+    <button class="btn" id="refresh" hidden>Refresh</button>
+    <button class="btn" id="signout" hidden>Sign out</button>
+  </span>
+</div></header>
+
+<main class="wrap">
+  <div id="gate" class="gate" hidden>
+    <h1>Admin</h1>
+    <p class="sub">Paste the access key to view submissions and domains.</p>
+    <input id="keyInput" type="password" placeholder="Access key" autocomplete="off">
+    <button class="btn solid" id="unlock" style="width:100%">Unlock</button>
+    <p class="muted" id="gateErr" style="margin-top:12px"></p>
+  </div>
+
+  <div id="app" hidden>
+    <h1>Dashboard</h1>
+    <p class="sub" id="updated"></p>
+    <div class="tabs">
+      <button class="tab on" id="tabSubs" type="button">Submissions</button>
+      <button class="tab" id="tabDoms" type="button">Domains</button>
+    </div>
+
+    <section id="subsPanel">
+      <div class="stat">
+        <div><b id="subsCount">0</b><span>submissions</span></div>
+        <a class="btn grow" id="subsCsv" target="_blank" rel="noopener">Download CSV</a>
+      </div>
+      <div id="subsList"></div>
+    </section>
+
+    <section id="domsPanel" hidden>
+      <div class="stat">
+        <div><b id="domsTotal">0</b><span>prompt copies</span></div>
+        <div><b id="domsUnique">0</b><span>unique domains</span></div>
+        <a class="btn grow" id="domsCsv" target="_blank" rel="noopener">Download CSV</a>
+      </div>
+      <table><thead><tr><th>Domain</th><th>Times</th><th>Last seen</th></tr></thead><tbody id="domsBody"></tbody></table>
+    </section>
+  </div>
+</main>
+
+<script>
+(function(){
+  var STORE='gtm-admin-key';
+  function $(id){return document.getElementById(id)}
+  var params=new URLSearchParams(location.search);
+  var key=params.get('key')||sessionStorage.getItem(STORE)||'';
+  if(params.get('key')){history.replaceState(null,'',location.pathname);}
+
+  function esc(s){return (s==null?'':String(s)).replace(/[&<>"]/g,function(c){return {'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]})}
+  function fmt(ts){if(!ts)return '';var d=new Date(ts);if(isNaN(d.getTime()))return esc(ts);return d.toLocaleString('en-GB',{year:'numeric',month:'short',day:'2-digit',hour:'2-digit',minute:'2-digit'})}
+
+  function showGate(msg){$('app').hidden=true;$('gate').hidden=false;$('refresh').hidden=true;$('signout').hidden=true;$('gateErr').textContent=msg||'';}
+  function showApp(){$('gate').hidden=true;$('app').hidden=false;$('refresh').hidden=false;$('signout').hidden=false;}
+
+  function api(path){return fetch(path+'?key='+encodeURIComponent(key)).then(function(r){if(r.status===401)throw new Error('401');if(!r.ok)throw new Error('HTTP '+r.status);return r.json();});}
+
+  function load(){
+    if(!key){showGate();return;}
+    Promise.all([api('/api/submissions'),api('/api/domains')]).then(function(res){
+      sessionStorage.setItem(STORE,key);
+      showApp();
+      renderSubs((res[0]&&res[0].submissions)||[]);
+      renderDoms((res[1]&&res[1].domains)||[]);
+      $('updated').textContent='Updated '+fmt(new Date().toISOString());
+      $('subsCsv').href='/api/submissions?format=csv&key='+encodeURIComponent(key);
+      $('domsCsv').href='/api/domains?format=csv&key='+encodeURIComponent(key);
+    }).catch(function(e){
+      if(String(e.message)==='401'){key='';sessionStorage.removeItem(STORE);showGate('That key was not accepted.');}
+      else showGate('Could not load: '+e.message);
+    });
+  }
+
+  function renderSubs(items){
+    items=items.slice().reverse();
+    $('subsCount').textContent=items.length;
+    if(!items.length){$('subsList').innerHTML='<div class="empty">No submissions yet.</div>';return;}
+    $('subsList').innerHTML=items.map(function(s){
+      return '<div class="card"><div class="ct"><h3>'+esc(s.title||'(untitled)')+'</h3>'+(s.kind?'<span class="pill">'+esc(s.kind)+'</span>':'')+'</div>'+
+        '<p class="meta">'+esc(s.author||'')+(s.email?' &middot; <a class="link" href="mailto:'+esc(s.email)+'">'+esc(s.email)+'</a>':'')+' &middot; '+fmt(s.ts)+'</p>'+
+        (s.description?'<p class="desc">'+esc(s.description)+'</p>':'')+
+        (s.details?'<p class="details">'+esc(s.details)+'</p>':'')+
+        (s.link?'<p class="meta"><a class="link" href="'+esc(s.link)+'" target="_blank" rel="noopener">'+esc(s.link)+'</a></p>':'')+
+        '</div>';
+    }).join('');
+  }
+
+  function renderDoms(items){
+    var map={};
+    items.forEach(function(d){var k=d.domain||d.raw||'';if(!k)return;if(!map[k])map[k]={domain:k,count:0,last:''};map[k].count++;if(!map[k].last||(d.ts||'')>map[k].last)map[k].last=d.ts||'';});
+    var rows=Object.keys(map).map(function(k){return map[k]}).sort(function(a,b){return b.count-a.count||(b.last>a.last?1:-1)});
+    $('domsTotal').textContent=items.length;
+    $('domsUnique').textContent=rows.length;
+    if(!rows.length){$('domsBody').innerHTML='<tr><td colspan="3"><div class="empty">No domains yet.</div></td></tr>';return;}
+    $('domsBody').innerHTML=rows.map(function(r){return '<tr><td>'+esc(r.domain)+'</td><td class="n">'+r.count+'</td><td>'+fmt(r.last)+'</td></tr>'}).join('');
+  }
+
+  $('tabSubs').addEventListener('click',function(){this.classList.add('on');$('tabDoms').classList.remove('on');$('subsPanel').hidden=false;$('domsPanel').hidden=true;});
+  $('tabDoms').addEventListener('click',function(){this.classList.add('on');$('tabSubs').classList.remove('on');$('domsPanel').hidden=false;$('subsPanel').hidden=true;});
+  $('refresh').addEventListener('click',load);
+  $('signout').addEventListener('click',function(){key='';sessionStorage.removeItem(STORE);showGate();});
+  $('unlock').addEventListener('click',function(){key=$('keyInput').value.trim();if(key)load();});
+  $('keyInput').addEventListener('keydown',function(e){if(e.key==='Enter'){key=this.value.trim();if(key)load();}});
+
+  load();
+})();
+</script>
+</body>
+</html>
