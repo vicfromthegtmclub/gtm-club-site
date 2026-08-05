@@ -155,7 +155,7 @@ const hero = (eyebrow, h1, lede, cta) => `
   <script>/* cap the lede to the title's widest wrapped line, so it ends where the title does */
 (function(){var s=document.currentScript,h=s.closest('.hero'),t=h.querySelector('h1'),l=h.querySelector('.lede');if(!t||!l)return;
 function fit(){var r=document.createRange();r.selectNodeContents(t);var m=0,c=r.getClientRects();for(var i=0;i<c.length;i++)if(c[i].width>m)m=c[i].width;l.style.maxWidth=Math.ceil(m)+'px';}
-fit();if(document.fonts&&document.fonts.ready)document.fonts.ready.then(fit);
+if(document.fonts&&document.fonts.ready){document.fonts.ready.then(fit);}else{fit();}
 var to;addEventListener('resize',function(){clearTimeout(to);to=setTimeout(fit,120);});})();</script>` : ''}
 </section>`;
 
@@ -281,6 +281,46 @@ ${hero('The courses', 'Learn the craft. On the job.', a.lede,
   return layout({
     title: 'Paths. Live GTM courses taught by operators. GTM Club',
     description: 'Four live tracks on outbound, RevOps, pipeline math and AI for GTM. Every module ends with a working artifact.',
+    canonical: '/paths/', current: '/paths/', body,
+  });
+}
+
+// Shown at /paths/ until PATHS_LIVE is true. The full pathsPage() above is kept
+// intact for when the tracks launch; flip the flag near the write() call to swap.
+function pathsWaitlistPage() {
+  const body = `
+${hero('Paths', 'Coming soon.',
+  'Live GTM courses taught by operators, each one ending with a working artifact you keep. We are building the first tracks now. Join the waitlist and we will email you the moment they open.')}
+
+<section class="band">
+  <div class="wrap">
+    <form class="waitlist" method="POST" action="/api/waitlist">
+      <p class="hp"><label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off"></label></p>
+      <input type="email" name="email" required placeholder="you@company.com" aria-label="Your email">
+      <button class="btn btn-solid" type="submit">Join the waitlist</button>
+    </form>
+    <p class="waitlist-done" id="waitlistDone" hidden>You are on the list. We will email you when Paths goes live.</p>
+    <p class="waitlist-note">One email when it launches. Nothing else.</p>
+  </div>
+</section>
+<script>
+(function(){
+  var f=document.querySelector('.waitlist'), done=document.getElementById('waitlistDone');
+  function ok(){ if(f){f.hidden=true;} if(done){done.hidden=false;} }
+  if(new URLSearchParams(location.search).get('joined')){ ok(); history.replaceState(null,'',location.pathname); }
+  if(f){ f.addEventListener('submit',function(e){
+    e.preventDefault();
+    var email=(f.querySelector('input[name=email]').value||'').trim();
+    if(!email){ return; }
+    var hp=(f.querySelector('input[name="company-website"]').value||'');
+    fetch('/api/waitlist',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email:email,'company-website':hp})}).catch(function(){});
+    ok();
+  }); }
+})();
+</script>`;
+  return layout({
+    title: 'Paths are coming. GTM Club',
+    description: 'Live GTM courses taught by operators. Join the waitlist and we will email you when Paths goes live.',
     canonical: '/paths/', current: '/paths/', body,
   });
 }
@@ -685,7 +725,8 @@ for (const a of assets) {
 }
 
 write('.', homePage());
-write('paths', pathsPage());
+const PATHS_LIVE = false; // flip to true when the tracks launch, to serve the full pathsPage()
+write('paths', PATHS_LIVE ? pathsPage() : pathsWaitlistPage());
 write('events', eventsPage(events));
 write('community', communityPage());
 write('library', libraryPage(assets, kinds, sources));

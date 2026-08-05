@@ -85,6 +85,7 @@ td.n{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
     <div class="tabs">
       <button class="tab on" id="tabSubs" type="button">Submissions</button>
       <button class="tab" id="tabDoms" type="button">Domains</button>
+      <button class="tab" id="tabWait" type="button">Waitlist</button>
     </div>
 
     <section id="subsPanel">
@@ -102,6 +103,14 @@ td.n{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
         <a class="btn grow" id="domsCsv" target="_blank" rel="noopener">Download CSV</a>
       </div>
       <table><thead><tr><th>Domain</th><th>Times</th><th>Last seen</th></tr></thead><tbody id="domsBody"></tbody></table>
+    </section>
+
+    <section id="waitPanel" hidden>
+      <div class="stat">
+        <div><b id="waitCount">0</b><span>on the waitlist</span></div>
+        <a class="btn grow" id="waitCsv" target="_blank" rel="noopener">Download CSV</a>
+      </div>
+      <table><thead><tr><th>Email</th><th>Joined</th></tr></thead><tbody id="waitBody"></tbody></table>
     </section>
   </div>
 </main>
@@ -124,14 +133,16 @@ td.n{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
 
   function load(){
     if(!key){showGate();return;}
-    Promise.all([api('/api/submissions'),api('/api/domains')]).then(function(res){
+    Promise.all([api('/api/submissions'),api('/api/domains'),api('/api/waitlist')]).then(function(res){
       sessionStorage.setItem(STORE,key);
       showApp();
       renderSubs((res[0]&&res[0].submissions)||[]);
       renderDoms((res[1]&&res[1].domains)||[]);
+      renderWait((res[2]&&res[2].waitlist)||[]);
       $('updated').textContent='Updated '+fmt(new Date().toISOString());
       $('subsCsv').href='/api/submissions?format=csv&key='+encodeURIComponent(key);
       $('domsCsv').href='/api/domains?format=csv&key='+encodeURIComponent(key);
+      $('waitCsv').href='/api/waitlist?format=csv&key='+encodeURIComponent(key);
     }).catch(function(e){
       if(String(e.message)==='401'){key='';sessionStorage.removeItem(STORE);showGate('That key was not accepted.');}
       else showGate('Could not load: '+e.message);
@@ -162,8 +173,16 @@ td.n{font-variant-numeric:tabular-nums;color:var(--ink);font-weight:600}
     $('domsBody').innerHTML=rows.map(function(r){return '<tr><td>'+esc(r.domain)+'</td><td class="n">'+r.count+'</td><td>'+fmt(r.last)+'</td></tr>'}).join('');
   }
 
-  $('tabSubs').addEventListener('click',function(){this.classList.add('on');$('tabDoms').classList.remove('on');$('subsPanel').hidden=false;$('domsPanel').hidden=true;});
-  $('tabDoms').addEventListener('click',function(){this.classList.add('on');$('tabSubs').classList.remove('on');$('domsPanel').hidden=false;$('subsPanel').hidden=true;});
+  function renderWait(items){
+    $('waitCount').textContent=items.length;
+    if(!items.length){$('waitBody').innerHTML='<tr><td colspan="2"><div class="empty">No one on the waitlist yet.</div></td></tr>';return;}
+    $('waitBody').innerHTML=items.map(function(w){return '<tr><td><a class="link" href="mailto:'+esc(w.email)+'">'+esc(w.email)+'</a></td><td>'+fmt(w.ts)+'</td></tr>'}).join('');
+  }
+
+  var TABS=[['tabSubs','subsPanel'],['tabDoms','domsPanel'],['tabWait','waitPanel']];
+  TABS.forEach(function(t){$(t[0]).addEventListener('click',function(){
+    TABS.forEach(function(x){$(x[0]).classList.toggle('on',x[0]===t[0]);$(x[1]).hidden=(x[0]!==t[0]);});
+  });});
   $('refresh').addEventListener('click',load);
   $('signout').addEventListener('click',function(){key='';sessionStorage.removeItem(STORE);showGate();});
   $('unlock').addEventListener('click',function(){key=$('keyInput').value.trim();if(key)load();});
