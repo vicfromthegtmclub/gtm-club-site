@@ -47,8 +47,10 @@ and searchable. Run this checklist:
    - `source` — `Member` (default, GTM Club / member built) or `Lemskills`, etc.
    - `author`, `meta` (optional), `updated` (`YYYY-MM-DD`, sorts newest first).
 2. **For a `Tool`**, also add `tool.html`: self-contained, GTM Club design
-   tokens, a `← Library` link back to `/library/`, and the `gtm-theme`
-   localStorage sync (read on load, persist on toggle) so it matches the site.
+   tokens, a `← Library` link back to `/library/`, the `gtm-theme` localStorage
+   sync (read on load, persist on toggle), and `<link rel="icon"
+   href="/assets/logo-96.png">` in the head (tool pages skip `layout()`, so they
+   need the favicon themselves or the tab shows a blank globe).
    Check it on mobile: give any two-column grid `minmax(0, 1fr)` tracks and
    `min-width: 0` so wide content cannot force horizontal scroll, and gate any
    `position: sticky` panel to desktop or it will overlap the stacked content.
