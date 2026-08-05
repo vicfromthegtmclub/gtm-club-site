@@ -625,22 +625,55 @@ tr:last-child td{border-bottom:0}
   function draftPrompt(){
     if(!draft)return "";
     var src=draft.src;
-    var lines=["You are a senior outbound strategist. Here is one row of a pain to value messaging matrix that already works.",""];
-    KEYS.forEach(function(k,i){lines.push(HEAD[i]+": "+(src[k]||"(blank)"))});
-    lines.push("");
-    lines.push("Task: "+draft.axis.label+".");
-    lines.push(draft.axis.ask(src));
-    lines.push("");
-    lines.push("Keep these fields exactly as they are: "+draft.axis.carry.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ")+".");
-    lines.push("Write these from scratch: "+draft.blanks.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ")+".");
-    lines.push("");
-    lines.push("Rules. Pain must sound like something said out loud on a call, never like website copy. The trigger must name where you would detect it. The cost needs a number, a headcount or a deadline. The email hook is 60 words max, opens on the trigger or the pain, ends on an easy question, and never opens with I hope this finds you well or I am reaching out. The LinkedIn opener is 30 words max. The comeback is a question, not a rebuttal. No em dashes. Set Confidence to Hypothesis.");
-    lines.push("");
-    lines.push("Return 2 candidate rows as TSV, tab separated, 12 columns in this order, no header, no preamble:");
-    lines.push(HEAD.join(" | "));
-    lines.push("");
-    lines.push("Then one line per row: the single question I should ask on a call to confirm or kill it.");
-    return lines.join("\n");
+    var n=draft.axis.carry.length;
+    var carryNames=draft.axis.carry.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ");
+    var blankNames=draft.blanks.map(function(k){return HEAD[KEYS.indexOf(k)]}).join(", ");
+    var rowTsv=KEYS.map(function(k){return (src[k]||"").replace(/\s+/g," ").trim()}).join("\t");
+    var L=[
+"<role>",
+"You are a senior outbound strategist building a pain to value messaging matrix.",
+"</role>",
+"",
+"<validated_row>",
+"This row is validated. It is both your content reference and your exact output format reference. It is one single line, 12 fields, separated by tab characters (U+0009), no header.",
+"",
+rowTsv,
+"</validated_row>",
+"",
+"<task>",
+draft.axis.label+". Produce 2 candidate rows.",
+"",
+"Copy these "+n+" fields verbatim from the validated row: "+carryNames+".",
+"Write from scratch: "+blankNames+".",
+"Set Confidence to Hypothesis in both rows.",
+"",
+draft.axis.ask(src),
+"Make the two candidate rows meaningfully different from each other, not two versions of the same idea.",
+"</task>",
+"",
+"<constraints>",
+"- The pain reads like something said out loud on a call.",
+"- The email hook is 60 words or fewer, opens on the trigger or the pain, and ends on an easy question.",
+"- The email hook opens on a concrete observation about them.",
+"- The LinkedIn opener is 30 words or fewer.",
+"- The comeback is phrased as a question.",
+"- Use plain hyphens and commas. Use no em dashes.",
+"- Reproduce the "+n+" copied fields character for character, including punctuation.",
+"</constraints>",
+"",
+"<output_format>",
+"Return exactly two blocks and nothing else. No preamble, no commentary, no headers, no bullet points.",
+"",
+"Block 1: a fenced code block containing 2 lines. Each line is one row: 12 fields in this order, separated by a single tab character (U+0009), with exactly 11 tabs per line and no line break inside any field.",
+"",
+"Field order: "+HEAD.join(", "),
+"",
+"Block 2: exactly 2 lines of plain text, one per row, in the same order. Each line is the single question to ask on a call to confirm or kill that row. No numbering, no labels.",
+"",
+"Before returning, verify each TSV line contains exactly 11 tab characters and no pipe characters. If a line fails, rewrite it.",
+"</output_format>"
+    ];
+    return L.join("\n");
   }
 
   function renderGrow(){
