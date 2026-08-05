@@ -508,8 +508,7 @@ function submitPage(kinds) {
 ${hero('Submit', 'Add your asset.', 'One form. Reviewed within a week. Your name stays on it.')}
 <section class="form-wrap">
   <div class="wrap narrow-form">
-    <form name="asset" method="POST" data-netlify="true" netlify-honeypot="company-website" action="/submit/thanks/" enctype="multipart/form-data">
-      <input type="hidden" name="form-name" value="asset">
+    <form name="asset" method="POST" action="/api/submit">
       <p class="hp"><label>Leave this empty <input name="company-website" tabindex="-1" autocomplete="off"></label></p>
 
       <label for="title">Asset name</label>
@@ -526,10 +525,7 @@ ${hero('Submit', 'Add your asset.', 'One form. Reviewed within a week. Your name
       <label for="details">How you use it, and what it changed</label>
       <textarea id="details" name="details" rows="6" required placeholder="What problem it solves, who it is for, any numbers you have."></textarea>
 
-      <label for="file">Upload the files <span class="dim">(zip, .md, csv. Optional if you paste a link)</span></label>
-      <input id="file" name="file" type="file" accept=".zip,.md,.txt,.csv,.json">
-
-      <label for="link">Or a link <span class="dim">(GitHub, Notion, Drive)</span></label>
+      <label for="link">Link to the files <span class="dim">(GitHub, Notion, Drive, or a shared zip)</span></label>
       <input id="link" name="link" type="url" placeholder="https://github.com/you/your-skill">
 
       <label for="author">Your name, as it should appear</label>

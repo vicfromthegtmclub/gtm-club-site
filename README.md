@@ -70,9 +70,9 @@ Filter types are derived from the content. You never edit a list by hand.
 
 ## Submissions
 
-`/submit/` still carries Netlify Forms markup, which does nothing on Vercel, so
-submissions currently go nowhere. It needs a real handler (a small `api/`
-function like `api/log-domain.js`, or a form service) before it works again.
+`/submit/` posts to `api/submit.js`, which stores the entry in Vercel KV and
+redirects to `/submit/thanks/`. Read them at `/api/submissions?key=<LOG_SECRET>`
+(`&format=csv` for a dump). File uploads are not stored; the form takes a link.
 
 File uploads count against your plan's form storage, so if people start sending
 large datasets, switch the file field for a link field.

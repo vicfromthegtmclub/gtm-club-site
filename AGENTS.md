@@ -30,7 +30,7 @@ localhost:3000 for a visual check.
 | `src/assets/theme.js` | Light/dark nav toggle. Persists the choice in the `gtm-theme` localStorage key |
 | `scripts/build.mjs` | Page templates and build logic |
 | `vercel.json` | Vercel build config and the immutable cache headers on `/assets/*` |
-| `api/*.js` | Vercel serverless functions. No npm deps; they call the KV REST API with `fetch`, reading secrets (KV tokens, `LOG_SECRET`) from Vercel env vars. `log-domain` records domains from the matrix tool; `domains` reads them back behind `?key=<LOG_SECRET>` |
+| `api/*.js` | Vercel serverless functions. No npm deps; they call the KV REST API with `fetch`, reading secrets (KV tokens, `LOG_SECRET`) from Vercel env vars. `log-domain`/`domains` handle matrix-tool domains; `submit`/`submissions` handle `/submit/` form entries. Reads are behind `?key=<LOG_SECRET>` |
 | `dist/` | Generated. Never edit, never commit |
 
 ## Adding a library asset
@@ -102,7 +102,8 @@ deployment, which is the safe way to review anything structural. Rollback is
 Vercel, Deployments, open a previous one, Promote to Production. Secrets live in
 Vercel env vars, never in the repo.
 
-**Known gap:** the `/submit/` form still carries Netlify Forms markup
-(`data-netlify="true"`, `name="asset"`, hidden `form-name`), which does nothing
-on Vercel, so asset submissions currently go nowhere. It needs a real handler (a
-small `api/` function like `log-domain`, or a form service) before it works.
+The `/submit/` form posts to `api/submit.js` (native POST, works with JS off),
+which stores the entry in KV and 303-redirects to `/submit/thanks/`. Read the
+entries at `/api/submissions?key=<LOG_SECRET>` (add `&format=csv`). File uploads
+are not stored yet; the form takes a link instead. Real uploads would need
+Vercel Blob.
