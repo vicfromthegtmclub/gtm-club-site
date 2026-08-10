@@ -22,7 +22,10 @@
     "crm": ["hubspot", "salesforce", "duplicate"],
     "ai": ["prompt", "claude", "agent"],
     "call": ["cold call", "phone", "script"],
-    "objection": ["pushback", "rebuttal", "reply"]
+    "objection": ["pushback", "rebuttal", "reply"],
+    "story": ["case study"],
+    "testimonials": ["testimonial"],
+    "proof": ["case study", "testimonial"]
   },
 
   "manifesto": {
