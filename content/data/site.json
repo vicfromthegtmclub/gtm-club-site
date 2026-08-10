@@ -25,7 +25,9 @@
     "objection": ["pushback", "rebuttal", "reply"],
     "story": ["case study"],
     "testimonials": ["testimonial"],
-    "proof": ["case study", "testimonial"]
+    "proof": ["case study", "testimonial"],
+    "network": ["connections", "linkedin"],
+    "referrals": ["referral"]
   },
 
   "manifesto": {
