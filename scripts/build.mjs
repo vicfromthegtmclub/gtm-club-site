@@ -495,8 +495,8 @@ ${hero('Asset library', 'Take it. Ship it today.',
 <section class="cta">
   <div class="wrap narrow">
     <h2 class="display-md">Built something? Add it.</h2>
-    <p class="lede center">Members submit assets straight from the club. Reviewed within a week, credited forever.</p>
-    <p><a class="btn" href="/submit/">Submit an asset</a></p>
+    <p class="lede center">Members submit assets straight from the club. Reviewed within a week, credited forever. Every skill also lives on GitHub, clone it, fork it, star it.</p>
+    <p style="display:flex;gap:12px;justify-content:center;flex-wrap:wrap"><a class="btn" href="/submit/">Submit an asset</a>${data.links.skillsRepo ? `<a class="btn btn-solid" href="${esc(data.links.skillsRepo)}" target="_blank" rel="noopener">Star the skills on GitHub ★</a>` : ''}</p>
   </div>
 </section>
 
@@ -527,7 +527,8 @@ function detailPage(a) {
     <span class="dim">updated ${esc(a.updatedLabel)}</span>
   </div>
   <div class="actions">
-    ${a.zip ? `<a class="btn btn-solid" href="${a.zip}" download>Download ${esc(a.slug)}.zip</a>` : ''}
+    ${data.links.skillsRepo ? `<a class="btn btn-solid" href="${esc(data.links.skillsRepo)}/tree/main/${a.slug}" target="_blank" rel="noopener">Get it on GitHub ★</a>` : ''}
+    ${a.zip ? `<a class="btn" href="${a.zip}" download>Download ${esc(a.slug)}.zip</a>` : ''}
     ${a.repo ? `<a class="btn" href="${esc(a.repo)}" rel="noopener">View source</a>` : ''}
   </div>
   <div class="prose">${a.html}</div>

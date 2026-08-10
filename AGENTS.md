@@ -95,6 +95,17 @@ a tiny inline script in `<head>` to avoid a flash. Only the colour tokens flip
 nav toggle and every Tool page read and write the same key, so they stay in
 sync. Default stays dark unless asked otherwise.
 
+## GitHub mirror
+
+The skills (not the tools) are mirrored to the public repo
+`vicfromthegtmclub/gtmskills` by `.github/workflows/mirror-skills.yml` on every
+push that touches `content/skills/`. The site is the source of truth; the mirror
+is one-way and force-synced (it clears and recopies the skill folders). It needs
+a `SKILLS_REPO_TOKEN` secret (fine-grained PAT, Contents read/write on the mirror
+repo). Skill detail pages link their primary button to
+`{links.skillsRepo}/tree/main/<slug>`, with the zip as the secondary download, so
+the site funnels stars to the repo. `links.skillsRepo` lives in `site.json`.
+
 ## Deploys
 
 Hosted on **Vercel** (`vercel.json` configures the build). A push to `main`
