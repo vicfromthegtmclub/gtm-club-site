@@ -1,0 +1,42 @@
+name: Mirror skills to gtmskills
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'content/skills/**'
+      - 'SKILLS_README.md'
+      - '.github/workflows/mirror-skills.yml'
+  workflow_dispatch:
+
+jobs:
+  mirror:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout site
+        uses: actions/checkout@v4
+
+      - name: Clone the skills repo
+        env:
+          TOKEN: ${{ secrets.SKILLS_REPO_TOKEN }}
+        run: git clone "https://x-access-token:${TOKEN}@github.com/vicfromthegtmclub/gtmskills.git" mirror
+
+      - name: Rebuild the skill tree
+        run: |
+          find mirror -mindepth 1 -maxdepth 1 ! -name '.git' ! -name 'README.md' -exec rm -rf {} +
+          for d in content/skills/*/; do
+            name=$(basename "$d")
+            [ -f "${d}tool.html" ] && continue
+            cp -R "$d" "mirror/$name"
+          done
+          cp SKILLS_README.md mirror/README.md
+
+      - name: Commit and push
+        working-directory: mirror
+        run: |
+          git config user.name "gtm-club-bot"
+          git config user.email "bot@thegtmclub.com"
+          git add -A
+          if git diff --cached --quiet; then echo "No skill changes to mirror."; exit 0; fi
+          git commit -m "Sync skills from gtm-club-site@${GITHUB_SHA:0:7}"
+          git push origin HEAD:main
