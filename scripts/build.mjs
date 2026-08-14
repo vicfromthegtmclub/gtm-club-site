@@ -96,7 +96,7 @@ const NAV = [
   ['/events/', 'Events'], ['/community/', 'Community'],
 ];
 
-function layout({ title, description, body, canonical, current }) {
+function layout({ title, description, body, canonical, current, noindex }) {
   return `<!DOCTYPE html>
 <html lang="en" data-theme="dark">
 <head>
@@ -105,7 +105,7 @@ function layout({ title, description, body, canonical, current }) {
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>${esc(title)}</title>
 <meta name="description" content="${esc(description)}">
-<link rel="canonical" href="${SITE}${canonical}">
+${noindex ? '<meta name="robots" content="noindex,nofollow">\n' : ''}<link rel="canonical" href="${SITE}${canonical}">
 <meta property="og:title" content="${esc(title)}">
 <meta property="og:description" content="${esc(description)}">
 <meta property="og:type" content="website">
@@ -596,6 +596,80 @@ function thanksPage() {
   });
 }
 
+/* ------------------------------------------------ page: lemlist entry hub
+
+   Hidden landing page (noindex, absent from the nav and sitemap). It is the
+   destination for the "lemlist academy" link on lemlist.com, and the ONLY page
+   that states GTM Club is initiated by lemlist. Its job is to route a lemlist
+   user to whichever GTM Club component fits their need. Route: /lemlist/. */
+function lemlistPage(assets) {
+  const tools = assets.filter(a => a.kind === 'Tool');
+  const doors = [
+    { title: 'Learn the motion', href: '/paths/', ext: false,
+      body: 'Live paths taught by operators still running outbound, not retired gurus. You leave each session with a working artifact, not notes.',
+      cta: 'Join the waitlist' },
+    { title: 'Grab an asset today', href: '/library/', ext: false,
+      body: `A free library of ${assets.length} skills and interactive tools. Drop one into Claude or your workflow and ship this afternoon.`,
+      cta: 'Open the library' },
+    { title: 'Get unstuck with peers', href: data.links.apply, ext: true,
+      body: 'A small room of operators who answer. Post the sequence that failed or the number that lies, get a real fix by tomorrow.',
+      cta: 'Apply to the community' },
+    { title: 'Watch it done live', href: '/events/', ext: false,
+      body: 'Teardowns, office hours and build nights. Bring your pipeline and leave with the next move.',
+      cta: "See what's on" },
+  ];
+  const body = `
+${hero('Powered by lemlist', 'Where lemlist users level up.')}
+
+<section class="band">
+  <div class="wrap prose-wide">
+    <p>The <strong>GTM Club</strong> is initiated by <strong>lemlist</strong> to help you drive real results from outbound, beyond the tool itself.</p>
+    <p>It is a community, a growing library of skills and tools, live paths taught by working operators, and a calendar of events. This page is your map: pick the door that fits where you are today.</p>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    ${sectionLabel('Pick your door')}
+    <div class="cards-4">
+      ${doors.map(d => `<a class="card-static hoverable" href="${esc(d.href)}"${d.ext ? ' target="_blank" rel="noopener"' : ''}>
+        <p class="card-name lg">${esc(d.title)}</p>
+        <p class="card-sub">${esc(d.body)}</p>
+        <p class="card-note">${esc(d.cta)} &rarr;</p>
+      </a>`).join('\n      ')}
+    </div>
+  </div>
+</section>
+${tools.length ? `
+<section class="band">
+  <div class="wrap">
+    ${sectionLabel('Or try a tool right now')}
+    <div class="cards-3">
+      ${tools.map(t => `<a class="card-static hoverable" href="${esc(t.url)}">
+        <p class="card-name lg">${esc(t.title)}</p>
+        <p class="card-sub">${esc(t.description)}</p>
+        <p class="card-note">Open the tool &rarr;</p>
+      </a>`).join('\n      ')}
+    </div>
+  </div>
+</section>` : ''}
+
+<section class="cta">
+  <div class="wrap narrow">
+    <div class="slashes"><i></i><i></i><i></i><i></i></div>
+    <h2 class="display-lg">Not sure where to start?</h2>
+    <p class="lede center">Open the library. It is free, and most people find their first win there in ten minutes.</p>
+    <p><a class="btn btn-solid" href="/library/">Browse the library</a></p>
+  </div>
+</section>`;
+
+  return layout({
+    title: 'GTM Club, by lemlist',
+    description: 'The GTM Club, initiated by lemlist to help you drive real results from outbound. A community, a library of skills and tools, live paths and events.',
+    canonical: '/lemlist/', current: '', noindex: true, body,
+  });
+}
+
 /* ------------------------------------------------------------------ read */
 
 function readAssets() {
@@ -733,6 +807,8 @@ write('community', communityPage());
 write('library', libraryPage(assets, kinds, sources));
 write('submit', submitPage(kindOptions));
 write('submit/thanks', thanksPage());
+// Hidden lemlist entry hub. Deliberately not in NAV or the sitemap urls below.
+write('lemlist', lemlistPage(assets));
 
 fs.writeFileSync(path.join(DIST, 'assets/library.json'), JSON.stringify(
   assets.map(({ dir, html, ...rest }) => rest), null, 2));
