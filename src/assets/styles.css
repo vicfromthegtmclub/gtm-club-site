@@ -630,3 +630,24 @@ img.avatar { object-fit: cover; }
 @media (max-width: 860px) { .lem-tool-grid { grid-template-columns: 1fr; } }
 
 @media (prefers-reduced-motion: reduce) { .aurora span { animation: none !important; } .lem-track { animation: none !important; } }
+
+/* testimonial avatar (photo with initials fallback) */
+.lem-avatar { width: 56px; height: 56px; flex: none; border-radius: 50%;
+  background: #2A2928 center / cover no-repeat; background-image: url(/assets/team/hugo-t.jpg);
+  display: flex; align-items: center; justify-content: center;
+  font: 700 15px/1 var(--body); letter-spacing: .04em; color: var(--dim); }
+:root[data-theme="light"] .lem-avatar { background-color: #E7E5E1; }
+
+/* "built for your stack" cards */
+.lem-stack-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.lem-stack { display: flex; flex-direction: column; padding: 26px; border: 1px solid var(--line);
+  border-radius: 16px; background: var(--surface); text-decoration: none; color: inherit;
+  transition: border-color 120ms ease, transform 120ms ease; }
+.lem-stack:hover { border-color: var(--eb-color, var(--accent)); transform: translateY(-3px); }
+.lem-stack-logo { display: inline-flex; align-items: center; align-self: flex-start; height: 40px;
+  padding: 0 16px; border-radius: 10px; margin-bottom: 18px; font: 700 18px/1 var(--body); letter-spacing: -.01em;
+  color: var(--eb-color, var(--accent));
+  background: color-mix(in srgb, var(--eb-color, var(--accent)) 15%, transparent); }
+.lem-stack p { font-size: 14px; line-height: 1.5; color: var(--dimmer); margin: 0 0 18px; }
+.lem-stack .lem-tool-go { margin-top: auto; }
+@media (max-width: 860px) { .lem-stack-grid { grid-template-columns: 1fr; } }

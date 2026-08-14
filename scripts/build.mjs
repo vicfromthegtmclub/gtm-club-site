@@ -726,6 +726,14 @@ function lemlistPage(assets) {
     { icon: 'bolt', h: 'What to expect', b: 'Post the sequence that failed or the number that lies, and get a real answer, fast. Ship a working artifact from every session.' },
     { icon: 'bullseye', h: "Who it's for", b: 'Founders, SDR and sales leads, RevOps and growth operators who run outbound with lemlist and want to get sharper at it.' },
   ];
+  const stack = [
+    ['lemlist', 'Sequences, deliverability and AI variables. The engine most of the club runs on.'],
+    ['Clay', 'Enrichment and signal waterfalls. Build the list before you write the first line.'],
+    ['HubSpot', 'CRM hygiene, routing and reporting your manager actually trusts.'],
+    ['Salesforce', 'Data model, dedup and attribution once you have scaled past the spreadsheet.'],
+    ['Slack', 'Where the alerts, the handoffs and the "who owns this" actually happen.'],
+    ['n8n', 'Glue it together. Automations and agents that handle the boring 80%.'],
+  ];
   const logoRun = LEM_LOGOS.map(l => `<span class="lem-logo">${esc(l)}</span>`).join('');
   const body = `
 <section class="lem-hero">
@@ -765,6 +773,23 @@ function lemlistPage(assets) {
   </div>
 </section>
 
+<section class="band lem-stack-band">
+  <div class="wrap">
+    <div class="lem-head">
+      ${sectionLabel('Built for your stack')}
+      <h2 class="display-md">The tools you already run.</h2>
+      <p class="lede">The club goes deep on the GTM stack, with skills, plays and teardowns for each. Swap logos in when ready.</p>
+    </div>
+    <div class="lem-stack-grid">
+      ${stack.map(([name, blurb], i) => `<a class="lem-stack" style="--eb-color:${EB_COLORS[i % EB_COLORS.length]}" href="/library/">
+        <span class="lem-stack-logo">${esc(name)}</span>
+        <p>${esc(blurb)}</p>
+        <span class="lem-tool-go">See the plays ${icon('arrow-right')}</span>
+      </a>`).join('\n      ')}
+    </div>
+  </div>
+</section>
+
 <section class="band lem-join">
   <div class="wrap lem-split">
     <div class="lem-split-a">
@@ -789,8 +814,8 @@ function lemlistPage(assets) {
     <blockquote class="lem-quote">
       <p>The GTM Club is the first place I check on Monday. I post the sequence that flopped, and by Tuesday someone who ran the exact play has already pulled it apart for me.</p>
       <footer class="lem-quote-foot">
-        ${placeholder('Photo', 'image', 'ph-avatar')}
-        <cite>GTM Club member<br><span>Placeholder &middot; replace with a real quote</span></cite>
+        <span class="lem-avatar" role="img" aria-label="Hugo T.">HT</span>
+        <cite>Hugo T.<br><span>GTM engineer &middot; Member since June 2026</span></cite>
       </footer>
     </blockquote>
   </div>
