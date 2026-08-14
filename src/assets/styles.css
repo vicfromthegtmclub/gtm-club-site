@@ -643,11 +643,11 @@ img.avatar { object-fit: cover; }
 .lem-stack { display: flex; flex-direction: column; padding: 26px; border: 1px solid var(--line);
   border-radius: 16px; background: var(--surface); text-decoration: none; color: inherit;
   transition: border-color 120ms ease, transform 120ms ease; }
-.lem-stack:hover { border-color: var(--eb-color, var(--accent)); transform: translateY(-3px); }
-.lem-stack-logo { display: inline-flex; align-items: center; align-self: flex-start; height: 40px;
-  padding: 0 16px; border-radius: 10px; margin-bottom: 18px; font: 700 18px/1 var(--body); letter-spacing: -.01em;
-  color: var(--eb-color, var(--accent));
-  background: color-mix(in srgb, var(--eb-color, var(--accent)) 15%, transparent); }
-.lem-stack p { font-size: 14px; line-height: 1.5; color: var(--dimmer); margin: 0 0 18px; }
+.lem-stack:hover { border-color: var(--line-hi); transform: translateY(-3px); }
+.lem-stack-logo { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px;
+  border-radius: 13px; margin-bottom: 18px; background: #fff; border: 1px solid rgba(10, 9, 9, .06); }
+.lem-stack-logo img { width: 30px; height: 30px; object-fit: contain; display: block; }
+.lem-stack-name { font: 500 16px/1.3 var(--body); }
+.lem-stack p { font-size: 14px; line-height: 1.5; color: var(--dimmer); margin: 8px 0 18px; }
 .lem-stack .lem-tool-go { margin-top: auto; }
 @media (max-width: 860px) { .lem-stack-grid { grid-template-columns: 1fr; } }

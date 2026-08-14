@@ -727,12 +727,13 @@ function lemlistPage(assets) {
     { icon: 'bullseye', h: "Who it's for", b: 'Founders, SDR and sales leads, RevOps and growth operators who run outbound with lemlist and want to get sharper at it.' },
   ];
   const stack = [
-    ['lemlist', 'Sequences, deliverability and AI variables. The engine most of the club runs on.'],
-    ['Clay', 'Enrichment and signal waterfalls. Build the list before you write the first line.'],
-    ['HubSpot', 'CRM hygiene, routing and reporting your manager actually trusts.'],
-    ['Salesforce', 'Data model, dedup and attribution once you have scaled past the spreadsheet.'],
-    ['Slack', 'Where the alerts, the handoffs and the "who owns this" actually happen.'],
-    ['n8n', 'Glue it together. Automations and agents that handle the boring 80%.'],
+    ['Claude', 'The engine behind every skill in the club: agents, drafting and research in one place.', 'claude'],
+    ['lemlist', 'Sequences, deliverability and AI variables. The outbound engine most of the club runs on.', 'lemlist'],
+    ['Clay', 'Enrichment and signal waterfalls. Build the list before you write the first line.', 'clay'],
+    ['HubSpot', 'CRM hygiene, routing and reporting your manager actually trusts.', 'hubspot'],
+    ['Salesforce', 'Data model, dedup and attribution once you have scaled past the spreadsheet.', 'salesforce'],
+    ['Slack', 'Where the alerts, the handoffs and the "who owns this" actually happen.', 'slack'],
+    ['n8n', 'Glue it together. Automations and agents that handle the boring 80%.', 'n8n'],
   ];
   const logoRun = LEM_LOGOS.map(l => `<span class="lem-logo">${esc(l)}</span>`).join('');
   const body = `
@@ -778,11 +779,12 @@ function lemlistPage(assets) {
     <div class="lem-head">
       ${sectionLabel('Built for your stack')}
       <h2 class="display-md">The tools you already run.</h2>
-      <p class="lede">The club goes deep on the GTM stack, with skills, plays and teardowns for each. Swap logos in when ready.</p>
+      <p class="lede">The club goes deep on the GTM stack, with skills, plays and teardowns for each.</p>
     </div>
     <div class="lem-stack-grid">
-      ${stack.map(([name, blurb], i) => `<a class="lem-stack" style="--eb-color:${EB_COLORS[i % EB_COLORS.length]}" href="/library/">
-        <span class="lem-stack-logo">${esc(name)}</span>
+      ${stack.map(([name, blurb, logo]) => `<a class="lem-stack" href="/library/">
+        <span class="lem-stack-logo"><img src="/assets/logos/${logo}.svg" alt="${esc(name)}" width="30" height="30" loading="lazy"></span>
+        <b class="lem-stack-name">${esc(name)}</b>
         <p>${esc(blurb)}</p>
         <span class="lem-tool-go">See the plays ${icon('arrow-right')}</span>
       </a>`).join('\n      ')}
