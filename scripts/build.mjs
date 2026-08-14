@@ -671,6 +671,35 @@ function thanksPage() {
    destination for the "lemlist academy" link on lemlist.com, and the ONLY page
    that states GTM Club is initiated by lemlist. Its job is to route a lemlist
    user to whichever GTM Club component fits their need. Route: /lemlist/. */
+// FontAwesome Free 6.5 icons, inlined as SVG (CC BY 4.0) so the site stays
+// zero-dependency, no CDN, CSP-safe. [viewBox, path]. icon() renders one.
+const FA = {
+  "arrow-right": ["0 0 448 512", "M438.6 278.6c12.5-12.5 12.5-32.8 0-45.3l-160-160c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3L338.8 224 32 224c-17.7 0-32 14.3-32 32s14.3 32 32 32l306.7 0L233.4 393.4c-12.5 12.5-12.5 32.8 0 45.3s32.8 12.5 45.3 0l160-160z"],
+  "bolt": ["0 0 448 512", "M349.4 44.6c5.9-13.7 1.5-29.7-10.6-38.5s-28.6-8-39.9 1.8l-256 224c-10 8.8-13.6 22.9-8.9 35.3S50.7 288 64 288H175.5L98.6 467.4c-5.9 13.7-1.5 29.7 10.6 38.5s28.6 8 39.9-1.8l256-224c10-8.8 13.6-22.9 8.9-35.3s-16.6-20.7-30-20.7H272.5L349.4 44.6z"],
+  "book-open": ["0 0 576 512", "M249.6 471.5c10.8 3.8 22.4-4.1 22.4-15.5V78.6c0-4.2-1.6-8.4-5-11C247.4 52 202.4 32 144 32C93.5 32 46.3 45.3 18.1 56.1C6.8 60.5 0 71.7 0 83.8V454.1c0 11.9 12.8 20.2 24.1 16.5C55.6 460.1 105.5 448 144 448c33.9 0 79 14 105.6 23.5zm76.8 0C353 462 398.1 448 432 448c38.5 0 88.4 12.1 119.9 22.6c11.3 3.8 24.1-4.6 24.1-16.5V83.8c0-12.1-6.8-23.3-18.1-27.6C529.7 45.3 482.5 32 432 32c-58.4 0-103.4 20-123 35.6c-3.3 2.6-5 6.8-5 11V456c0 11.4 11.7 19.3 22.4 15.5z"],
+  "box-open": ["0 0 640 512", "M58.9 42.1c3-6.1 9.6-9.6 16.3-8.7L320 64 564.8 33.4c6.7-.8 13.3 2.7 16.3 8.7l41.7 83.4c9 17.9-.6 39.6-19.8 45.1L439.6 217.3c-13.9 4-28.8-1.9-36.2-14.3L320 64 236.6 203c-7.4 12.4-22.3 18.3-36.2 14.3L37.1 170.6c-19.3-5.5-28.8-27.2-19.8-45.1L58.9 42.1zM321.1 128l54.9 91.4c14.9 24.8 44.6 36.6 72.5 28.6L576 211.6v167c0 22-15 41.2-36.4 46.6l-204.1 51c-10.2 2.6-20.9 2.6-31 0l-204.1-51C79 419.7 64 400.5 64 378.5v-167L191.6 248c27.8 8 57.6-3.8 72.5-28.6L318.9 128h2.2z"],
+  "bullseye": ["0 0 512 512", "M448 256A192 192 0 1 0 64 256a192 192 0 1 0 384 0zM0 256a256 256 0 1 1 512 0A256 256 0 1 1 0 256zm256 80a80 80 0 1 0 0-160 80 80 0 1 0 0 160zm0-224a144 144 0 1 1 0 288 144 144 0 1 1 0-288zM224 256a32 32 0 1 1 64 0 32 32 0 1 1 -64 0z"],
+  "calendar-days": ["0 0 448 512", "M128 0c17.7 0 32 14.3 32 32V64H288V32c0-17.7 14.3-32 32-32s32 14.3 32 32V64h48c26.5 0 48 21.5 48 48v48H0V112C0 85.5 21.5 64 48 64H96V32c0-17.7 14.3-32 32-32zM0 192H448V464c0 26.5-21.5 48-48 48H48c-26.5 0-48-21.5-48-48V192zm64 80v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm128 0v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H208c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V272c0-8.8-7.2-16-16-16H336zM64 400v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H80c-8.8 0-16 7.2-16 16zm144-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H208zm112 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V400c0-8.8-7.2-16-16-16H336c-8.8 0-16 7.2-16 16z"],
+  "comments": ["0 0 640 512", "M208 352c114.9 0 208-78.8 208-176S322.9 0 208 0S0 78.8 0 176c0 38.6 14.7 74.3 39.6 103.4c-3.5 9.4-8.7 17.7-14.2 24.7c-4.8 6.2-9.7 11-13.3 14.3c-1.8 1.6-3.3 2.9-4.3 3.7c-.5 .4-.9 .7-1.1 .8l-.2 .2 0 0 0 0C1 327.2-1.4 334.4 .8 340.9S9.1 352 16 352c21.8 0 43.8-5.6 62.1-12.5c9.2-3.5 17.8-7.4 25.3-11.4C134.1 343.3 169.8 352 208 352zM448 176c0 112.3-99.1 196.9-216.5 207C255.8 457.4 336.4 512 432 512c38.2 0 73.9-8.7 104.7-23.9c7.5 4 16 7.9 25.2 11.4c18.3 6.9 40.3 12.5 62.1 12.5c6.9 0 13.1-4.5 15.2-11.1c2.1-6.6-.2-13.8-5.8-17.9l0 0 0 0-.2-.2c-.2-.2-.6-.4-1.1-.8c-1-.8-2.5-2-4.3-3.7c-3.6-3.3-8.5-8.1-13.3-14.3c-5.5-7-10.7-15.4-14.2-24.7c24.9-29 39.6-64.7 39.6-103.4c0-92.8-84.9-168.9-192.6-175.5c.4 5.1 .6 10.3 .6 15.5z"],
+  "download": ["0 0 512 512", "M288 32c0-17.7-14.3-32-32-32s-32 14.3-32 32V274.7l-73.4-73.4c-12.5-12.5-32.8-12.5-45.3 0s-12.5 32.8 0 45.3l128 128c12.5 12.5 32.8 12.5 45.3 0l128-128c12.5-12.5 12.5-32.8 0-45.3s-32.8-12.5-45.3 0L288 274.7V32zM64 352c-35.3 0-64 28.7-64 64v32c0 35.3 28.7 64 64 64H448c35.3 0 64-28.7 64-64V416c0-35.3-28.7-64-64-64H346.5l-45.3 45.3c-25 25-65.5 25-90.5 0L165.5 352H64zm368 56a24 24 0 1 1 0 48 24 24 0 1 1 0-48z"],
+  "film": ["0 0 512 512", "M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM48 368v32c0 8.8 7.2 16 16 16H96c8.8 0 16-7.2 16-16V368c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16zm368-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V368c0-8.8-7.2-16-16-16H416zM48 240v32c0 8.8 7.2 16 16 16H96c8.8 0 16-7.2 16-16V240c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16zm368-16c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V240c0-8.8-7.2-16-16-16H416zM48 112v32c0 8.8 7.2 16 16 16H96c8.8 0 16-7.2 16-16V112c0-8.8-7.2-16-16-16H64c-8.8 0-16 7.2-16 16zM416 96c-8.8 0-16 7.2-16 16v32c0 8.8 7.2 16 16 16h32c8.8 0 16-7.2 16-16V112c0-8.8-7.2-16-16-16H416zM160 128v64c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V128c0-17.7-14.3-32-32-32H192c-17.7 0-32 14.3-32 32zm32 160c-17.7 0-32 14.3-32 32v64c0 17.7 14.3 32 32 32H320c17.7 0 32-14.3 32-32V320c0-17.7-14.3-32-32-32H192z"],
+  "graduation-cap": ["0 0 640 512", "M320 32c-8.1 0-16.1 1.4-23.7 4.1L15.8 137.4C6.3 140.9 0 149.9 0 160s6.3 19.1 15.8 22.6l57.9 20.9C57.3 229.3 48 259.8 48 291.9v28.1c0 28.4-10.8 57.7-22.3 80.8c-6.5 13-13.9 25.8-22.5 37.6C0 442.7-.9 448.3 .9 453.4s6 8.9 11.2 10.2l64 16c4.2 1.1 8.7 .3 12.4-2s6.3-6.1 7.1-10.4c8.6-42.8 4.3-81.2-2.1-108.7C90.3 344.3 86 329.8 80 316.5V291.9c0-30.2 10.2-58.7 27.9-81.5c12.9-15.5 29.6-28 49.2-35.7l157-61.7c8.2-3.2 17.5 .8 20.7 9s-.8 17.5-9 20.7l-157 61.7c-12.4 4.9-23.3 12.4-32.2 21.6l159.6 57.6c7.6 2.7 15.6 4.1 23.7 4.1s16.1-1.4 23.7-4.1L624.2 182.6c9.5-3.4 15.8-12.5 15.8-22.6s-6.3-19.1-15.8-22.6L343.7 36.1C336.1 33.4 328.1 32 320 32zM128 408c0 35.3 86 72 192 72s192-36.7 192-72L496.7 262.6 354.5 314c-11.1 4-22.8 6-34.5 6s-23.5-2-34.5-6L143.3 262.6 128 408z"],
+  "image": ["0 0 512 512", "M0 96C0 60.7 28.7 32 64 32H448c35.3 0 64 28.7 64 64V416c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V96zM323.8 202.5c-4.5-6.6-11.9-10.5-19.8-10.5s-15.4 3.9-19.8 10.5l-87 127.6L170.7 297c-4.6-5.7-11.5-9-18.7-9s-14.2 3.3-18.7 9l-64 80c-5.8 7.2-6.9 17.1-2.9 25.4s12.4 13.6 21.6 13.6h96 32H424c8.9 0 17.1-4.9 21.2-12.8s3.6-17.4-1.4-24.7l-120-176zM112 192a48 48 0 1 0 0-96 48 48 0 1 0 0 96z"],
+  "quote-left": ["0 0 448 512", "M0 216C0 149.7 53.7 96 120 96h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H64c-35.3 0-64-28.7-64-64V320 288 216zm256 0c0-66.3 53.7-120 120-120h8c17.7 0 32 14.3 32 32s-14.3 32-32 32h-8c-30.9 0-56 25.1-56 56v8h64c35.3 0 64 28.7 64 64v64c0 35.3-28.7 64-64 64H320c-35.3 0-64-28.7-64-64V320 288 216z"],
+  "rocket": ["0 0 512 512", "M156.6 384.9L125.7 354c-8.5-8.5-11.5-20.8-7.7-32.2c3-8.9 7-20.5 11.8-33.8L24 288c-8.6 0-16.6-4.6-20.9-12.1s-4.2-16.7 .2-24.1l52.5-88.5c13-21.9 36.5-35.3 61.9-35.3l82.3 0c2.4-4 4.8-7.7 7.2-11.3C289.1-4.1 411.1-8.1 483.9 5.3c11.6 2.1 20.6 11.2 22.8 22.8c13.4 72.9 9.3 194.8-111.4 276.7c-3.5 2.4-7.3 4.8-11.3 7.2v82.3c0 25.4-13.4 49-35.3 61.9l-88.5 52.5c-7.4 4.4-16.6 4.5-24.1 .2s-12.1-12.2-12.1-20.9V380.8c-14.1 4.9-26.4 8.9-35.7 11.9c-11.2 3.6-23.4 .5-31.8-7.8zM384 168a40 40 0 1 0 0-80 40 40 0 1 0 0 80z"],
+  "screwdriver-wrench": ["0 0 512 512", "M78.6 5C69.1-2.4 55.6-1.5 47 7L7 47c-8.5 8.5-9.4 22-2.1 31.6l80 104c4.5 5.9 11.6 9.4 19 9.4h54.1l109 109c-14.7 29-10 65.4 14.3 89.6l112 112c12.5 12.5 32.8 12.5 45.3 0l64-64c12.5-12.5 12.5-32.8 0-45.3l-112-112c-24.2-24.2-60.6-29-89.6-14.3l-109-109V104c0-7.5-3.5-14.5-9.4-19L78.6 5zM19.9 396.1C7.2 408.8 0 426.1 0 444.1C0 481.6 30.4 512 67.9 512c18 0 35.3-7.2 48-19.9L233.7 374.3c-7.8-20.9-9-43.6-3.6-65.1l-61.7-61.7L19.9 396.1zM512 144c0-10.5-1.1-20.7-3.2-30.5c-2.4-11.2-16.1-14.1-24.2-6l-63.9 63.9c-3 3-7.1 4.7-11.3 4.7H352c-8.8 0-16-7.2-16-16V102.6c0-4.2 1.7-8.3 4.7-11.3l63.9-63.9c8.1-8.1 5.2-21.8-6-24.2C388.7 1.1 378.5 0 368 0C288.5 0 224 64.5 224 144l0 .8 85.3 85.3c36-9.1 75.8 .5 104 28.7L429 274.5c49-23 83-72.8 83-130.5zM56 432a24 24 0 1 1 48 0 24 24 0 1 1 -48 0z"],
+  "user-group": ["0 0 640 512", "M96 128a128 128 0 1 1 256 0A128 128 0 1 1 96 128zM0 482.3C0 383.8 79.8 304 178.3 304h91.4C368.2 304 448 383.8 448 482.3c0 16.4-13.3 29.7-29.7 29.7H29.7C13.3 512 0 498.7 0 482.3zM609.3 512H471.4c5.4-9.4 8.6-20.3 8.6-32v-8c0-60.7-27.1-115.2-69.8-151.8c2.4-.1 4.7-.2 7.1-.2h61.4C567.8 320 640 392.2 640 481.3c0 17-13.8 30.7-30.7 30.7zM432 256c-31 0-59-12.6-79.3-32.9C372.4 196.5 384 163.6 384 128c0-26.8-6.6-52.1-18.3-74.3C384.3 40.1 407.2 32 432 32c61.9 0 112 50.1 112 112s-50.1 112-112 112z"],
+  "wand-magic-sparkles": ["0 0 576 512", "M234.7 42.7L197 56.8c-3 1.1-5 4-5 7.2s2 6.1 5 7.2l37.7 14.1L248.8 123c1.1 3 4 5 7.2 5s6.1-2 7.2-5l14.1-37.7L315 71.2c3-1.1 5-4 5-7.2s-2-6.1-5-7.2L277.3 42.7 263.2 5c-1.1-3-4-5-7.2-5s-6.1 2-7.2 5L234.7 42.7zM46.1 395.4c-18.7 18.7-18.7 49.1 0 67.9l34.6 34.6c18.7 18.7 49.1 18.7 67.9 0L529.9 116.5c18.7-18.7 18.7-49.1 0-67.9L495.3 14.1c-18.7-18.7-49.1-18.7-67.9 0L46.1 395.4zM484.6 82.6l-105 105-23.3-23.3 105-105 23.3 23.3zM7.5 117.2C3 118.9 0 123.2 0 128s3 9.1 7.5 10.8L64 160l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L128 160l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L128 96 106.8 39.5C105.1 35 100.8 32 96 32s-9.1 3-10.8 7.5L64 96 7.5 117.2zm352 256c-4.5 1.7-7.5 6-7.5 10.8s3 9.1 7.5 10.8L416 416l21.2 56.5c1.7 4.5 6 7.5 10.8 7.5s9.1-3 10.8-7.5L480 416l56.5-21.2c4.5-1.7 7.5-6 7.5-10.8s-3-9.1-7.5-10.8L480 352l-21.2-56.5c-1.7-4.5-6-7.5-10.8-7.5s-9.1 3-10.8 7.5L416 352l-56.5 21.2z"],
+};
+const icon = (name, cls = '') => {
+  const g = FA[name];
+  if (!g) return '';
+  return `<svg class="ic${cls ? ' ' + cls : ''}" viewBox="${g[0]}" aria-hidden="true" focusable="false"><path d="${g[1]}"/></svg>`;
+};
+// A labelled placeholder box for imagery/animation the manager can fill later.
+const placeholder = (label, ic = 'image', cls = '') =>
+  `<div class="ph${cls ? ' ' + cls : ''}" role="img" aria-label="${esc(label)} placeholder">${icon(ic, 'ph-ic')}<span class="ph-label">${esc(label)}</span></div>`;
+
 // Logos of lemlist customers, shown in the hero trust bar. Text wordmarks for
 // now; swap in real logo SVGs when provided (see /assets/logos/).
 const LEM_LOGOS = ['xAI', 'ElevenLabs', 'Pennylane', 'Spendesk', 'PostHog', 'Spotify',
@@ -679,69 +708,76 @@ const LEM_LOGOS = ['xAI', 'ElevenLabs', 'Pennylane', 'Spendesk', 'PostHog', 'Spo
 function lemlistPage(assets) {
   const tools = assets.filter(a => a.kind === 'Tool');
   const doors = [
-    { title: 'Learn the motion', href: '/paths/', ext: false,
-      body: 'Live paths taught by operators still running outbound, not retired gurus. You leave each session with a working artifact, not notes.',
+    { title: 'Learn the motion', href: '/paths/', ext: false, icon: 'graduation-cap',
+      body: 'Live paths taught by operators still running outbound. Leave each session with a working artifact.',
       cta: 'Join the waitlist' },
-    { title: 'Grab an asset today', href: '/library/', ext: false,
-      body: `A free library of ${assets.length} skills and interactive tools. Drop one into Claude or your workflow and ship this afternoon.`,
+    { title: 'Grab an asset today', href: '/library/', ext: false, icon: 'box-open',
+      body: `A free library of ${assets.length} skills and interactive tools. Ship this afternoon.`,
       cta: 'Open the library' },
-    { title: 'Get unstuck with peers', href: data.links.apply, ext: true,
-      body: 'A small room of operators who answer. Post the sequence that failed or the number that lies, get a real fix by tomorrow.',
+    { title: 'Get unstuck with peers', href: data.links.apply, ext: true, icon: 'comments',
+      body: 'A small room of operators who answer. Post the play that failed, get a real fix by tomorrow.',
       cta: 'Apply to the community' },
-    { title: 'Watch it done live', href: '/events/', ext: false,
-      body: 'Teardowns, office hours and build nights. Bring your pipeline and leave with the next move.',
+    { title: 'Watch it done live', href: '/events/', ext: false, icon: 'calendar-days',
+      body: 'Teardowns, office hours and build nights. Bring your pipeline, leave with the next move.',
       cta: "See what's on" },
   ];
   const whatis = [
-    { h: 'What it is', b: 'A small, curated room of go-to-market operators, plus a free library of Claude skills and interactive tools. No gurus, no gated PDFs.' },
-    { h: 'What to expect', b: 'Post the sequence that failed or the number that lies, and get a real answer, fast. Ship a working artifact from every session.' },
-    { h: "Who it's for", b: 'Founders, SDR and sales leads, RevOps and growth operators who run outbound with lemlist and want to get sharper at it.' },
+    { icon: 'user-group', h: 'What it is', b: 'A small, curated room of go-to-market operators, plus a free library of Claude skills and interactive tools. No gurus, no gated PDFs.' },
+    { icon: 'bolt', h: 'What to expect', b: 'Post the sequence that failed or the number that lies, and get a real answer, fast. Ship a working artifact from every session.' },
+    { icon: 'bullseye', h: "Who it's for", b: 'Founders, SDR and sales leads, RevOps and growth operators who run outbound with lemlist and want to get sharper at it.' },
   ];
   const logoRun = LEM_LOGOS.map(l => `<span class="lem-logo">${esc(l)}</span>`).join('');
   const body = `
 <section class="lem-hero">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  <div class="wrap lem-hero-in">
-    <p class="eyebrow">Powered by lemlist</p>
-    <h1>Where lemlist users level up.</h1>
-    <p class="lede">The GTM Club is initiated by lemlist to help you drive real results from outbound. A community, interactive tools, live paths and events, all in one room.</p>
-    <div class="hero-cta lem-cta">
-      <a class="btn btn-solid" href="${esc(data.links.apply)}">Join the GTM Club</a>
-      <a class="btn" href="/library/">Explore the tools</a>
+  <div class="wrap lem-hero-grid">
+    <div class="lem-hero-in">
+      <p class="eyebrow">Powered by lemlist</p>
+      <h1>Where lemlist users level up.</h1>
+      <p class="lede">The GTM Club is initiated by lemlist to help you drive real results from outbound. A community, interactive tools, live paths and events, all in one room.</p>
+      <div class="hero-cta lem-cta">
+        <a class="btn btn-solid" href="${esc(data.links.apply)}">${icon('rocket')} Join the GTM Club</a>
+        <a class="btn" href="/library/">Explore the tools</a>
+      </div>
     </div>
+    <div class="lem-hero-media">${placeholder('Hero visual or short loop', 'film', 'ph-hero')}</div>
   </div>
   <div class="wrap lem-logobar">
     <p class="lem-logolabel">Go-to-market teams that run outbound with lemlist</p>
-    <div class="lem-marquee">
-      <div class="lem-track">${logoRun}${logoRun}</div>
-    </div>
+    <div class="lem-marquee"><div class="lem-track">${logoRun}${logoRun}</div></div>
   </div>
 </section>
 
-<section class="band">
+<section class="band lem-what">
   <div class="wrap">
-    ${sectionLabel("What's the GTM Club")}
-    <div class="lem-intro">
+    <div class="lem-head center">
+      ${sectionLabel("What's the GTM Club")}
       <h2 class="display-md">The room where outbound gets better, together.</h2>
-      <p class="lede">Initiated by lemlist, the GTM Club is where operators go past the tool: to swap the plays that work, borrow the assets, and get unstuck the same week.</p>
+      <p class="lede center">Initiated by lemlist, the GTM Club is where operators go past the tool: to swap the plays that work, borrow the assets, and get unstuck the same week.</p>
     </div>
-    <div class="cards-3">
-      ${whatis.map(w => `<div class="card-static">
-        <p class="card-name lg">${esc(w.h)}</p>
+    <div class="lem-features">
+      ${whatis.map(w => `<div class="lem-feature">
+        <span class="lem-feat-ic">${icon(w.icon)}</span>
+        <h3 class="display-sm">${esc(w.h)}</h3>
         <p class="card-sub">${esc(w.b)}</p>
       </div>`).join('\n      ')}
     </div>
   </div>
 </section>
 
-<section class="band">
-  <div class="wrap">
-    ${sectionLabel('Join the GTM Club')}
-    <div class="cards-4">
-      ${doors.map(d => `<a class="card-static hoverable" href="${esc(d.href)}"${d.ext ? ' target="_blank" rel="noopener"' : ''}>
-        <p class="card-name lg">${esc(d.title)}</p>
-        <p class="card-sub">${esc(d.body)}</p>
-        <p class="card-note">${esc(d.cta)} &rarr;</p>
+<section class="band lem-join">
+  <div class="wrap lem-split">
+    <div class="lem-split-a">
+      ${sectionLabel('Join the GTM Club')}
+      <h2 class="display-md">Four doors. Walk through any of them.</h2>
+      <p class="lede">Wherever you are today, there is a way in that fits. Most people start with the library, then join the room.</p>
+      ${placeholder('Community screenshot or animation', 'wand-magic-sparkles', 'ph-tall')}
+    </div>
+    <div class="lem-doorlist">
+      ${doors.map(d => `<a class="lem-door" href="${esc(d.href)}"${d.ext ? ' target="_blank" rel="noopener"' : ''}>
+        <span class="lem-door-ic">${icon(d.icon)}</span>
+        <span class="lem-door-txt"><b>${esc(d.title)}</b><span>${esc(d.body)}</span><em>${esc(d.cta)}</em></span>
+        <span class="lem-door-go">${icon('arrow-right')}</span>
       </a>`).join('\n      ')}
     </div>
   </div>
@@ -749,22 +785,33 @@ function lemlistPage(assets) {
 
 <section class="band lem-quote-band">
   <div class="wrap narrow">
+    <span class="lem-qmark">${icon('quote-left')}</span>
     <blockquote class="lem-quote">
       <p>The GTM Club is the first place I check on Monday. I post the sequence that flopped, and by Tuesday someone who ran the exact play has already pulled it apart for me.</p>
-      <cite>GTM Club member &middot; placeholder, replace with a real quote</cite>
+      <footer class="lem-quote-foot">
+        ${placeholder('Photo', 'image', 'ph-avatar')}
+        <cite>GTM Club member<br><span>Placeholder &middot; replace with a real quote</span></cite>
+      </footer>
     </blockquote>
   </div>
 </section>
 ${tools.length ? `
-<section class="band">
+<section class="band lem-tools">
   <div class="wrap">
-    ${sectionLabel('Our GTM tools')}
-    <p class="lede lem-tools-lede">Free, interactive, no signup. Try one right now.</p>
-    <div class="cards-3">
-      ${tools.map(t => `<a class="card-static hoverable" href="${esc(t.url)}">
-        <p class="card-name lg">${esc(t.title)}</p>
-        <p class="card-sub">${esc(t.description)}</p>
-        <p class="card-note">Open the tool &rarr;</p>
+    <div class="lem-head">
+      ${sectionLabel('Our GTM tools')}
+      <h2 class="display-md">Free, interactive, no signup.</h2>
+      <p class="lede">Try one right now. Each is a self-contained tool you can use in the browser.</p>
+    </div>
+    <div class="lem-tool-grid">
+      ${tools.map(t => `<a class="lem-tool" href="${esc(t.url)}">
+        <div class="lem-tool-preview">${placeholder('Tool preview', 'image')}</div>
+        <div class="lem-tool-body">
+          <span class="lem-tool-ic">${icon('screwdriver-wrench')}</span>
+          <b>${esc(t.title)}</b>
+          <p>${esc(t.description)}</p>
+          <span class="lem-tool-go">Open the tool ${icon('arrow-right')}</span>
+        </div>
       </a>`).join('\n      ')}
     </div>
   </div>
@@ -775,7 +822,7 @@ ${tools.length ? `
     <div class="slashes"><i></i><i></i><i></i><i></i></div>
     <h2 class="display-lg">Ready to level up?</h2>
     <p class="lede center">Join the room where lemlist users turn outbound into pipeline. It is free, and most people find their first win in ten minutes.</p>
-    <p><a class="btn btn-solid" href="${esc(data.links.apply)}">Join the GTM Club</a></p>
+    <p><a class="btn btn-solid" href="${esc(data.links.apply)}">${icon('rocket')} Join the GTM Club</a></p>
   </div>
 </section>`;
 

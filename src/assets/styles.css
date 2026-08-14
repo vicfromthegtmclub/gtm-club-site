@@ -526,12 +526,31 @@ img.avatar { object-fit: cover; }
 }
 
 /* ============================================================ lemlist page */
+/* inline FontAwesome icons */
+.ic { display: inline-block; height: 1em; width: auto; fill: currentColor; vertical-align: -0.125em; }
+
+/* labelled media/animation placeholders */
+.ph { display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 10px;
+  border: 1.5px dashed var(--line-hi); border-radius: 14px; background: var(--surface);
+  color: var(--dimmer); text-align: center; padding: 24px; min-height: 160px; }
+.ph-ic { font-size: 26px; opacity: .6; }
+.ph-label { font: 700 10.5px/1.3 var(--body); letter-spacing: .16em; text-transform: uppercase; }
+.ph-hero { min-height: 320px; aspect-ratio: 4 / 3; }
+.ph-tall { min-height: 220px; margin-top: 28px; }
+.ph-avatar { min-height: 0; width: 56px; height: 56px; padding: 0; border-radius: 50%; flex: none; }
+.ph-avatar .ph-label { display: none; }
+.ph-avatar .ph-ic { font-size: 20px; }
+
+/* hero: split text + media */
 .lem-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line);
-  padding: calc(var(--nav-h) + 72px) 0 40px; }
-.lem-hero-in { position: relative; z-index: 2; }
-.lem-hero h1 { max-width: 16ch; }
-.lem-hero .lede { max-width: 620px; }
+  padding: calc(var(--nav-h) + 64px) 0 40px; }
+.lem-hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+.lem-hero-in h1 { max-width: 15ch; }
+.lem-hero-in .lede { max-width: 560px; }
 .lem-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
+.lem-cta .btn .ic { margin-right: 8px; }
+.lem-hero-media .ph { background: rgba(20, 19, 19, .5); backdrop-filter: blur(4px); }
+@media (max-width: 900px) { .lem-hero-grid { grid-template-columns: 1fr; gap: 32px; } .lem-hero-media { display: none; } }
 
 /* animated aurora background */
 .aurora { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -549,33 +568,65 @@ img.avatar { object-fit: cover; }
 
 /* client logo bar */
 .lem-logobar { position: relative; z-index: 2; margin-top: 64px; }
-.lem-logolabel { text-align: center; font: 700 11px/1 var(--body); letter-spacing: .2em;
-  text-transform: uppercase; color: var(--dimmer); margin: 0 0 26px; }
-.lem-marquee { overflow: hidden;
-  -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent);
-  mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
+.lem-logolabel { text-align: center; font: 700 11px/1 var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--dimmer); margin: 0 0 26px; }
+.lem-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .lem-track { display: flex; align-items: center; gap: 52px; width: max-content; animation: marquee 42s linear infinite; }
 .lem-marquee:hover .lem-track { animation-play-state: paused; }
 .lem-logo { font: 600 18px/1 var(--body); letter-spacing: .01em; color: var(--dim); white-space: nowrap; opacity: .7; }
 @keyframes marquee { to { transform: translateX(-50%); } }
 
-/* what's the GTM club */
-.lem-intro { max-width: 760px; margin: 0 0 44px; }
-.lem-intro .lede { margin-top: 18px; }
+/* section heads */
+.lem-head { max-width: 720px; margin: 0 0 44px; }
+.lem-head.center { margin: 0 auto 52px; text-align: center; }
+.lem-head .lede { margin-top: 18px; }
+.lem-head.center .lede { margin-left: auto; margin-right: auto; }
+
+/* what's the club: icon feature columns */
+.lem-features { display: grid; grid-template-columns: repeat(3, 1fr); gap: 20px; }
+.lem-feature { padding: 32px; border: 1px solid var(--line); border-radius: 16px; background: var(--surface); }
+.lem-feat-ic { display: inline-flex; align-items: center; justify-content: center; width: 52px; height: 52px;
+  border-radius: 12px; background: var(--accent); color: var(--accent-ink, #fff); font-size: 22px; margin-bottom: 22px; }
+.lem-feature h3 { margin: 0 0 10px; }
+@media (max-width: 780px) { .lem-features { grid-template-columns: 1fr; } }
+
+/* join: split (media/heading) + vertical door list */
+.lem-split { display: grid; grid-template-columns: .9fr 1.1fr; gap: 48px; align-items: start; }
+.lem-split-a h2 { margin-top: 16px; }
+.lem-doorlist { display: flex; flex-direction: column; gap: 12px; }
+.lem-door { display: flex; align-items: center; gap: 18px; padding: 20px 22px; border: 1px solid var(--line);
+  border-radius: 14px; background: var(--surface); text-decoration: none; color: inherit; transition: border-color 120ms ease, transform 120ms ease; }
+.lem-door:hover { border-color: var(--line-hi); transform: translateX(4px); }
+.lem-door-ic { display: inline-flex; align-items: center; justify-content: center; width: 44px; height: 44px; flex: none;
+  border-radius: 10px; background: rgba(203,61,0,.12); color: var(--accent); font-size: 18px; }
+.lem-door-txt { display: flex; flex-direction: column; gap: 3px; flex: 1; min-width: 0; }
+.lem-door-txt b { font: 500 16px/1.3 var(--body); }
+.lem-door-txt span { font-size: 13.5px; line-height: 1.45; color: var(--dimmer); }
+.lem-door-txt em { font: 700 10.5px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); font-style: normal; margin-top: 4px; }
+.lem-door-go { color: var(--dimmer); font-size: 15px; transition: color 120ms ease, transform 120ms ease; }
+.lem-door:hover .lem-door-go { color: var(--accent); transform: translateX(3px); }
+@media (max-width: 860px) { .lem-split { grid-template-columns: 1fr; gap: 28px; } .lem-split-a .ph-tall { display: none; } }
 
 /* testimonial */
 .lem-quote-band { text-align: center; }
-.lem-quote { margin: 0 auto; max-width: 860px; position: relative; }
-.lem-quote p { font: 500 clamp(22px, 3.2vw, 34px)/1.34 var(--body); letter-spacing: -.01em;
-  color: var(--ink); margin: 0; text-wrap: balance; }
-.lem-quote p::before { content: '\201C'; color: var(--accent); }
-.lem-quote p::after { content: '\201D'; color: var(--accent); }
-.lem-quote cite { display: block; margin-top: 28px; font: 700 11px/1.4 var(--body);
-  letter-spacing: .16em; text-transform: uppercase; color: var(--dimmer); font-style: normal; }
+.lem-qmark { display: inline-block; color: var(--accent); font-size: 34px; margin-bottom: 20px; }
+.lem-quote { margin: 0 auto; max-width: 860px; }
+.lem-quote p { font: 500 clamp(22px, 3.2vw, 34px)/1.34 var(--body); letter-spacing: -.01em; color: var(--ink); margin: 0; text-wrap: balance; }
+.lem-quote-foot { display: flex; align-items: center; justify-content: center; gap: 14px; margin-top: 30px; }
+.lem-quote-foot cite { font: 700 12px/1.4 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--ink); font-style: normal; text-align: left; }
+.lem-quote-foot cite span { color: var(--dimmer); letter-spacing: .06em; }
 
-.lem-tools-lede { margin: -24px 0 32px; }
+/* tools: media cards with preview placeholders */
+.lem-tool-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px; }
+.lem-tool { display: flex; flex-direction: column; border: 1px solid var(--line); border-radius: 16px; overflow: hidden;
+  background: var(--surface); text-decoration: none; color: inherit; transition: border-color 120ms ease, transform 120ms ease; }
+.lem-tool:hover { border-color: var(--line-hi); transform: translateY(-3px); }
+.lem-tool-preview .ph { border: 0; border-bottom: 1px dashed var(--line); border-radius: 0; min-height: 132px; background: var(--surface-2, rgba(255,255,255,.03)); }
+.lem-tool-body { padding: 20px 22px 22px; display: flex; flex-direction: column; }
+.lem-tool-ic { display: inline-flex; align-items: center; justify-content: center; width: 40px; height: 40px; border-radius: 10px; background: rgba(203,61,0,.12); color: var(--accent); font-size: 16px; margin-bottom: 16px; }
+.lem-tool-body b { font: 500 17px/1.3 var(--body); }
+.lem-tool-body p { font-size: 13.5px; line-height: 1.5; color: var(--dimmer); margin: 8px 0 16px; }
+.lem-tool-go { margin-top: auto; font: 700 11px/1 var(--body); letter-spacing: .12em; text-transform: uppercase; color: var(--accent); }
+.lem-tool-go .ic { margin-left: 6px; }
+@media (max-width: 860px) { .lem-tool-grid { grid-template-columns: 1fr; } }
 
-@media (prefers-reduced-motion: reduce) {
-  .aurora span { animation: none !important; }
-  .lem-track { animation: none !important; }
-}
+@media (prefers-reduced-motion: reduce) { .aurora span { animation: none !important; } .lem-track { animation: none !important; } }
