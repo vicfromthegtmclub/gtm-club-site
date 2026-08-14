@@ -671,6 +671,11 @@ function thanksPage() {
    destination for the "lemlist academy" link on lemlist.com, and the ONLY page
    that states GTM Club is initiated by lemlist. Its job is to route a lemlist
    user to whichever GTM Club component fits their need. Route: /lemlist/. */
+// Logos of lemlist customers, shown in the hero trust bar. Text wordmarks for
+// now; swap in real logo SVGs when provided (see /assets/logos/).
+const LEM_LOGOS = ['xAI', 'ElevenLabs', 'Pennylane', 'Spendesk', 'PostHog', 'Spotify',
+  'Vinted', 'Fireworks AI', 'AirOps', 'Attio', 'Crusoe', 'Doctolib', 'Dailymotion', 'Indeed'];
+
 function lemlistPage(assets) {
   const tools = assets.filter(a => a.kind === 'Tool');
   const doors = [
@@ -687,19 +692,51 @@ function lemlistPage(assets) {
       body: 'Teardowns, office hours and build nights. Bring your pipeline and leave with the next move.',
       cta: "See what's on" },
   ];
+  const whatis = [
+    { h: 'What it is', b: 'A small, curated room of go-to-market operators, plus a free library of Claude skills and interactive tools. No gurus, no gated PDFs.' },
+    { h: 'What to expect', b: 'Post the sequence that failed or the number that lies, and get a real answer, fast. Ship a working artifact from every session.' },
+    { h: "Who it's for", b: 'Founders, SDR and sales leads, RevOps and growth operators who run outbound with lemlist and want to get sharper at it.' },
+  ];
+  const logoRun = LEM_LOGOS.map(l => `<span class="lem-logo">${esc(l)}</span>`).join('');
   const body = `
-${hero('Powered by lemlist', 'Where lemlist users level up.')}
-
-<section class="band">
-  <div class="wrap prose-wide">
-    <p>The <strong>GTM Club</strong> is initiated by <strong>lemlist</strong> to help you drive real results from outbound, beyond the tool itself.</p>
-    <p>It is a community, a growing library of skills and tools, live paths taught by working operators, and a calendar of events. This page is your map: pick the door that fits where you are today.</p>
+<section class="lem-hero">
+  <div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
+  <div class="wrap lem-hero-in">
+    <p class="eyebrow">Powered by lemlist</p>
+    <h1>Where lemlist users level up.</h1>
+    <p class="lede">The GTM Club is initiated by lemlist to help you drive real results from outbound. A community, interactive tools, live paths and events, all in one room.</p>
+    <div class="hero-cta lem-cta">
+      <a class="btn btn-solid" href="${esc(data.links.apply)}">Join the GTM Club</a>
+      <a class="btn" href="/library/">Explore the tools</a>
+    </div>
+  </div>
+  <div class="wrap lem-logobar">
+    <p class="lem-logolabel">Go-to-market teams that run outbound with lemlist</p>
+    <div class="lem-marquee">
+      <div class="lem-track">${logoRun}${logoRun}</div>
+    </div>
   </div>
 </section>
 
 <section class="band">
   <div class="wrap">
-    ${sectionLabel('Pick your door')}
+    ${sectionLabel("What's the GTM Club")}
+    <div class="lem-intro">
+      <h2 class="display-md">The room where outbound gets better, together.</h2>
+      <p class="lede">Initiated by lemlist, the GTM Club is where operators go past the tool: to swap the plays that work, borrow the assets, and get unstuck the same week.</p>
+    </div>
+    <div class="cards-3">
+      ${whatis.map(w => `<div class="card-static">
+        <p class="card-name lg">${esc(w.h)}</p>
+        <p class="card-sub">${esc(w.b)}</p>
+      </div>`).join('\n      ')}
+    </div>
+  </div>
+</section>
+
+<section class="band">
+  <div class="wrap">
+    ${sectionLabel('Join the GTM Club')}
     <div class="cards-4">
       ${doors.map(d => `<a class="card-static hoverable" href="${esc(d.href)}"${d.ext ? ' target="_blank" rel="noopener"' : ''}>
         <p class="card-name lg">${esc(d.title)}</p>
@@ -709,10 +746,20 @@ ${hero('Powered by lemlist', 'Where lemlist users level up.')}
     </div>
   </div>
 </section>
+
+<section class="band lem-quote-band">
+  <div class="wrap narrow">
+    <blockquote class="lem-quote">
+      <p>The GTM Club is the first place I check on Monday. I post the sequence that flopped, and by Tuesday someone who ran the exact play has already pulled it apart for me.</p>
+      <cite>GTM Club member &middot; placeholder, replace with a real quote</cite>
+    </blockquote>
+  </div>
+</section>
 ${tools.length ? `
 <section class="band">
   <div class="wrap">
-    ${sectionLabel('Or try a tool right now')}
+    ${sectionLabel('Our GTM tools')}
+    <p class="lede lem-tools-lede">Free, interactive, no signup. Try one right now.</p>
     <div class="cards-3">
       ${tools.map(t => `<a class="card-static hoverable" href="${esc(t.url)}">
         <p class="card-name lg">${esc(t.title)}</p>
@@ -726,9 +773,9 @@ ${tools.length ? `
 <section class="cta">
   <div class="wrap narrow">
     <div class="slashes"><i></i><i></i><i></i><i></i></div>
-    <h2 class="display-lg">Not sure where to start?</h2>
-    <p class="lede center">Open the library. It is free, and most people find their first win there in ten minutes.</p>
-    <p><a class="btn btn-solid" href="/library/">Browse the library</a></p>
+    <h2 class="display-lg">Ready to level up?</h2>
+    <p class="lede center">Join the room where lemlist users turn outbound into pipeline. It is free, and most people find their first win in ten minutes.</p>
+    <p><a class="btn btn-solid" href="${esc(data.links.apply)}">Join the GTM Club</a></p>
   </div>
 </section>`;
 
