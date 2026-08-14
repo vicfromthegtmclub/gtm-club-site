@@ -1,0 +1,35 @@
+{
+  "_note": "Snapshot of Circle courses. A sync script (npm run sync-circle) would regenerate this from the Circle Admin API before a build.",
+  "_lessonUrlNote": "Per-module 'url' uses Circle's lesson-permalink pattern /c/<course-slug>/<lesson-slug>, best-guessed from the lesson names. VERIFY once the course is published (draft lessons are not reachable yet); the sync script should capture the real slugs.",
+  "syncedAt": "2026-08-14",
+  "courses": [
+    {
+      "name": "AI Signal-Driven Outbound",
+      "slug": "signal-driven-outbound",
+      "url": "https://paths.thegtmclub.com/c/signal-driven-outbound",
+      "emoji": "📡",
+      "status": "draft",
+      "courseType": "self-paced",
+      "sectionLabel": "module",
+      "lessonLabel": "lesson",
+      "summary": "Build one live signal agent feeding one evergreen campaign, with an AI-drafted opener wired to the signal. About an hour, then it runs while you do everything else.",
+      "stat": "315 replies · 5.7% · under 10 min of setup",
+      "modules": [
+        { "label": "Module 0", "title": "Cold open", "summary": "The 315-reply, 5.7% campaign that took under ten minutes to set up, and why it worked.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/315-replies-5-7-under-10-minutes-of-setup" },
+        { "label": "Module 1", "title": "Your one-shot blast is the problem, not your effort", "summary": "What a Sunday CSV blast really costs your domain, and the 40-row exercise that proves it.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/your-one-shot-blast-is-the-problem-not-your-effort" },
+        { "label": "Module 2", "title": "The Signal Tier List", "summary": "Sixteen intent signals ranked S to B, live. Why stacking beats collecting.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/the-signal-tier-list" },
+        { "label": "Module 3", "title": "Which signal should YOU turn on first?", "summary": "Pick the one signal to turn on first, with a decision tree and the One Signal Test.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/which-signal-should-you-turn-on-first" },
+        { "label": "Module 4", "title": "The signal is not the message", "summary": "The four ingredients of an opener that earns a reply, and the AI prompt behind them.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/the-signal-is-not-the-message" },
+        { "label": "Module 5", "title": "The Roast", "summary": "Real signal-based outreach graded live on a VP's inbox. The misses teach fastest.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/the-roast-signal-based-outreach-in-the-wild" },
+        { "label": "Module 6", "title": "Build your first live signal agent", "summary": "Wire a live agent to an evergreen campaign with an AI opener, then flip it always-on.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/build-your-first-live-signal-agent" },
+        { "label": "Final project", "title": "Launch your live signal-driven campaign", "summary": "Ship it: one live agent, one evergreen campaign, real leads. The course deliverable.", "url": "https://paths.thegtmclub.com/c/signal-driven-outbound/launch-your-live-signal-driven-campaign" }
+      ]
+    }
+  ],
+  "comingSoon": [
+    { "title": "Lead sourcing", "summary": "Find who is worth your time in the first place." },
+    { "title": "Copywriting masterclass", "summary": "Go deep on the message layer from Module 4." },
+    { "title": "Multichannel sequencing", "summary": "LinkedIn plus email plus calls, without over-engineering." },
+    { "title": "Discovery calls", "summary": "Turn replies into signed deals." }
+  ]
+}

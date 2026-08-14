@@ -12,6 +12,9 @@ const EVENTS = path.join(ROOT, 'content/events');
 const SITE = process.env.SITE_URL || 'https://www.thegtmclub.com'; // canonical/og/sitemap base; override with SITE_URL
 
 const data = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/data/site.json'), 'utf8'));
+// Course catalogue snapshot from Circle (see content/data/circle-courses.json).
+// A sync script would regenerate this from the Circle Admin API before a build.
+const circle = JSON.parse(fs.readFileSync(path.join(ROOT, 'content/data/circle-courses.json'), 'utf8'));
 
 /* ---------------------------------------------------------------- parsing */
 
@@ -279,45 +282,60 @@ function homePage(assetCount) {
 /* ----------------------------------------------------------- page: paths */
 
 function pathsPage() {
-  const a = data.paths;
+  const course = circle.courses[0];
+  const enter = course ? course.url : data.links.circle;
+  const howItRuns = [
+    { title: 'Self-paced', body: 'Short lessons you watch on your schedule, then come back when you have shipped something.' },
+    { title: 'In public', body: 'Every module ends in the community thread. Post your work, get it pulled apart by operators.' },
+    { title: 'One artifact', body: 'You finish with a live signal agent running, not a certificate. The deliverable is real pipeline.' },
+  ];
   const body = `
-${hero('The courses', 'Learn the craft. On the job.', a.lede,
-  { href: data.links.circle, label: 'Enter the courses' })}
+${hero('The courses', 'Learn the craft. On the job.',
+  'Self-paced courses taught by operators who run the motion, not retired gurus. You leave with a working artifact, not notes.',
+  { href: enter, label: 'Enter the courses' })}
 
 <section class="band">
   <div class="wrap">
-    ${sectionLabel('Tracks')}
+    ${sectionLabel('Courses')}
     <div class="cards-4">
-      ${a.tracks.map(t => `<div class="card-static hoverable">
-        <span class="art">Track art</span>
-        <h2 class="display-sm">${esc(t.name)}</h2>
-        <p class="card-sub">${esc(t.blurb)}</p>
-        <p class="dim">${esc(t.modules)} &middot; ${esc(t.level)}</p>
+      ${circle.courses.map(c => `<a class="card-static hoverable path-card" href="${esc(c.url)}" target="_blank" rel="noopener">
+        <span class="path-emoji">${esc(c.emoji || '')}</span>
+        <h2 class="display-sm">${esc(c.name)}</h2>
+        <p class="card-sub">${esc(c.summary)}</p>
+        <p class="dim">${c.modules.length} ${esc(c.sectionLabel)}s &middot; ${esc(c.courseType)}</p>
+        ${c.stat ? `<p class="path-stat">${esc(c.stat)}</p>` : ''}
+      </a>`).join('\n      ')}
+      ${(circle.comingSoon || []).map(s => `<div class="card-static path-card is-soon">
+        <span class="path-emoji">+</span>
+        <h2 class="display-sm">${esc(s.title)}</h2>
+        <p class="card-sub">${esc(s.summary)}</p>
+        <p class="dim">Coming soon</p>
       </div>`).join('\n      ')}
     </div>
   </div>
 </section>
 
+${course ? `
 <section class="band">
   <div class="wrap">
     <div class="row-head">
-      <h2 class="display-md">Inside a track</h2>
-      <span class="section-label">${esc(a.sampleTrack)}</span>
+      <h2 class="display-md">Inside the course</h2>
+      <span class="section-label">${esc(course.emoji || '')} ${esc(course.name)}</span>
     </div>
-    ${a.modules.map((m, i) => `<div class="row-item">
-      <span class="row-n">${pad2(i + 1)}</span>
+    ${course.modules.map((m, i) => `<a class="row-item row-link" href="${esc(m.url || course.url)}" target="_blank" rel="noopener">
+      <span class="row-n">${pad2(i)}</span>
       <div>
         <p class="row-title">${esc(m.title)}</p>
-        <p class="card-sub">${esc(m.out)}</p>
+        <p class="card-sub">${esc(m.summary)}</p>
       </div>
-      <span class="dim">${esc(m.len)}</span>
-    </div>`).join('\n    ')}
+      <span class="dim">${esc(m.label)}</span>
+    </a>`).join('\n    ')}
   </div>
-</section>
+</section>` : ''}
 
 <section class="band">
   <div class="wrap cols-3">
-    ${a.howItRuns.map(c => `<div>
+    ${howItRuns.map(c => `<div>
       <h3 class="display-sm">${esc(c.title)}</h3>
       <p class="card-sub">${esc(c.body)}</p>
     </div>`).join('\n    ')}
@@ -327,14 +345,14 @@ ${hero('The courses', 'Learn the craft. On the job.', a.lede,
 <section class="cta">
   <div class="wrap narrow">
     <h2 class="display-lg">Everything runs on Circle.</h2>
-    <p class="lede center">Sessions, replays and workbooks live in one place. Members get access on day one.</p>
-    <p><a class="btn btn-accent" href="${esc(data.links.circle)}">Go to Circle</a></p>
+    <p class="lede center">Lessons, discussion and your workbook live in one place. Members get access on day one.</p>
+    <p><a class="btn btn-accent" href="${esc(enter)}">Go to Circle</a></p>
   </div>
 </section>`;
 
   return layout({
-    title: 'Paths. Live GTM courses taught by operators. GTM Club',
-    description: 'Four live tracks on outbound, RevOps, pipeline math and AI for GTM. Every module ends with a working artifact.',
+    title: 'Paths. Self-paced GTM courses taught by operators. GTM Club',
+    description: 'Self-paced GTM courses on Circle. The first: AI Signal-Driven Outbound, eight modules ending in a live signal agent.',
     canonical: '/paths/', current: '/paths/', body,
   });
 }

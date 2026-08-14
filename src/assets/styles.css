@@ -658,3 +658,14 @@ img.avatar { object-fit: cover; }
 
 /* tool-card preview screenshots */
 .lem-tool-preview img { display: block; width: 100%; height: 150px; object-fit: cover; object-position: top center; border-bottom: 1px solid var(--line); }
+
+/* paths page: Circle course catalogue */
+.path-card { display: flex; flex-direction: column; }
+.path-emoji { font-size: 26px; line-height: 1; margin-bottom: 16px; }
+.path-card .display-sm { margin-bottom: 10px; }
+.path-card .dim { margin-top: 14px; }
+.path-stat { margin: 10px 0 0; font: 700 10.5px/1.4 var(--body); letter-spacing: .1em; text-transform: uppercase; color: var(--accent); }
+.path-card.is-soon { opacity: .5; }
+.path-card.is-soon .path-emoji { color: var(--dimmer); }
+.row-link { text-decoration: none; color: inherit; }
+.row-link:hover .row-title { color: var(--accent); }
