@@ -832,7 +832,7 @@ ${tools.length ? `
     </div>
     <div class="lem-tool-grid">
       ${tools.map(t => `<a class="lem-tool" href="${esc(t.url)}">
-        <div class="lem-tool-preview">${placeholder('Tool preview', 'image')}</div>
+        <div class="lem-tool-preview"><img src="/assets/previews/${esc(t.slug)}.jpg" alt="${esc(t.title)} preview" loading="lazy"></div>
         <div class="lem-tool-body">
           <span class="lem-tool-ic">${icon('screwdriver-wrench')}</span>
           <b>${esc(t.title)}</b>

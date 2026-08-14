@@ -651,3 +651,6 @@ img.avatar { object-fit: cover; }
 .lem-stack p { font-size: 14px; line-height: 1.5; color: var(--dimmer); margin: 8px 0 18px; }
 .lem-stack .lem-tool-go { margin-top: auto; }
 @media (max-width: 860px) { .lem-stack-grid { grid-template-columns: 1fr; } }
+
+/* tool-card preview screenshots */
+.lem-tool-preview img { display: block; width: 100%; height: 150px; object-fit: cover; object-position: top center; border-bottom: 1px solid var(--line); }
