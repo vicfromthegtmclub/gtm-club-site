@@ -122,11 +122,12 @@ ${noindex ? '<meta name="robots" content="noindex,nofollow">\n' : ''}<link rel="
 <header class="nav">
   <div class="nav-in">
     <a class="brand" href="/"><img src="/assets/logo-96.png" alt="" width="28" height="28"> GTM Club</a>
-    <nav aria-label="Main">
+    <nav id="navMenu" aria-label="Main">
       ${NAV.map(([href, label]) =>
         `<a href="${href}"${href === current ? ' aria-current="page"' : ''}>${label}</a>`).join('\n      ')}
     </nav>
     <button class="theme-toggle" id="themeToggle" type="button" aria-label="Switch to light theme">Light</button>
+    <button class="nav-toggle" id="navToggle" type="button" aria-label="Menu" aria-controls="navMenu" aria-expanded="false"><span></span><span></span><span></span></button>
   </div>
 </header>
 <main id="main">
@@ -163,10 +164,63 @@ const sectionLabel = t => `<p class="section-label">${esc(t)}</p>`;
 
 /* ------------------------------------------------------------ page: home */
 
-function homePage() {
+function homePage(assetCount) {
   const m = data.manifesto;
   const body = `
-${hero('Manifesto', 'Learn. Share. Grow. Together.')}
+<section class="hero-cockpit">
+  <div class="wrap cockpit-content">
+    <p class="eyebrow">A higher standard of GTM motion</p>
+    <h1><span class="line"><span>Learn. Share.</span></span><span class="line"><span>Grow. Together.</span></span></h1>
+    <p class="lede">A small room of operators who ship, with the assets, paths and people to move faster than the feed.</p>
+    <div class="hero-cta cockpit-cta">
+      <a class="btn btn-solid" href="${esc(data.links.apply)}">Apply to join</a>
+      <a class="btn" href="/library/">Browse the library</a>
+    </div>
+    <p class="cockpit-stats">${assetCount} free assets &nbsp;&middot;&nbsp; 30-seat rooms &nbsp;&middot;&nbsp; weekly teardowns</p>
+  </div>
+
+  <div class="cockpit-stage" aria-hidden="true">
+    <div class="mock mock-chart">
+      <div class="mock-top">
+        <div><span class="mock-k">Reply rate</span><span class="mock-sub">Signal-led outbound</span></div>
+        <span class="mock-tag">Live</span>
+      </div>
+      <div class="spark-wrap">
+        <svg class="spark" viewBox="0 0 640 200" preserveAspectRatio="none">
+          <defs>
+            <linearGradient id="sparkLine" x1="0" y1="0" x2="1" y2="0">
+              <stop offset="0" stop-color="#CB3D00" stop-opacity=".2"/>
+              <stop offset=".65" stop-color="#CB3D00"/>
+              <stop offset="1" stop-color="#FF8A4C"/>
+            </linearGradient>
+            <linearGradient id="sparkFill" x1="0" y1="0" x2="0" y2="1">
+              <stop offset="0" stop-color="#CB3D00" stop-opacity=".26"/>
+              <stop offset="1" stop-color="#CB3D00" stop-opacity="0"/>
+            </linearGradient>
+            <filter id="sparkGlow" x="-15%" y="-80%" width="130%" height="260%">
+              <feGaussianBlur stdDeviation="7"/>
+            </filter>
+          </defs>
+          <g class="spark-grid"><line x1="0" y1="50" x2="640" y2="50"/><line x1="0" y1="100" x2="640" y2="100"/><line x1="0" y1="150" x2="640" y2="150"/></g>
+          <path class="spark-area" d="M0,164 L40,156 L80,168 L120,144 L160,158 L200,126 L240,138 L280,108 L320,120 L360,88 L400,100 L440,66 L480,78 L520,44 L560,58 L600,26 L632,16 L632,200 L0,200 Z" fill="url(#sparkFill)"/>
+          <path class="spark-glow" pathLength="1" d="M0,164 L40,156 L80,168 L120,144 L160,158 L200,126 L240,138 L280,108 L320,120 L360,88 L400,100 L440,66 L480,78 L520,44 L560,58 L600,26 L632,16" fill="none" stroke="#CB3D00" stroke-width="6" stroke-linecap="round" stroke-linejoin="round" filter="url(#sparkGlow)" opacity=".85"/>
+          <path class="spark-line" pathLength="1" d="M0,164 L40,156 L80,168 L120,144 L160,158 L200,126 L240,138 L280,108 L320,120 L360,88 L400,100 L440,66 L480,78 L520,44 L560,58 L600,26 L632,16" fill="none" stroke="url(#sparkLine)" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+          <circle class="spark-tip" cx="632" cy="16" r="4.5" fill="#FF8A4C" filter="url(#sparkGlow)"/>
+        </svg>
+      </div>
+      <div class="mock-axis"><span>W1</span><span>W2</span><span>W3</span><span>W4</span><span>W5</span><span>W6</span></div>
+    </div>
+    <div class="mock mock-list">
+      <div class="mock-top"><span class="mock-k">Latest in the library</span><span class="mock-tag ghost">${assetCount}</span></div>
+      <ul>
+        <li><span><b>The one signal test</b><i>Interactive diagnostic</i></span><em>Tool</em></li>
+        <li><span><b>Pain to value matrix</b><i>Messaging builder</i></span><em>Tool</em></li>
+        <li><span><b>Warm intro finder</b><i>Network play</i></span><em>Skill</em></li>
+        <li><span><b>Outbound quota calculator</b><i>Daily math</i></span><em>Tool</em></li>
+      </ul>
+    </div>
+  </div>
+</section>
 
 <section class="band">
   <div class="wrap prose-wide">
@@ -799,7 +853,7 @@ for (const a of assets) {
   }
 }
 
-write('.', homePage());
+write('.', homePage(assets.length));
 const PATHS_LIVE = false; // flip to true when the tracks launch, to serve the full pathsPage()
 write('paths', PATHS_LIVE ? pathsPage() : pathsWaitlistPage());
 write('events', eventsPage(events));

@@ -20,3 +20,22 @@
 
   sync();
 })();
+
+// Mobile nav: the hamburger toggles a dropdown menu (below 760px).
+(function () {
+  var nav = document.querySelector('.nav');
+  var toggle = document.getElementById('navToggle');
+  if (!nav || !toggle) return;
+
+  function close() { nav.removeAttribute('data-open'); toggle.setAttribute('aria-expanded', 'false'); }
+  function open() { nav.setAttribute('data-open', ''); toggle.setAttribute('aria-expanded', 'true'); }
+
+  toggle.addEventListener('click', function () {
+    if (nav.hasAttribute('data-open')) close(); else open();
+  });
+
+  var menu = document.getElementById('navMenu');
+  if (menu) menu.addEventListener('click', function (e) { if (e.target.closest('a')) close(); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape') close(); });
+  window.addEventListener('resize', function () { if (window.innerWidth > 760) close(); });
+})();
