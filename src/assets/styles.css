@@ -314,6 +314,7 @@ form .btn { margin-top: 32px; }
   padding: 32px; border-radius: 16px; background: var(--surface);
   border: 1px solid var(--line); transition: border-color 120ms ease;
 }
+.card-static.hoverable { text-decoration: none; color: inherit; }
 .card-static.hoverable:hover { border-color: var(--line-hi); }
 .card-static > *:first-child { margin-top: 0; }
 .card-name { font: 500 16px/1.4 var(--body); margin: 16px 0 0; }
