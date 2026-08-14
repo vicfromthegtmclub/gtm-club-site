@@ -496,8 +496,8 @@ const EB_COLORS = ['#CB3D00', '#FF7A5A', '#9E2F00', '#6F7BB0', '#1E6E7A', '#C9A4
 
 function card(a, i = 0) {
   const search = esc([a.title, a.description, a.kind, a.source, a.author, a.meta].join(' ').toLowerCase());
-  return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}" data-search="${search}">
-  <span class="eb" aria-hidden="true" style="--eb-color:${EB_COLORS[i % EB_COLORS.length]}"><i class="eb-bg"></i><i class="eb-stroke"></i><i class="eb-glow eb-g1"></i><i class="eb-glow eb-g2"></i></span>
+  return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}" data-search="${search}" style="--eb-color:${EB_COLORS[i % EB_COLORS.length]}">
+  <span class="eb" aria-hidden="true"><i class="eb-bg"></i><i class="eb-stroke"></i><i class="eb-glow eb-g1"></i><i class="eb-glow eb-g2"></i></span>
   <div class="card-top">
     <span class="pill">${esc(a.kind)}</span>
     <span class="dim">${esc(a.updatedLabel)}</span>
