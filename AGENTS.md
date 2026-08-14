@@ -106,6 +106,18 @@ repo). Skill detail pages link their primary button to
 `{links.skillsRepo}/tree/main/<slug>`, with the zip as the secondary download, so
 the site funnels stars to the repo. `links.skillsRepo` lives in `site.json`.
 
+## Hidden pages
+
+`/lemlist/` (`lemlistPage()` in `build.mjs`) is a standalone entry hub: the
+destination for the "lemlist academy" link on lemlist.com, and the **only** page
+that states GTM Club is initiated by lemlist. It routes a lemlist user to the
+component that fits their need (paths, library, community, events, tools). It is
+built with `noindex: true` (an optional `layout()` flag) and is deliberately
+kept out of `NAV` and the `urls` sitemap array, so it is not discoverable on its
+own. If you touch nav, the sitemap, or that page, keep those three things true.
+Interactive tools on the page are read from `assets` (kind `Tool`), so new tools
+appear automatically.
+
 ## Deploys
 
 Hosted on **Vercel** (`vercel.json` configures the build). A push to `main`
