@@ -542,15 +542,14 @@ img.avatar { object-fit: cover; }
 .ph-avatar .ph-ic { font-size: 20px; }
 
 /* hero: muted module reel as a full-bleed background */
-.lem-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line);
-  padding: calc(var(--nav-h) + 96px) 0 44px; min-height: min(600px, 82vh); display: flex; flex-direction: column; justify-content: center; }
+.lem-hero { position: relative; overflow: hidden; padding: 120px 0 48px; }
 .lem-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: .5; }
 .lem-hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
   background: linear-gradient(96deg, var(--bg) 6%, rgba(10, 9, 9, .66) 42%, rgba(10, 9, 9, .34) 100%),
     linear-gradient(to top, var(--bg) 1%, transparent 46%); }
 :root[data-theme="light"] .lem-hero-scrim { background: linear-gradient(96deg, var(--bg) 6%, rgba(244, 243, 240, .72) 44%, rgba(244, 243, 240, .4) 100%), linear-gradient(to top, var(--bg) 1%, transparent 46%); }
-.lem-hero-in { position: relative; z-index: 3; max-width: 720px; }
-.lem-hero-in h1 { max-width: 15ch; }
+.lem-hero-in { position: relative; z-index: 3; }
+.lem-hero-in h1 { max-width: 14ch; }
 .lem-hero-in .lede { max-width: 560px; }
 .lem-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
 .lem-cta .btn .ic { margin-right: 8px; }
@@ -570,8 +569,9 @@ img.avatar { object-fit: cover; }
 @keyframes drift3 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(7%,-8%) scale(1.15); } }
 @keyframes drift4 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6%,-6%) scale(1.1); } }
 
-/* client logo bar */
-.lem-logobar { position: relative; z-index: 3; margin-top: 56px; }
+/* client logo bar (its own band under the hero) */
+.lem-logo-band { padding: 28px 0 10px; border-bottom: 1px solid var(--line); }
+.lem-logobar { margin: 0; }
 .lem-logolabel { text-align: center; font: 700 11px/1 var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--dimmer); margin: 0 0 26px; }
 .lem-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .lem-track { display: flex; align-items: center; gap: 52px; width: max-content; animation: marquee 42s linear infinite; }
@@ -669,3 +669,23 @@ img.avatar { object-fit: cover; }
 .path-card.is-soon .path-emoji { color: var(--dimmer); }
 .row-link { text-decoration: none; color: inherit; }
 .row-link:hover .row-title { color: var(--accent); }
+
+/* ---- generic hero backgrounds (aurora / video), reused across page heroes */
+.hero-bg { position: relative; overflow: hidden; }
+.hero-bg > .wrap { position: relative; z-index: 3; }
+.hero-aurora { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
+.hero-aurora span { position: absolute; width: 42vw; height: 42vw; min-width: 320px; min-height: 320px;
+  border-radius: 50%; filter: blur(90px); opacity: .38; mix-blend-mode: screen; will-change: transform; }
+.hero-aurora span:nth-child(1) { background: #CB3D00; top: -26%; left: -8%; animation: drift1 19s ease-in-out infinite; }
+.hero-aurora span:nth-child(2) { background: #6F7BB0; top: -30%; right: -10%; animation: drift2 23s ease-in-out infinite; }
+.hero-aurora span:nth-child(3) { background: #1E6E7A; bottom: -34%; left: 16%; animation: drift3 21s ease-in-out infinite; }
+.hero-aurora span:nth-child(4) { background: #FF7A5A; bottom: -30%; right: 6%; animation: drift4 27s ease-in-out infinite; }
+:root[data-theme="light"] .hero-aurora span { mix-blend-mode: multiply; opacity: .2; }
+.hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: .5; }
+.hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(100deg, var(--bg) 4%, rgba(10, 9, 9, .52) 40%, rgba(10, 9, 9, .2) 100%),
+    linear-gradient(to top, var(--bg) 1%, transparent 52%); }
+:root[data-theme="light"] .hero-scrim {
+  background: linear-gradient(100deg, var(--bg) 4%, rgba(244, 243, 240, .62) 42%, rgba(244, 243, 240, .28) 100%),
+    linear-gradient(to top, var(--bg) 1%, transparent 52%); }
+@media (prefers-reduced-motion: reduce) { .hero-aurora span { animation: none !important; } .hero-video { display: none; } }

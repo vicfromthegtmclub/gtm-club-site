@@ -148,8 +148,9 @@ ${body}
 </html>`;
 }
 
-const hero = (eyebrow, h1, lede, cta) => `
-<section class="hero">
+const hero = (eyebrow, h1, lede, cta, opts = {}) => `
+<section class="hero${opts.bg ? ' hero-bg' : ''}">
+  ${opts.bg === 'aurora' ? '<div class="hero-aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div><div class="hero-scrim" aria-hidden="true"></div>' : opts.bg === 'video' ? '<video class="hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/hero-poster.jpg" aria-hidden="true"><source src="/assets/hero-reel.webm" type="video/webm"><source src="/assets/hero-reel.mp4" type="video/mp4"></video><div class="hero-scrim" aria-hidden="true"></div>' : ''}
   <div class="wrap">
     <p class="eyebrow">${esc(eyebrow)}</p>
     <h1>${esc(h1)}</h1>
@@ -292,7 +293,7 @@ function pathsPage(opts = {}) {
   const body = `
 ${hero('The courses', 'Learn the craft. On the job.',
   'Self-paced courses taught by operators who run the motion, not retired gurus. You leave with a working artifact, not notes.',
-  { href: enter, label: 'Enter the courses' })}
+  { href: enter, label: 'Enter the courses' }, { bg: 'video' })}
 
 <section class="band">
   <div class="wrap">
@@ -365,7 +366,8 @@ ${course ? `
 function pathsWaitlistPage() {
   const body = `
 ${hero('Paths', 'Coming soon.',
-  'Live GTM courses taught by operators, each one ending with a working artifact you keep. We are building the first tracks now. Join the waitlist and we will email you the moment they open.')}
+  'Live GTM courses taught by operators, each one ending with a working artifact you keep. We are building the first tracks now. Join the waitlist and we will email you the moment they open.',
+  null, { bg: 'video' })}
 
 <section class="band">
   <div class="wrap">
@@ -404,7 +406,7 @@ ${hero('Paths', 'Coming soon.',
 
 function eventsPage(events) {
   const body = `
-${hero('Calendar', "What's on.", data.events.lede)}
+${hero('Calendar', "What's on.", data.events.lede, null, { bg: 'aurora' })}
 
 <section class="band">
   <div class="wrap">
@@ -450,7 +452,7 @@ ${hero('Calendar', "What's on.", data.events.lede)}
 function communityPage() {
   const c = data.community;
   const body = `
-${hero('The community', 'The room you post in first.', c.lede)}
+${hero('The community', 'The room you post in first.', c.lede, null, { bg: 'aurora' })}
 
 <section class="band">
   <div class="wrap">
@@ -547,7 +549,8 @@ function libraryPage(assets, kinds, sources) {
   </filter>
 </defs></svg>
 ${hero('Asset library', 'Take it. Ship it today.',
-  'Claude skills, repos, sequences, prompts and datasets built by members. Cloned, forked, credited.')}
+  'Claude skills, repos, sequences, prompts and datasets built by members. Cloned, forked, credited.',
+  null, { bg: 'aurora' })}
 
 <section class="filters">
   <div class="wrap">
@@ -774,6 +777,9 @@ function lemlistPage(assets) {
       <a class="btn" href="/library/">Explore the tools</a>
     </div>
   </div>
+</section>
+
+<section class="lem-logo-band">
   <div class="wrap lem-logobar">
     <p class="lem-logolabel">Go-to-market teams that run outbound with lemlist</p>
     <div class="lem-marquee"><div class="lem-track">${logoRun}${logoRun}</div></div>
