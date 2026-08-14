@@ -1,0 +1,730 @@
+<!-- GTM Club / library / one-signal-test
+     Self-contained diagnostic. All design tokens live in the :root block below. -->
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>The one signal test · GTM Club</title>
+<link rel="icon" href="/assets/logo-96.png">
+<meta name="description" content="Answer 7 questions and get the one outbound signal to turn on first, scored against your audience, your stack and your setup appetite.">
+<script>try{if(localStorage.getItem("gtm-theme")==="light")document.documentElement.setAttribute("data-theme","light")}catch(e){}</script>
+
+<style>
+/* Site fonts, self-hosted (same origin as this page). */
+@font-face{font-family:'Druk Wide';src:url('/assets/fonts/druk-wide-bold.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-400.woff2') format('woff2');font-weight:400;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-500.woff2') format('woff2');font-weight:500;font-style:normal;font-display:swap}
+@font-face{font-family:'Helvetica Now Text';src:url('/assets/fonts/helvetica-now-text-700.woff2') format('woff2');font-weight:700;font-style:normal;font-display:swap}
+:root{
+  /* GTM Club design tokens */
+  --bg:#0A0909;
+  --surface:#141313;
+  --surface-2:#1F1E1C;
+  --line:rgba(255,255,255,.12);
+  --line-strong:rgba(255,255,255,.22);
+  --text:#FFFFFF;
+  --muted:#A9A9A9;
+  --faint:#706E6A;
+  --accent:#CB3D00;
+  --accent-ink:#FFFFFF;
+  --accent-dim:rgba(203,61,0,.15);
+  --tier-s:#CB3D00;
+  --tier-a:#D98A2B;
+  --tier-b:#9A9894;
+  --pass:#5BD98A;
+  --radius:14px;
+  --display:'Druk Wide','Arial Black',sans-serif;
+  --body:'Helvetica Now Text',Helvetica,Arial,sans-serif;
+  --mono:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;
+}
+[data-theme="light"]{
+  --bg:#F4F3F0; --surface:#FFFFFF; --surface-2:#F0EFEC;
+  --line:rgba(10,9,9,.14); --line-strong:rgba(10,9,9,.26);
+  --text:#0A0909; --muted:#4B4A48; --faint:#8A8884;
+  --accent-dim:rgba(203,61,0,.10); --tier-b:#8A8884;
+}
+
+*{box-sizing:border-box;margin:0;padding:0}
+html{-webkit-text-size-adjust:100%}
+html,body{min-height:100vh}
+body{
+  background:
+    radial-gradient(ellipse at top, rgba(203,61,0,.07) 0%, transparent 55%),
+    var(--bg);
+  background-attachment:fixed;
+  color:var(--text);font-family:var(--body);font-size:16px;line-height:1.5;
+  -webkit-font-smoothing:antialiased;
+}
+a{color:inherit}
+:focus-visible{outline:2px solid var(--accent);outline-offset:2px;border-radius:4px}
+
+/* ---------- top bar ---------- */
+.topbar{
+  max-width:640px;margin:0 auto;padding:20px 24px 0;
+  display:flex;justify-content:space-between;align-items:center
+}
+.back{font-size:14px;color:var(--muted);text-decoration:none}
+.back:hover{color:var(--text)}
+.theme{
+  background:none;border:1px solid var(--line);color:var(--muted);
+  font-family:var(--mono);font-size:11px;letter-spacing:.08em;text-transform:uppercase;
+  padding:7px 12px;border-radius:99px;cursor:pointer
+}
+.theme:hover{color:var(--text);border-color:var(--muted)}
+
+.app{
+  max-width:640px;margin:0 auto;padding:26px 24px 80px;
+  min-height:calc(100vh - 60px);display:flex;flex-direction:column
+}
+
+.brand-tag{
+  font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.14em;
+  text-transform:uppercase;color:var(--faint);
+  display:inline-flex;align-items:center;gap:8px
+}
+.brand-tag::before{content:'';width:6px;height:6px;border-radius:50%;background:var(--accent)}
+.header{margin-bottom:44px}
+
+/* ---------- start screen ---------- */
+.start-screen{padding-top:32px}
+.start-title{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(36px,8vw,58px);line-height:.98;letter-spacing:-.01em;
+  margin-top:28px;margin-bottom:24px
+}
+.start-title em{color:var(--accent);font-style:normal}
+.start-desc{
+  font-size:17px;color:var(--muted);margin-bottom:40px;max-width:52ch;line-height:1.55
+}
+.start-desc strong{color:var(--text);font-weight:600}
+.start-meta{
+  display:flex;gap:36px;margin-bottom:48px;padding-top:32px;border-top:1px solid var(--line)
+}
+.meta-item{display:flex;flex-direction:column;gap:6px}
+.meta-value{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:26px;line-height:1;letter-spacing:-.01em}
+.meta-label{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em}
+
+/* ---------- buttons ---------- */
+.btn{
+  display:inline-flex;align-items:center;justify-content:center;gap:8px;
+  padding:13px 22px;font-size:15px;font-weight:650;font-family:var(--body);
+  border:none;border-radius:10px;cursor:pointer;transition:filter .15s ease,transform .15s ease,color .15s ease,border-color .15s ease;
+  text-decoration:none;white-space:nowrap
+}
+.btn-primary{background:var(--accent);color:var(--accent-ink)}
+.btn-primary:hover{filter:brightness(1.08);transform:translateY(-1px)}
+.btn-secondary{background:transparent;color:var(--text);border:1px solid var(--line-strong)}
+.btn-secondary:hover{background:var(--surface-2);border-color:var(--muted)}
+.btn-ghost{background:transparent;color:var(--muted);padding:8px 12px;font-weight:550}
+.btn-ghost:hover{color:var(--text)}
+.btn-arrow::after{content:'→';font-size:18px;transition:transform .2s ease}
+.btn-primary.btn-arrow:hover::after{transform:translateX(3px)}
+
+/* ---------- progress ---------- */
+.progress{display:flex;gap:6px;margin-bottom:40px}
+.progress-dot{flex:1;height:3px;border-radius:2px;background:var(--line);transition:background .3s ease}
+.progress-dot.active{background:var(--accent)}
+.progress-dot.done{background:var(--muted)}
+
+/* ---------- questions ---------- */
+.question-screen{animation:fadeSlideIn .25s ease-out}
+@keyframes fadeSlideIn{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:translateY(0)}}
+.q-eyebrow{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.q-eyebrow span{color:var(--accent)}
+.q-text{font-size:clamp(24px,5.4vw,30px);line-height:1.18;font-weight:650;letter-spacing:-.01em;margin-bottom:8px}
+.q-subtitle{font-size:15px;color:var(--muted);margin-bottom:32px;line-height:1.5}
+.options{display:flex;flex-direction:column;gap:10px;margin-bottom:32px}
+.option{
+  background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:17px 20px;
+  text-align:left;cursor:pointer;font-family:var(--body);font-size:15px;color:var(--text);line-height:1.4;
+  transition:background .15s ease,border-color .15s ease,transform .15s ease;
+  display:flex;align-items:flex-start;gap:12px;position:relative
+}
+.option:hover{background:var(--surface-2);border-color:var(--line-strong);transform:translateX(2px)}
+.option.selected{background:var(--accent-dim);border-color:var(--accent)}
+.option-marker{
+  width:20px;height:20px;border-radius:50%;border:1.5px solid var(--line-strong);flex-shrink:0;margin-top:1px;
+  transition:border-color .15s ease,background .15s ease;display:flex;align-items:center;justify-content:center
+}
+.option:hover .option-marker{border-color:var(--muted)}
+.option.selected .option-marker{border-color:var(--accent);background:var(--accent)}
+.option.selected .option-marker::after{content:'';width:8px;height:8px;border-radius:50%;background:#fff}
+.nav{display:flex;justify-content:space-between;align-items:center;margin-top:auto;padding-top:24px}
+
+/* ---------- result screen ---------- */
+.result-screen{animation:fadeIn .4s ease-out}
+@keyframes fadeIn{from{opacity:0}to{opacity:1}}
+.result-eyebrow{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.1em;margin-bottom:14px}
+.result-signal{
+  font-family:var(--display);font-weight:700;text-transform:uppercase;
+  font-size:clamp(34px,7.5vw,58px);line-height:.98;letter-spacing:-.01em;
+  margin-bottom:20px;animation:signalReveal .6s cubic-bezier(.16,1,.3,1)
+}
+@keyframes signalReveal{from{opacity:0;transform:translateY(20px)}to{opacity:1;transform:translateY(0)}}
+.tier-badge{
+  display:inline-flex;align-items:center;gap:6px;padding:5px 11px;border-radius:6px;
+  font-family:var(--mono);font-size:11px;font-weight:400;letter-spacing:.06em;text-transform:uppercase;margin-bottom:24px
+}
+.tier-badge.tier-s{background:rgba(203,61,0,.15);color:var(--tier-s);border:1px solid rgba(203,61,0,.34)}
+.tier-badge.tier-a{background:rgba(217,138,43,.13);color:var(--tier-a);border:1px solid rgba(217,138,43,.28)}
+.tier-badge.tier-b{background:rgba(154,152,148,.14);color:var(--tier-b);border:1px solid rgba(154,152,148,.3)}
+.result-why{font-size:17px;color:var(--muted);line-height:1.55;margin-bottom:32px}
+.result-why strong{color:var(--text);font-weight:600}
+
+/* ---------- facts ---------- */
+.facts{
+  display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-bottom:40px;padding:22px 24px;
+  background:var(--surface);border:1px solid var(--line);border-radius:var(--radius)
+}
+.fact-label{font-family:var(--mono);font-size:10.5px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:6px}
+.fact-value{font-size:15px;color:var(--text);font-weight:600}
+
+/* ---------- chart ---------- */
+.chart{margin-bottom:40px}
+.chart-title{font-family:var(--mono);font-size:11px;color:var(--faint);text-transform:uppercase;letter-spacing:.08em;margin-bottom:16px}
+.chart-bar-row{display:grid;grid-template-columns:160px 1fr 32px;align-items:center;gap:12px;margin-bottom:8px}
+.chart-signal-name{font-size:13px;color:var(--muted);text-align:right;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.chart-bar-row.winner .chart-signal-name{color:var(--text);font-weight:600}
+.chart-bar-track{height:6px;background:var(--surface-2);border-radius:3px;overflow:hidden}
+.chart-bar-fill{height:100%;background:var(--faint);border-radius:3px;transition:width .8s cubic-bezier(.16,1,.3,1);width:0}
+.chart-bar-row.winner .chart-bar-fill{background:var(--accent)}
+.chart-score{font-family:var(--mono);font-size:12px;color:var(--faint);font-variant-numeric:tabular-nums;text-align:right}
+.chart-bar-row.winner .chart-score{color:var(--text);font-weight:500}
+
+/* ---------- next step ---------- */
+.next-step{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:8px;padding:20px 24px;margin-bottom:40px
+}
+.next-step-label{font-family:var(--mono);font-size:11px;color:var(--accent);text-transform:uppercase;letter-spacing:.08em;font-weight:400;margin-bottom:8px}
+.next-step-text{font-size:15px;color:var(--text);line-height:1.5}
+
+/* ---------- commitment ---------- */
+.commit-section{margin-bottom:40px}
+.commit-heading{font-family:var(--display);font-weight:700;text-transform:uppercase;font-size:22px;letter-spacing:-.01em;margin-bottom:10px}
+.commit-desc{font-size:14px;color:var(--muted);margin-bottom:16px;line-height:1.5}
+.commit-box{
+  background:var(--surface);border:1px solid var(--line);border-left:3px solid var(--accent);border-radius:8px;
+  padding:20px;font-size:17px;line-height:1.5;color:var(--text);margin-bottom:12px
+}
+.commit-actions{display:flex;gap:8px;flex-wrap:wrap}
+
+/* ---------- footer actions ---------- */
+.final-actions{display:flex;flex-direction:column;gap:12px;padding-top:32px;border-top:1px solid var(--line)}
+
+/* ---------- toast ---------- */
+.toast{
+  position:fixed;bottom:24px;left:50%;transform:translateX(-50%) translateY(80px);
+  background:var(--text);color:var(--bg);padding:12px 20px;border-radius:8px;
+  font-size:14px;font-weight:500;opacity:0;transition:all .3s ease;pointer-events:none;z-index:100
+}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+
+/* ---------- responsive ---------- */
+.start-title,.result-signal{overflow-wrap:break-word}
+@media (max-width:560px){
+  .app{padding:24px 20px 60px}
+  .start-title{font-size:clamp(32px,8.5vw,44px)}
+  .result-signal{font-size:clamp(28px,7.6vw,40px);letter-spacing:-.02em}
+  .facts{grid-template-columns:1fr;gap:20px}
+  .chart-bar-row{grid-template-columns:100px 1fr 32px;gap:10px}
+  .chart-signal-name{font-size:12px}
+  .start-meta{flex-direction:column;gap:20px}
+}
+</style>
+
+<div class="topbar">
+  <a class="back" href="/library/">← Library</a>
+  <button class="theme" id="themeBtn" type="button">Light</button>
+</div>
+<div class="app" id="app"></div>
+<div class="toast" id="toast">Copied</div>
+
+<script>
+  // ============================================
+  // SIGNALS DATA
+  // ============================================
+  const signals = {
+    engagers: {
+      name: 'Engagers',
+      fullName: 'Influencer engagement',
+      tier: 'A',
+      tierNote: 'S-tier for founders with any audience',
+      setup: 'Zero',
+      timeToReply: '1 to 3 days',
+      why: 'The people commenting on your (or your team\'s) LinkedIn content have already raised their hand. It\'s the highest-leverage, zero-setup signal available to a founding team, and it\'s uniquely yours: no competitor can target the same list.',
+      nextStep: 'Point the agent at 3 to 5 recent posts (yours or your team\'s). Filter by ICP-fit titles. Wire the opener with the post text captured as a variable.'
+    },
+    profile_views: {
+      name: 'Profile views',
+      fullName: 'LinkedIn profile views',
+      tier: 'S',
+      tierNote: 'Highest signal-to-noise on the board',
+      setup: 'Zero',
+      timeToReply: '3 to 7 days',
+      why: 'Someone in your market is actively scoping you. Smaller volume than engagers, but the intent per lead is unmatched: they came looking, you just have to answer the door.',
+      nextStep: 'Enable Sales Nav visitor tracking. Filter for ICP-shaped viewers. The opener references the fact that they were on your page (without being creepy about it).'
+    },
+    competitor_connections: {
+      name: 'Competitor connections',
+      fullName: 'Competitor connections',
+      tier: 'S',
+      tierNote: 'No audience required on your side',
+      setup: 'Zero',
+      timeToReply: '3 to 7 days',
+      why: 'When someone connects with your named competitor on LinkedIn, they\'re researching your category, often actively comparing. Zero audience needed on your side. The internet does the work.',
+      nextStep: 'Name your top 3 competitors in the agent. Watch for new inbound connections on their profiles. The opener frames the comparison honestly (opinionated, not defensive).'
+    },
+    contact_changed_jobs: {
+      name: 'Job changes',
+      fullName: 'Contact changed jobs',
+      tier: 'S',
+      tierNote: 'The warmest re-entry in outbound',
+      setup: 'Low (need a list)',
+      timeToReply: 'Variable (depends on watchlist size)',
+      why: 'Pre-existing trust meets a new mandate and a fresh budget. Your old champion is now your new champion at a new company. The reply rate on this signal beats every other on the board when the relationship is real.',
+      nextStep: 'Export past customers and champions from your CRM. Wire the agent to watch for job changes. The opener acknowledges the move and offers to reconnect without pitching upfront.'
+    },
+    technology_change: {
+      name: 'Tech stack change',
+      fullName: 'Technology change',
+      tier: 'A',
+      tierNote: 'S-tier for devtools and integrations',
+      setup: 'Low',
+      timeToReply: '3 to 7 days',
+      why: 'You just need to be present the moment a company adopts or replaces the tool your product hooks into. The wave is already moving; you\'re riding it.',
+      nextStep: 'Name the specific tool. Filter for companies adopting or replacing it in the last 30 to 90 days. The opener leads with the tech context, not your product.'
+    },
+    company_hiring: {
+      name: 'Hiring signals',
+      fullName: 'Company is hiring',
+      tier: 'A',
+      tierNote: 'Public bug reports for growth pain',
+      setup: 'Low',
+      timeToReply: '3 to 7 days',
+      why: 'Job posts are public bug reports for a company\'s growth pain. A company hiring 5 SDRs is a company that needs your outbound tool this quarter. A company hiring a VP RevOps just told you what they can\'t do internally anymore.',
+      nextStep: 'Filter for companies posting the roles most correlated with your buying moment. The opener names the role and the implied pain.'
+    },
+    website_visitors: {
+      name: 'Website visitors',
+      fullName: 'Website visitors',
+      tier: 'A',
+      tierNote: 'Closest to inbound outbound has',
+      setup: 'Medium (tracking snippet)',
+      timeToReply: '5 to 14 days',
+      why: 'Someone visited your product page. They\'re already in the funnel; they just haven\'t said hi yet. It takes some setup (tracking snippet, page tagging) but once running it\'s the warmest cold outreach possible.',
+      nextStep: 'Install the tracking snippet on your site. Focus on high-intent pages (pricing, integration, specific use case). The opener acknowledges the visit without being creepy about it.'
+    },
+    custom_signals: {
+      name: 'Custom signals',
+      fullName: 'Custom signals',
+      tier: 'S',
+      tierNote: 'Pure 80/20 for niche markets',
+      setup: 'Medium',
+      timeToReply: '3 to 7 days',
+      why: 'You write the exact question (e.g. "companies whose Head of Sales just posted a hiring plan for AEs and use Apollo"). The agent scans the web daily for matches. This is the play when the presets don\'t fit your motion.',
+      nextStep: 'Write your signal question in one sentence. Let the agent do daily matching. The opener uses the specific data point as its hook.'
+    }
+  };
+
+  // ============================================
+  // QUESTIONS
+  // ============================================
+  const questions = [
+    {
+      id: 'audience',
+      text: 'Do you (or your team) post on LinkedIn?',
+      subtitle: 'Not "have you posted", do people actually engage with your content?',
+      options: [
+        { label: 'Yes, weekly or more, with real engagement', scores: { engagers: 6 } },
+        { label: 'Occasionally, or engagement is quiet', scores: { engagers: 2 } },
+        { label: 'Not really, we\'re not posting much yet', scores: {} }
+      ]
+    },
+    {
+      id: 'profile_views',
+      text: 'Do you get LinkedIn profile views from ICP-shaped people?',
+      subtitle: 'Titles you recognize from your target market, not random recruiters.',
+      options: [
+        { label: 'Yes, regularly, I recognize the titles', scores: { profile_views: 6 } },
+        { label: 'Sometimes, hard to say', scores: { profile_views: 3 } },
+        { label: 'I don\'t check, or don\'t have Sales Nav', scores: {} }
+      ]
+    },
+    {
+      id: 'competitors',
+      text: 'Do you have 1 to 3 named competitors you regularly go up against?',
+      subtitle: 'Direct competitors you can name, not "the whole category".',
+      options: [
+        { label: 'Yes, I know exactly who they are', scores: { competitor_connections: 6 } },
+        { label: 'Many indirect competitors, no clear top 3', scores: { competitor_connections: 2 } },
+        { label: 'Not really, we\'re carving new ground', scores: { custom_signals: 2 } }
+      ]
+    },
+    {
+      id: 'champions',
+      text: 'Do you have past customers or old champions who might have moved companies?',
+      subtitle: 'People who trusted you at their last job, now somewhere new.',
+      options: [
+        { label: 'Yes, several I could reconnect with', scores: { contact_changed_jobs: 6 } },
+        { label: 'A handful, maybe worth checking', scores: { contact_changed_jobs: 3 } },
+        { label: 'Too new to have that yet', scores: {} }
+      ]
+    },
+    {
+      id: 'tech_stack',
+      text: 'Does your product replace or plug into a specific tool?',
+      subtitle: '"Alternative to X", or "we live in the Y ecosystem" specific.',
+      options: [
+        { label: 'Yes, we\'re the alternative to X or plug into Y', scores: { technology_change: 5 } },
+        { label: 'Somewhat, but it\'s not the main hook', scores: { technology_change: 2 } },
+        { label: 'No, we\'re tech-agnostic', scores: {} }
+      ]
+    },
+    {
+      id: 'growth_stage',
+      text: 'Are your best-fit customers usually in fast-growth mode?',
+      subtitle: 'Actively scaling headcount, expanding into new markets, launching new products.',
+      options: [
+        { label: 'Yes, most are in growth mode', scores: { company_hiring: 4 } },
+        { label: 'Mixed', scores: { company_hiring: 2 } },
+        { label: 'No, they\'re stable or established', scores: {} }
+      ]
+    },
+    {
+      id: 'setup_appetite',
+      text: 'What\'s your setup appetite?',
+      subtitle: 'How much lift are you willing to put in for the first signal?',
+      options: [
+        {
+          label: 'Zero-setup only, this week',
+          scores: { engagers: 2, profile_views: 2, competitor_connections: 2, contact_changed_jobs: 2 }
+        },
+        {
+          label: 'I can add a tracking snippet if it moves the needle',
+          scores: { website_visitors: 4, technology_change: 1 }
+        },
+        {
+          label: 'I want the highest-intent signal, setup effort be damned',
+          scores: { custom_signals: 3, website_visitors: 2, technology_change: 1 }
+        }
+      ]
+    }
+  ];
+
+  // ============================================
+  // STATE
+  // ============================================
+  const state = {
+    screen: 'start', // 'start' | 'question' | 'result'
+    currentQ: 0,
+    answers: {},
+    scores: {}
+  };
+
+  // Initialize scores
+  Object.keys(signals).forEach(k => state.scores[k] = 0);
+
+  // ============================================
+  // RENDERING
+  // ============================================
+  const app = document.getElementById('app');
+  const toast = document.getElementById('toast');
+
+  function render() {
+    if (state.screen === 'start') renderStart();
+    else if (state.screen === 'question') renderQuestion();
+    else if (state.screen === 'result') renderResult();
+    window.scrollTo(0, 0);
+  }
+
+  function renderStart() {
+    app.innerHTML = `
+      <div class="header">
+        <span class="brand-tag">GTM Club · Companion tool</span>
+      </div>
+      <div class="start-screen">
+        <h1 class="start-title">The <em>One</em><br/>Signal Test</h1>
+        <p class="start-desc">
+          <strong>Pick the one signal you turn on first.</strong> Not the theoretically strongest. The one most likely to give you a real reply this week, given the audience, the tools, and the situation you already have.
+        </p>
+        <div class="start-meta">
+          <div class="meta-item">
+            <span class="meta-value">2 min</span>
+            <span class="meta-label">7 questions</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-value">8</span>
+            <span class="meta-label">Signals scored</span>
+          </div>
+          <div class="meta-item">
+            <span class="meta-value">1</span>
+            <span class="meta-label">Verdict</span>
+          </div>
+        </div>
+        <button class="btn btn-primary btn-arrow" onclick="startQuiz()">Start the diagnostic</button>
+      </div>
+    `;
+  }
+
+  function renderQuestion() {
+    const q = questions[state.currentQ];
+    const total = questions.length;
+    const selected = state.answers[q.id];
+
+    const dots = Array.from({ length: total }, (_, i) => {
+      if (i < state.currentQ) return '<span class="progress-dot done"></span>';
+      if (i === state.currentQ) return '<span class="progress-dot active"></span>';
+      return '<span class="progress-dot"></span>';
+    }).join('');
+
+    const options = q.options.map((opt, i) => `
+      <button class="option ${selected === i ? 'selected' : ''}" onclick="selectOption(${i})">
+        <span class="option-marker"></span>
+        <span>${opt.label}</span>
+      </button>
+    `).join('');
+
+    app.innerHTML = `
+      <div class="header">
+        <span class="brand-tag">The One Signal Test</span>
+      </div>
+      <div class="progress">${dots}</div>
+      <div class="question-screen">
+        <p class="q-eyebrow">Question <span>${state.currentQ + 1}</span> of ${total}</p>
+        <h2 class="q-text">${q.text}</h2>
+        <p class="q-subtitle">${q.subtitle}</p>
+        <div class="options">${options}</div>
+        <div class="nav">
+          ${state.currentQ > 0
+            ? `<button class="btn btn-ghost" onclick="goBack()">← Back</button>`
+            : '<span></span>'}
+          ${selected !== undefined
+            ? `<button class="btn btn-primary btn-arrow" onclick="goNext()">${state.currentQ === total - 1 ? 'See your signal' : 'Next'}</button>`
+            : '<span></span>'}
+        </div>
+      </div>
+    `;
+  }
+
+  function renderResult() {
+    // Compute scores from answers
+    const scores = {};
+    Object.keys(signals).forEach(k => scores[k] = 0);
+    Object.entries(state.answers).forEach(([qId, optIdx]) => {
+      const q = questions.find(x => x.id === qId);
+      const opt = q.options[optIdx];
+      Object.entries(opt.scores).forEach(([sig, pts]) => {
+        scores[sig] = (scores[sig] || 0) + pts;
+      });
+    });
+
+    // Rank signals
+    const ranked = Object.entries(scores)
+      .sort((a, b) => b[1] - a[1])
+      .filter(([, score]) => score > 0);
+
+    // Fallback: if nothing scored, custom_signals wins
+    let winner, winnerScore;
+    if (ranked.length === 0) {
+      winner = 'custom_signals';
+      winnerScore = 1;
+    } else {
+      [winner, winnerScore] = ranked[0];
+    }
+
+    // If winner scored very low (< 4), still recommend but with a note
+    const lowConfidence = winnerScore < 4;
+
+    const sig = signals[winner];
+    const tierClass = `tier-${sig.tier.toLowerCase()}`;
+
+    // Build the reason text based on which answers contributed to the winner
+    const contributingAnswers = [];
+    Object.entries(state.answers).forEach(([qId, optIdx]) => {
+      const q = questions.find(x => x.id === qId);
+      const opt = q.options[optIdx];
+      if (opt.scores[winner] && opt.scores[winner] >= 3) {
+        contributingAnswers.push({ q: q.text, answer: opt.label, weight: opt.scores[winner] });
+      }
+    });
+
+    // Build chart data (all 8 signals)
+    const maxScore = Math.max(...Object.values(scores), 1);
+    const chartRows = Object.entries(signals)
+      .map(([key, s]) => {
+        const score = scores[key] || 0;
+        const pct = Math.max((score / maxScore) * 100, 3);
+        const isWinner = key === winner;
+        return `
+          <div class="chart-bar-row ${isWinner ? 'winner' : ''}">
+            <div class="chart-signal-name">${s.name}</div>
+            <div class="chart-bar-track">
+              <div class="chart-bar-fill" data-width="${pct}"></div>
+            </div>
+            <div class="chart-score">${score}</div>
+          </div>
+        `;
+      })
+      .sort((a, b) => {
+        // Sort by score descending, winner first
+        const scoreA = parseFloat(a.match(/chart-score">(\d+)/)[1]);
+        const scoreB = parseFloat(b.match(/chart-score">(\d+)/)[1]);
+        return scoreB - scoreA;
+      })
+      .join('');
+
+    // Pre-fill commitment
+    const commitmentReason = contributingAnswers.length > 0
+      ? contributingAnswers[0].answer.toLowerCase()
+      : 'it\'s the best fit for my current situation';
+    const commitment = `I'm starting with ${sig.fullName.toLowerCase()} because ${commitmentReason}.`;
+
+    app.innerHTML = `
+      <div class="header">
+        <span class="brand-tag">Diagnostic complete</span>
+      </div>
+      <div class="result-screen">
+        <p class="result-eyebrow">Your signal</p>
+        <h1 class="result-signal">${sig.fullName}</h1>
+        <span class="tier-badge ${tierClass}">Tier ${sig.tier} · ${sig.tierNote}</span>
+        <p class="result-why">${sig.why}</p>
+
+        ${lowConfidence ? `
+          <div class="next-step" style="border-left-color: var(--tier-a); margin-bottom: 32px;">
+            <div class="next-step-label" style="color: var(--tier-a);">Heads up</div>
+            <div class="next-step-text">
+              Your scores are low across the board. This usually means you're very early stage or in a niche market. Two paths: build audience first (start posting on LinkedIn, then this test flips to engagers), or lean into Custom Signals, where you define your own criterion.
+            </div>
+          </div>
+        ` : ''}
+
+        <div class="facts">
+          <div>
+            <div class="fact-label">Setup effort</div>
+            <div class="fact-value">${sig.setup}</div>
+          </div>
+          <div>
+            <div class="fact-label">Time to first reply</div>
+            <div class="fact-value">${sig.timeToReply}</div>
+          </div>
+        </div>
+
+        <div class="chart">
+          <p class="chart-title">All 8 signals scored for you</p>
+          ${chartRows}
+        </div>
+
+        <div class="next-step">
+          <div class="next-step-label">What to do next</div>
+          <div class="next-step-text">${sig.nextStep}</div>
+        </div>
+
+        <div class="commit-section">
+          <h2 class="commit-heading">Commit publicly.</h2>
+          <p class="commit-desc">Commitment beats intention. Post this in the community thread for Module 3, and the rest of us will help you tune the criteria once you have a first reply.</p>
+          <div class="commit-box">${escapeHtml(commitment)}</div>
+          <div class="commit-actions">
+            <button class="btn btn-primary" onclick="copyCommitment('${escapeAttr(commitment)}')">Copy the commitment</button>
+            <a class="btn btn-secondary" href="https://gtmclub-132c51.circle.so/c/discussion-signal-driven" target="_blank" rel="noopener">Open the thread →</a>
+          </div>
+        </div>
+
+        <div class="final-actions">
+          <a class="btn btn-primary btn-arrow" href="https://gtmclub-132c51.circle.so/c/signal-driven-outbound" target="_blank" rel="noopener">Now go build it in Module 6</a>
+          <button class="btn btn-ghost" onclick="restart()">Retake the test</button>
+        </div>
+      </div>
+    `;
+
+    // Animate chart bars in
+    setTimeout(() => {
+      document.querySelectorAll('.chart-bar-fill').forEach(el => {
+        el.style.width = el.dataset.width + '%';
+      });
+    }, 100);
+  }
+
+  // ============================================
+  // ACTIONS
+  // ============================================
+  function startQuiz() {
+    state.screen = 'question';
+    state.currentQ = 0;
+    render();
+  }
+
+  function selectOption(idx) {
+    const q = questions[state.currentQ];
+    state.answers[q.id] = idx;
+    render();
+    // Auto-advance after a beat for good UX
+    setTimeout(() => {
+      if (state.answers[q.id] === idx) goNext();
+    }, 350);
+  }
+
+  function goNext() {
+    if (state.currentQ < questions.length - 1) {
+      state.currentQ++;
+      render();
+    } else {
+      state.screen = 'result';
+      render();
+    }
+  }
+
+  function goBack() {
+    if (state.currentQ > 0) {
+      state.currentQ--;
+      render();
+    }
+  }
+
+  function restart() {
+    state.screen = 'start';
+    state.currentQ = 0;
+    state.answers = {};
+    Object.keys(signals).forEach(k => state.scores[k] = 0);
+    render();
+  }
+
+  function copyCommitment(text) {
+    const decoded = text.replace(/&#39;/g, "'").replace(/&quot;/g, '"').replace(/&amp;/g, '&');
+    navigator.clipboard.writeText(decoded).then(() => showToast('Copied to clipboard'));
+  }
+
+  function showToast(msg) {
+    toast.textContent = msg;
+    toast.classList.add('show');
+    setTimeout(() => toast.classList.remove('show'), 2000);
+  }
+
+  function escapeHtml(str) {
+    return str.replace(/[&<>"']/g, m => ({
+      '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;'
+    })[m]);
+  }
+
+  function escapeAttr(str) {
+    return str.replace(/'/g, '&#39;').replace(/"/g, '&quot;');
+  }
+
+  // ============================================
+  // THEME TOGGLE (shared gtm-theme key)
+  // ============================================
+  (function () {
+    var tb = document.getElementById('themeBtn');
+    function syncTheme() {
+      tb.textContent = document.documentElement.getAttribute('data-theme') === 'light' ? 'Dark' : 'Light';
+    }
+    tb.addEventListener('click', function () {
+      var next = document.documentElement.getAttribute('data-theme') === 'light' ? 'dark' : 'light';
+      document.documentElement.setAttribute('data-theme', next);
+      try { localStorage.setItem('gtm-theme', next); } catch (e) {}
+      syncTheme();
+    });
+    syncTheme();
+  })();
+
+  // Kickoff
+  render();
+</script>

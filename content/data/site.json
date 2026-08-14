@@ -28,7 +28,10 @@
     "testimonials": ["testimonial"],
     "proof": ["case study", "testimonial"],
     "network": ["connections", "linkedin"],
-    "referrals": ["referral"]
+    "referrals": ["referral"],
+    "signal": ["signals", "trigger", "intent"],
+    "quiz": ["test", "diagnostic", "assessment"],
+    "intent": ["signal", "trigger"]
   },
 
   "manifesto": {
