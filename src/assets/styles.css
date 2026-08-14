@@ -541,16 +541,20 @@ img.avatar { object-fit: cover; }
 .ph-avatar .ph-label { display: none; }
 .ph-avatar .ph-ic { font-size: 20px; }
 
-/* hero: split text + media */
+/* hero: muted module reel as a full-bleed background */
 .lem-hero { position: relative; overflow: hidden; border-bottom: 1px solid var(--line);
-  padding: calc(var(--nav-h) + 64px) 0 40px; }
-.lem-hero-grid { position: relative; z-index: 2; display: grid; grid-template-columns: 1.15fr .85fr; gap: 48px; align-items: center; }
+  padding: calc(var(--nav-h) + 96px) 0 44px; min-height: min(600px, 82vh); display: flex; flex-direction: column; justify-content: center; }
+.lem-hero-video { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; z-index: 1; opacity: .5; }
+.lem-hero-scrim { position: absolute; inset: 0; z-index: 2; pointer-events: none;
+  background: linear-gradient(96deg, var(--bg) 6%, rgba(10, 9, 9, .66) 42%, rgba(10, 9, 9, .34) 100%),
+    linear-gradient(to top, var(--bg) 1%, transparent 46%); }
+:root[data-theme="light"] .lem-hero-scrim { background: linear-gradient(96deg, var(--bg) 6%, rgba(244, 243, 240, .72) 44%, rgba(244, 243, 240, .4) 100%), linear-gradient(to top, var(--bg) 1%, transparent 46%); }
+.lem-hero-in { position: relative; z-index: 3; max-width: 720px; }
 .lem-hero-in h1 { max-width: 15ch; }
 .lem-hero-in .lede { max-width: 560px; }
 .lem-cta { display: flex; gap: 12px; flex-wrap: wrap; margin-top: 36px; }
 .lem-cta .btn .ic { margin-right: 8px; }
-.lem-hero-media .ph { background: rgba(20, 19, 19, .5); backdrop-filter: blur(4px); }
-@media (max-width: 900px) { .lem-hero-grid { grid-template-columns: 1fr; gap: 32px; } .lem-hero-media { display: none; } }
+@media (prefers-reduced-motion: reduce) { .lem-hero-video { display: none; } }
 
 /* animated aurora background */
 .aurora { position: absolute; inset: 0; z-index: 0; pointer-events: none; overflow: hidden; }
@@ -567,7 +571,7 @@ img.avatar { object-fit: cover; }
 @keyframes drift4 { 0%,100% { transform: translate(0,0) scale(1); } 50% { transform: translate(-6%,-6%) scale(1.1); } }
 
 /* client logo bar */
-.lem-logobar { position: relative; z-index: 2; margin-top: 64px; }
+.lem-logobar { position: relative; z-index: 3; margin-top: 56px; }
 .lem-logolabel { text-align: center; font: 700 11px/1 var(--body); letter-spacing: .2em; text-transform: uppercase; color: var(--dimmer); margin: 0 0 26px; }
 .lem-marquee { overflow: hidden; -webkit-mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); mask-image: linear-gradient(90deg, transparent, #000 7%, #000 93%, transparent); }
 .lem-track { display: flex; align-items: center; gap: 52px; width: max-content; animation: marquee 42s linear infinite; }

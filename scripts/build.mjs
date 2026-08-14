@@ -739,17 +739,19 @@ function lemlistPage(assets) {
   const body = `
 <section class="lem-hero">
   <div class="aurora" aria-hidden="true"><span></span><span></span><span></span><span></span></div>
-  <div class="wrap lem-hero-grid">
-    <div class="lem-hero-in">
-      <p class="eyebrow">Powered by lemlist</p>
-      <h1>Where lemlist users level up.</h1>
-      <p class="lede">The GTM Club is initiated by lemlist to help you drive real results from outbound. A community, interactive tools, live paths and events, all in one room.</p>
-      <div class="hero-cta lem-cta">
-        <a class="btn btn-solid" href="${esc(data.links.apply)}">${icon('rocket')} Join the GTM Club</a>
-        <a class="btn" href="/library/">Explore the tools</a>
-      </div>
+  <video class="lem-hero-video" autoplay muted loop playsinline preload="metadata" poster="/assets/hero-poster.jpg" aria-hidden="true">
+    <source src="/assets/hero-reel.webm" type="video/webm">
+    <source src="/assets/hero-reel.mp4" type="video/mp4">
+  </video>
+  <div class="lem-hero-scrim" aria-hidden="true"></div>
+  <div class="wrap lem-hero-in">
+    <p class="eyebrow">Powered by lemlist</p>
+    <h1>Where lemlist users level up.</h1>
+    <p class="lede">The GTM Club is initiated by lemlist to help you drive real results from outbound. A community, interactive tools, live paths and events, all in one room.</p>
+    <div class="hero-cta lem-cta">
+      <a class="btn btn-solid" href="${esc(data.links.apply)}">${icon('rocket')} Join the GTM Club</a>
+      <a class="btn" href="/library/">Explore the tools</a>
     </div>
-    <div class="lem-hero-media">${placeholder('Hero visual or short loop', 'film', 'ph-hero')}</div>
   </div>
   <div class="wrap lem-logobar">
     <p class="lem-logolabel">Go-to-market teams that run outbound with lemlist</p>
