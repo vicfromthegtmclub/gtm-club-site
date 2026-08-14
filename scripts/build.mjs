@@ -281,7 +281,7 @@ function homePage(assetCount) {
 
 /* ----------------------------------------------------------- page: paths */
 
-function pathsPage() {
+function pathsPage(opts = {}) {
   const course = circle.courses[0];
   const enter = course ? course.url : data.links.circle;
   const howItRuns = [
@@ -353,7 +353,10 @@ ${course ? `
   return layout({
     title: 'Paths. Self-paced GTM courses taught by operators. GTM Club',
     description: 'Self-paced GTM courses on Circle. The first: AI Signal-Driven Outbound, eight modules ending in a live signal agent.',
-    canonical: '/paths/', current: '/paths/', body,
+    canonical: opts.canonical || '/paths/',
+    current: opts.current === undefined ? '/paths/' : opts.current,
+    noindex: opts.noindex || false,
+    body,
   });
 }
 
@@ -1012,6 +1015,9 @@ for (const a of assets) {
 write('.', homePage(assets.length));
 const PATHS_LIVE = false; // flip to true when the tracks launch, to serve the full pathsPage()
 write('paths', PATHS_LIVE ? pathsPage() : pathsWaitlistPage());
+// Hidden team-preview of the full course catalogue while /paths/ stays a waitlist.
+// noindex + absent from NAV and the sitemap, so users can't find it; share the URL directly.
+write('paths-preview', pathsPage({ canonical: '/paths-preview/', current: '', noindex: true }));
 write('events', eventsPage(events));
 write('community', communityPage());
 write('library', libraryPage(assets, kinds, sources));
