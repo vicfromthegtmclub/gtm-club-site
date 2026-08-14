@@ -490,9 +490,14 @@ ${hero('The community', 'The room you post in first.', c.lede)}
 
 /* --------------------------------------------------------- page: library */
 
-function card(a) {
+// Electric-border colours (GTM Club palette), warm brand tones first. Assigned
+// round-robin by card position so all six appear evenly, stable across builds.
+const EB_COLORS = ['#CB3D00', '#FF7A5A', '#9E2F00', '#6F7BB0', '#1E6E7A', '#C9A489'];
+
+function card(a, i = 0) {
   const search = esc([a.title, a.description, a.kind, a.source, a.author, a.meta].join(' ').toLowerCase());
   return `<a class="card" href="${a.url}" data-kind="${esc(a.kind)}" data-source="${esc(a.source)}" data-search="${search}">
+  <span class="eb" aria-hidden="true" style="--eb-color:${EB_COLORS[i % EB_COLORS.length]}"><i class="eb-bg"></i><i class="eb-stroke"></i><i class="eb-glow eb-g1"></i><i class="eb-glow eb-g2"></i></span>
   <div class="card-top">
     <span class="pill">${esc(a.kind)}</span>
     <span class="dim">${esc(a.updatedLabel)}</span>
@@ -510,6 +515,16 @@ function libraryPage(assets, kinds, sources) {
   const chip = (facet, value, label, on) =>
     `<button type="button" class="chip${on ? ' is-on' : ''}" data-facet="${facet}" data-value="${esc(value)}" aria-pressed="${on}">${esc(label)}</button>`;
   const body = `
+<svg class="eb-defs" aria-hidden="true" width="0" height="0"><defs>
+  <filter id="eb" color-interpolation-filters="sRGB" x="-30%" y="-30%" width="160%" height="160%">
+    <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="8" seed="3" result="n1"/>
+    <feOffset in="n1" dy="0" result="o1"><animate attributeName="dy" values="260;0" dur="3.2s" repeatCount="indefinite" calcMode="linear"/></feOffset>
+    <feTurbulence type="turbulence" baseFrequency="0.02" numOctaves="8" seed="3" result="n2"/>
+    <feOffset in="n2" dy="0" result="o2"><animate attributeName="dy" values="0;-260" dur="3.2s" repeatCount="indefinite" calcMode="linear"/></feOffset>
+    <feComposite in="o1" in2="o2" result="noise"/>
+    <feDisplacementMap in="SourceGraphic" in2="noise" scale="16" xChannelSelector="R" yChannelSelector="G"/>
+  </filter>
+</defs></svg>
 ${hero('Asset library', 'Take it. Ship it today.',
   'Claude skills, repos, sequences, prompts and datasets built by members. Cloned, forked, credited.')}
 
