@@ -46,7 +46,7 @@
 (function () {
   var bar = document.getElementById('shipbar');
   if (!bar) return;
-  var TARGET = 3 * 60 * 1000;               // active ms to a full bar
+  var TARGET = 75 * 1000;                   // active ms to a full bar (1m15)
   var MS = 'gtm-ship-ms', DISMISS = 'gtm-ship-x';
   var ss = window.sessionStorage;
   try { if (ss && ss.getItem(DISMISS)) return; } catch (e) {}
@@ -64,7 +64,6 @@
     if (p >= 1 && !full) {
       full = true;
       bar.classList.add('is-full');
-      if (label) label.textContent = "You're still here";
       if (cta) cta.hidden = false;
     }
   }
