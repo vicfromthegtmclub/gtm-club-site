@@ -721,3 +721,68 @@ img.avatar { object-fit: cover; }
 @keyframes shipIn { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
 @media (max-width: 520px) { .shipbar-label { display: none; } .shipbar { gap: 10px; padding: 7px 8px 7px 12px; } }
 @media (prefers-reduced-motion: reduce) { .shipbar { animation: none; } .shipbar-fill { transition: none; } }
+
+/* ============================================ manifesto: the motion (scroll) */
+.mf { position: relative; max-width: 780px; margin: 0 auto; padding: 0 24px 24px 88px; }
+.mf-spine { position: absolute; left: 40px; top: 0; bottom: 0; width: 2px; background: var(--line); border-radius: 2px; }
+.mf-fill { position: absolute; left: 0; top: 0; width: 100%; height: 0; background: var(--accent); border-radius: 2px; box-shadow: 0 0 12px rgba(203, 61, 0, .5); }
+.mf-dot { position: absolute; left: 1px; top: 0; width: 12px; height: 12px; margin: -6px 0 0 -6px; border-radius: 50%; background: var(--accent); box-shadow: 0 0 20px var(--accent), 0 0 0 4px rgba(203, 61, 0, .18); }
+
+.mf-beat { position: relative; padding: 13vh 0; }
+.mf.reveal .mf-beat { opacity: 0; transform: translateY(18px); transition: opacity .7s ease, transform .7s ease; }
+.mf.reveal .mf-beat.is-in, .mf.reveal .mf-hero { opacity: 1; transform: none; }
+
+.mf-tag { display: inline-block; margin: 0 0 26px -48px; padding: 6px 12px; border: 1px solid var(--accent); border-radius: 999px;
+  background: var(--bg); font: 700 10px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: var(--accent); position: relative; }
+
+/* hero: the fork in the road */
+.mf-hero { padding-top: calc(var(--nav-h) + 6vh); }
+.mf-fork { font: 700 clamp(40px, 9vw, 104px)/.92 var(--display); text-transform: uppercase; letter-spacing: -.01em; margin: 0; }
+.mf-market { display: block; color: var(--ink); }
+.mf-home { display: block; color: var(--dimmest); }
+.mf-sub { font-size: 20px; color: var(--dim); margin: 28px 0 0; }
+.mf-scroll { display: inline-block; margin-top: 42px; font: 700 11px/1 var(--body); letter-spacing: .18em; text-transform: uppercase; color: var(--dimmer); }
+
+.mf-h { font: 700 clamp(28px, 4.4vw, 46px)/1 var(--display); text-transform: uppercase; letter-spacing: -.01em; margin: 0 0 22px; }
+.mf-lede { font-size: 20px; line-height: 1.5; color: var(--dim); max-width: 56ch; margin: 0 0 24px; text-wrap: pretty; }
+.mf-lede:last-child { margin-bottom: 0; }
+
+/* the graveyard */
+.mf-stones { display: flex; flex-wrap: wrap; gap: 10px; }
+.mf-stone { font: 400 14px/1 var(--body); color: var(--dimmest); border: 1px solid var(--line); border-radius: 8px;
+  padding: 9px 13px; text-decoration: line-through; text-decoration-color: var(--dimmest); }
+.mf-stone.is-alive { color: var(--accent); border-color: var(--accent); text-decoration: none; box-shadow: 0 0 22px rgba(203, 61, 0, .28); }
+
+/* the engineered path */
+.mf-steps { display: flex; flex-wrap: wrap; align-items: center; gap: 12px; margin: 8px 0 30px; }
+.mf-step { display: inline-flex; align-items: center; gap: 10px; font: 600 15px/1 var(--body); color: var(--ink);
+  border: 1px solid var(--line); border-radius: 999px; padding: 10px 16px; }
+.mf-step i { font: 700 11px/1 var(--body); font-style: normal; color: var(--accent); }
+.mf-arrow { color: var(--dimmer); font-size: 15px; }
+.mf-punch { font: 500 clamp(20px, 2.6vw, 28px)/1.35 var(--body); color: var(--dim); margin: 0; text-wrap: balance; }
+.mf-punch em { color: var(--ink); font-style: normal; }
+
+/* the three laws */
+.mf-laws .section-label { margin-bottom: 40px; }
+.mf-law { display: grid; grid-template-columns: auto 1fr; gap: 6px 24px; align-items: start; padding: 30px 0; border-top: 1px solid var(--line); }
+.mf-law:first-of-type { border-top: 0; padding-top: 0; }
+.mf-law-n { grid-row: 1 / 3; font: 700 clamp(26px, 3vw, 40px)/1 var(--display); color: var(--accent); }
+.mf-law-h { grid-column: 2; font: 700 clamp(22px, 2.6vw, 34px)/1.1 var(--display); text-transform: uppercase; letter-spacing: -.01em; margin: 0; }
+.mf-law-h em { color: var(--ink); font-style: normal; }
+.mf-not { color: var(--dimmest); }
+.mf-law-b { grid-column: 2; font-size: 16.5px; line-height: 1.55; color: var(--dim); margin: 12px 0 0; max-width: 60ch; }
+
+/* the turn */
+.mf-fork-sm { font-size: clamp(32px, 6vw, 60px); }
+.mf-close .hero-cta { margin-top: 32px; }
+
+@media (max-width: 640px) {
+  .mf { padding: 0 20px 20px 46px; }
+  .mf-spine { left: 18px; }
+  .mf-tag { margin-left: -28px; }
+  .mf-beat { padding: 10vh 0; }
+  .mf-law { grid-template-columns: 1fr; gap: 4px; }
+  .mf-law-n, .mf-law-h, .mf-law-b { grid-column: 1; }
+  .mf-law-n { grid-row: auto; }
+}
+@media (prefers-reduced-motion: reduce) { .mf.reveal .mf-beat { opacity: 1; transform: none; } }

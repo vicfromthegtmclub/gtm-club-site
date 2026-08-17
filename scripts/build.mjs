@@ -286,6 +286,117 @@ function homePage(assetCount) {
   });
 }
 
+/* ------------------------------------------------ page: manifesto (motion)
+   The form is the message: a line runs down the page and a dot travels it as
+   you scroll, carrying you from Stranger to Customer. Prototype at
+   /manifesto-preview/ (noindex) until we decide it replaces home. */
+function manifestoPage(opts = {}) {
+  const m = data.manifesto;
+  const dead = ['Ledgerly', 'Cohortly', 'Optiflow', 'Zendful', 'Parselo', 'Quanta',
+    'Brightloop', 'Ferrologic', 'Nexnote', 'Cadence', 'Outlyne', 'Ravenq'];
+  const steps = ['Find them', 'Reach them', 'Make them care', 'Keep them happy'];
+  const laws = [
+    { n: '01', is: 'A motion', not: 'activity',
+      body: 'Busy is not a motion. Random posts, emails when you remember, the odd call. A motion is an engineered path: a stranger goes in one end, a customer comes out the other, and you know every step in between.' },
+    { n: '02', is: 'Repeatable', not: 'lucky',
+      body: 'If you cannot explain why it worked, you cannot do it again. Three meetings every week beats twenty you landed once and could never trace. Predictable beats big.' },
+    { n: '03', is: 'Owned', not: 'rented',
+      body: 'Whoever controls the channel controls you. Rent your reach and one algorithm change wipes your pipeline overnight. Own the audience, the data, the relationships, and the machine answers to you.' },
+  ];
+  const teamCard = (p) => {
+    const hasImg = p.img && fs.existsSync(path.join(ROOT, 'src', p.img));
+    const avatar = hasImg
+      ? `<img class="avatar" src="${esc(p.img)}" alt="" width="56" height="56" loading="lazy">`
+      : `<span class="avatar avatar-mono" aria-hidden="true">${esc(p.initials || '')}</span>`;
+    return `<a class="card-static hoverable team-card" href="${esc(p.url)}" target="_blank" rel="noopener">
+        ${avatar}
+        <p class="card-name">${esc(p.name)}</p>
+        <p class="card-sub">${esc(p.role)}</p>
+        ${p.note ? `<p class="card-note">${esc(p.note)}</p>` : ''}
+      </a>`;
+  };
+  const body = `
+<div class="mf">
+  <div class="mf-spine" aria-hidden="true"><span class="mf-fill" id="mfFill"></span><span class="mf-dot" id="mfDot"></span></div>
+
+  <section class="mf-beat mf-hero">
+    <span class="mf-tag">Stranger</span>
+    <h1 class="mf-fork"><span class="mf-market">Go to market.</span><span class="mf-home">Or go home.</span></h1>
+    <p class="mf-sub">Time to make your product visible.</p>
+    <span class="mf-scroll" aria-hidden="true">Follow the motion &darr;</span>
+  </section>
+
+  <section class="mf-beat">
+    <h2 class="mf-h">The build was the easy part.</h2>
+    <p class="mf-lede">Look around the graveyard. It is full of better products nobody ever heard of. Only because a great product with no distribution is a hobby.</p>
+    <div class="mf-stones" aria-hidden="true">
+      ${dead.map(d => `<span class="mf-stone">${esc(d)}</span>`).join('')}<span class="mf-stone is-alive">You?</span>
+    </div>
+  </section>
+
+  <section class="mf-beat">
+    <p class="mf-lede">So what is left? The one thing that does not copy in a week.</p>
+    <div class="mf-steps">
+      ${steps.map((s, i) => `<span class="mf-step"><i>${pad2(i + 1)}</i>${esc(s)}</span>`).join('<span class="mf-arrow" aria-hidden="true">&rarr;</span>')}
+    </div>
+    <p class="mf-punch">That is go-to-market. <em>A motion owned, repeatable, and yours.</em></p>
+  </section>
+
+  <section class="mf-beat mf-laws">
+    <p class="section-label">What go-to-market actually means</p>
+    ${laws.map(l => `<div class="mf-law">
+      <span class="mf-law-n">${l.n}</span>
+      <h3 class="mf-law-h"><em>${esc(l.is)}.</em> <span class="mf-not">Not ${esc(l.not)}.</span></h3>
+      <p class="mf-law-b">${esc(l.body)}</p>
+    </div>`).join('')}
+  </section>
+
+  <section class="mf-beat mf-close">
+    <span class="mf-tag">Customer</span>
+    <h2 class="mf-fork mf-fork-sm"><span class="mf-market">Go to market.</span><span class="mf-home">Or go home.</span></h2>
+    <p class="hero-cta"><a class="btn btn-solid" href="${esc(data.links.apply)}">Own your motion</a></p>
+  </section>
+</div>
+
+<section class="band">
+  <div class="wrap">
+    ${sectionLabel('Who runs it')}
+    <div class="cards-3">
+      ${m.team.map(teamCard).join('\n      ')}
+    </div>
+  </div>
+</section>
+
+<script>
+(function(){
+  var mf=document.querySelector('.mf'); if(!mf) return;
+  var fill=document.getElementById('mfFill'), dot=document.getElementById('mfDot');
+  var beats=[].slice.call(mf.querySelectorAll('.mf-beat'));
+  var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if('IntersectionObserver' in window && !reduce){
+    mf.classList.add('reveal');
+    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('is-in'); });},{threshold:0.2});
+    beats.forEach(function(b){ io.observe(b); });
+  }
+  function frame(){
+    var r=mf.getBoundingClientRect(), vh=window.innerHeight, h=mf.offsetHeight;
+    var p=(vh*0.5 - r.top)/h; if(p<0)p=0; if(p>1)p=1;
+    var s=(p*100).toFixed(2)+'%'; fill.style.height=s; dot.style.top=s;
+  }
+  if(reduce){ fill.style.height='100%'; dot.style.top='100%'; }
+  else { frame(); addEventListener('scroll',frame,{passive:true}); addEventListener('resize',frame); }
+})();
+</script>`;
+  return layout({
+    title: 'Manifesto. Go to market, or go home. GTM Club',
+    description: 'A great product with no distribution is a hobby. Go-to-market is the motion that does not copy in a week: owned, repeatable, and yours.',
+    canonical: opts.canonical || '/',
+    current: opts.current === undefined ? '/' : opts.current,
+    noindex: opts.noindex || false,
+    body,
+  });
+}
+
 /* ----------------------------------------------------------- page: paths */
 
 function pathsPage(opts = {}) {
@@ -1047,6 +1158,8 @@ for (const a of assets) {
 }
 
 write('.', homePage(assets.length));
+// Hidden prototype of the new "motion" manifesto; noindex, off the nav/sitemap.
+write('manifesto-preview', manifestoPage({ canonical: '/manifesto-preview/', current: '', noindex: true }));
 const PATHS_LIVE = false; // flip to true when the tracks launch, to serve the full pathsPage()
 write('paths', PATHS_LIVE ? pathsPage() : pathsWaitlistPage());
 // Hidden team-preview of the full course catalogue while /paths/ stays a waitlist.
