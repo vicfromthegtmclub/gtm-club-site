@@ -143,6 +143,12 @@ ${body}
   </nav>
   <p>GTM Club. Assets are shared by members, credited to their authors.</p>
 </footer>
+<div class="shipbar" id="shipbar" hidden>
+  <span class="shipbar-label" id="shipbarLabel">Time spent not shipping</span>
+  <span class="shipbar-track"><i class="shipbar-fill" id="shipbarFill"></i></span>
+  <a class="shipbar-cta" id="shipbarCta" href="/library/" hidden>Go ship &rarr;</a>
+  <button class="shipbar-x" id="shipbarX" type="button" aria-label="Dismiss the nudge">&times;</button>
+</div>
 <script src="${THEME_JS_HREF}" defer></script>
 </body>
 </html>`;

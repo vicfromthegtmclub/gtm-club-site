@@ -698,3 +698,24 @@ img.avatar { object-fit: cover; }
   background: linear-gradient(100deg, var(--bg) 4%, rgba(244, 243, 240, .62) 42%, rgba(244, 243, 240, .28) 100%),
     linear-gradient(to top, var(--bg) 1%, transparent 52%); }
 @media (prefers-reduced-motion: reduce) { .hero-aurora span { animation: none !important; } .hero-video { display: none; } }
+
+/* ---- "time spent not shipping" nudge: a bar that fills the longer you linger */
+.shipbar {
+  position: fixed; left: 50%; bottom: 20px; transform: translateX(-50%); z-index: 40;
+  display: flex; align-items: center; gap: 12px; max-width: calc(100vw - 24px);
+  background: rgba(20, 19, 19, .82); backdrop-filter: blur(14px);
+  border: 1px solid var(--line); border-radius: 999px; padding: 8px 10px 8px 16px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, .35); animation: shipIn .4s ease both;
+}
+:root[data-theme="light"] .shipbar { background: rgba(255, 255, 255, .86); box-shadow: 0 12px 30px rgba(10, 9, 9, .1); }
+.shipbar-label { font: 700 10.5px/1.2 var(--body); letter-spacing: .14em; text-transform: uppercase; color: var(--dimmer); white-space: nowrap; }
+.shipbar-track { width: 116px; height: 5px; background: rgba(128, 128, 128, .22); border-radius: 999px; overflow: hidden; flex: none; }
+.shipbar-fill { display: block; height: 100%; width: 0; background: var(--accent); transition: width .6s linear; }
+.shipbar-cta { font: 700 11px/1 var(--body); letter-spacing: .03em; color: var(--accent); text-decoration: none; white-space: nowrap; }
+.shipbar-x { background: none; border: 0; color: var(--dimmer); font: 400 18px/1 var(--body); cursor: pointer; padding: 0 4px; }
+.shipbar-x:hover { color: var(--ink); }
+.shipbar.is-full { border-color: var(--accent); }
+.shipbar.is-full .shipbar-label { color: var(--ink); }
+@keyframes shipIn { from { opacity: 0; transform: translate(-50%, 12px); } to { opacity: 1; transform: translate(-50%, 0); } }
+@media (max-width: 520px) { .shipbar-label { display: none; } .shipbar { gap: 10px; padding: 7px 8px 7px 12px; } }
+@media (prefers-reduced-motion: reduce) { .shipbar { animation: none; } .shipbar-fill { transition: none; } }
