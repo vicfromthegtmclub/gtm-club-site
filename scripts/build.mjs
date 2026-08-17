@@ -310,7 +310,14 @@ ${hero('The courses', 'Learn the craft. On the job.',
         <span class="path-emoji">+</span>
         <h2 class="display-sm">${esc(s.title)}</h2>
         <p class="card-sub">${esc(s.summary)}</p>
-        <p class="dim">Coming soon</p>
+        <p class="dim path-soon-label">Coming soon</p>
+        <form class="path-notify" method="POST" action="/api/notify">
+          <input type="hidden" name="course" value="${esc(s.title)}">
+          <input class="hp" type="text" name="company-website" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <input type="email" name="email" required placeholder="Email me when it ships" aria-label="Notify me about ${esc(s.title)}">
+          <button class="btn sm btn-solid" type="submit">Notify me</button>
+          <p class="path-notify-done" hidden>On the list &check;</p>
+        </form>
       </div>`).join('\n      ')}
     </div>
   </div>
@@ -349,7 +356,22 @@ ${course ? `
     <p class="lede center">Lessons, discussion and your workbook live in one place. Members get access on day one.</p>
     <p><a class="btn btn-accent" href="${esc(enter)}">Go to Circle</a></p>
   </div>
-</section>`;
+</section>
+<script>
+(function(){
+  document.querySelectorAll('form.path-notify').forEach(function(f){
+    f.addEventListener('submit',function(e){
+      e.preventDefault();
+      var em=f.querySelector('input[name=email]'); var email=(em&&em.value||'').trim(); if(!email)return;
+      var course=(f.querySelector('input[name=course]')||{}).value||'';
+      var hp=(f.querySelector('input[name="company-website"]')||{}).value||'';
+      fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email:email,course:course,'company-website':hp})}).catch(function(){});
+      if(em)em.hidden=true; var b=f.querySelector('button'); if(b)b.hidden=true;
+      var d=f.querySelector('.path-notify-done'); if(d)d.hidden=false;
+    });
+  });
+})();
+</script>`;
 
   return layout({
     title: 'Paths. Self-paced GTM courses taught by operators. GTM Club',
