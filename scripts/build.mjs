@@ -311,7 +311,7 @@ ${hero('The courses', 'Learn the craft. On the job.',
         <h2 class="display-sm">${esc(s.title)}</h2>
         <p class="card-sub">${esc(s.summary)}</p>
         <p class="dim path-soon-label">Coming soon</p>
-        <form class="path-notify" method="POST" action="/api/notify">
+        <form class="path-notify" method="POST" action="/api/notify/">
           <input type="hidden" name="course" value="${esc(s.title)}">
           <input class="hp" type="text" name="company-website" tabindex="-1" autocomplete="off" aria-hidden="true">
           <input type="email" name="email" required placeholder="Email me when it ships" aria-label="Notify me about ${esc(s.title)}">
@@ -365,7 +365,7 @@ ${course ? `
       var em=f.querySelector('input[name=email]'); var email=(em&&em.value||'').trim(); if(!email)return;
       var course=(f.querySelector('input[name=course]')||{}).value||'';
       var hp=(f.querySelector('input[name="company-website"]')||{}).value||'';
-      fetch('/api/notify',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email:email,course:course,'company-website':hp})}).catch(function(){});
+      fetch('/api/notify/',{method:'POST',headers:{'Content-Type':'application/json','Accept':'application/json'},body:JSON.stringify({email:email,course:course,'company-website':hp})}).catch(function(){});
       if(em)em.hidden=true; var b=f.querySelector('button'); if(b)b.hidden=true;
       var d=f.querySelector('.path-notify-done'); if(d)d.hidden=false;
     });
