@@ -286,21 +286,28 @@ function homePage(assetCount) {
   });
 }
 
-/* ------------------------------------------------ page: manifesto (motion)
-   The form is the message: a line runs down the page and a dot travels it as
-   you scroll, carrying you from Stranger to Customer. Prototype at
+/* ------------------------------------------ page: manifesto (build the motion)
+   The form is the message: your product sits alone, then the go-to-market
+   machine assembles around it, part by part, as you scroll. Prototype at
    /manifesto-preview/ (noindex) until we decide it replaces home. */
 function manifestoPage(opts = {}) {
   const m = data.manifesto;
-  const dead = ['Ledgerly', 'Cohortly', 'Optiflow', 'Zendful', 'Parselo', 'Quanta',
-    'Brightloop', 'Ferrologic', 'Nexnote', 'Cadence', 'Outlyne', 'Ravenq'];
-  const steps = ['Find them', 'Reach them', 'Make them care', 'Keep them happy'];
-  const laws = [
-    { n: '01', is: 'A motion', not: 'activity',
-      body: 'Busy is not a motion. Random posts, emails when you remember, the odd call. A motion is an engineered path: a stranger goes in one end, a customer comes out the other, and you know every step in between.' },
-    { n: '02', is: 'Repeatable', not: 'lucky',
+  const nodes = [
+    { cls: 'n1', ic: 'bolt', label: 'Find them' },
+    { cls: 'n2', ic: 'arrow-right', label: 'Reach them' },
+    { cls: 'n3', ic: 'comments', label: 'Make them care' },
+    { cls: 'n4', ic: 'user-group', label: 'Keep them happy' },
+  ];
+  const steps = [
+    { stage: '0', label: 'The graveyard', h: 'The build was the easy part.',
+      body: 'Look around. It is full of better products nobody ever heard of. A great product with no distribution is a hobby. There it sits. Finished. Invisible.' },
+    { stage: '1', label: 'The one thing that does not copy', h: 'Build the motion around it.',
+      body: 'Find them. Reach them. Make them care. Keep them happy. An engineered path where a stranger goes in one end and a customer comes out the other. That is go-to-market.' },
+    { stage: '2', label: '01', h: '<em>A motion.</em> <span class="mf-not">Not activity.</span>',
+      body: 'Busy is not a motion. Random posts, emails when you remember, the odd call. A motion is an engineered path, and you know every step in between.' },
+    { stage: '3', label: '02', h: '<em>Repeatable.</em> <span class="mf-not">Not lucky.</span>',
       body: 'If you cannot explain why it worked, you cannot do it again. Three meetings every week beats twenty you landed once and could never trace. Predictable beats big.' },
-    { n: '03', is: 'Owned', not: 'rented',
+    { stage: '4', label: '03', h: '<em>Owned.</em> <span class="mf-not">Not rented.</span>',
       body: 'Whoever controls the channel controls you. Rent your reach and one algorithm change wipes your pipeline overnight. Own the audience, the data, the relationships, and the machine answers to you.' },
   ];
   const teamCard = (p) => {
@@ -315,48 +322,52 @@ function manifestoPage(opts = {}) {
         ${p.note ? `<p class="card-note">${esc(p.note)}</p>` : ''}
       </a>`;
   };
+  const rig = `
+    <div class="rig" id="rig" data-stage="0">
+      <span class="rig-frame" aria-hidden="true"></span>
+      <span class="rig-glow" aria-hidden="true"></span>
+      <svg class="rig-wires" viewBox="0 0 400 400" preserveAspectRatio="xMidYMid meet" aria-hidden="true">
+        <path class="wire w1" pathLength="1" d="M200 200 L200 62"/>
+        <path class="wire w2" pathLength="1" d="M200 200 L338 200"/>
+        <path class="wire w3" pathLength="1" d="M200 200 L200 338"/>
+        <path class="wire w4" pathLength="1" d="M200 200 L62 200"/>
+        <path class="loop" pathLength="1" d="M200 62 L338 200 L200 338 L62 200 Z"/>
+        <circle class="flow" r="5" fill="var(--accent)"><animateMotion dur="3.4s" repeatCount="indefinite" path="M200 62 L338 200 L200 338 L62 200 Z"/></circle>
+      </svg>
+      ${nodes.map(n => `<span class="node ${n.cls}"><span class="node-ic">${icon(n.ic)}</span>${esc(n.label)}</span>`).join('')}
+      <span class="product" aria-hidden="true">
+        <span class="product-bar"><i></i><i></i><i></i></span>
+        <span class="product-ui"><span class="pu-spark"></span><span class="pu-row"></span><span class="pu-row s"></span></span>
+      </span>
+    </div>`;
   const body = `
-<div class="mf">
-  <div class="mf-spine" aria-hidden="true"><span class="mf-fill" id="mfFill"></span><span class="mf-dot" id="mfDot"></span></div>
-
-  <section class="mf-beat mf-hero">
-    <span class="mf-tag">Stranger</span>
+<section class="mf2-hero">
+  <div class="wrap">
+    <p class="eyebrow">The manifesto</p>
     <h1 class="mf-fork"><span class="mf-market">Go to market.</span><span class="mf-home">Or go home.</span></h1>
     <p class="mf-sub">Time to make your product visible.</p>
-    <span class="mf-scroll" aria-hidden="true">Follow the motion &darr;</span>
-  </section>
+    <span class="mf-scroll" aria-hidden="true">Scroll, and watch the motion build &darr;</span>
+  </div>
+</section>
 
-  <section class="mf-beat">
-    <h2 class="mf-h">The build was the easy part.</h2>
-    <p class="mf-lede">Look around the graveyard. It is full of better products nobody ever heard of. Only because a great product with no distribution is a hobby.</p>
-    <div class="mf-stones" aria-hidden="true">
-      ${dead.map(d => `<span class="mf-stone">${esc(d)}</span>`).join('')}<span class="mf-stone is-alive">You?</span>
-    </div>
-  </section>
+<section class="build">
+  <div class="build-viz">${rig}</div>
+  <div class="build-steps">
+    ${steps.map(s => `<div class="step" data-stage="${s.stage}">
+      <p class="section-label">${esc(s.label)}</p>
+      <h2 class="mf-h">${s.h}</h2>
+      <p class="mf-lede">${esc(s.body)}</p>
+    </div>`).join('\n    ')}
+  </div>
+</section>
 
-  <section class="mf-beat">
-    <p class="mf-lede">So what is left? The one thing that does not copy in a week.</p>
-    <div class="mf-steps">
-      ${steps.map((s, i) => `<span class="mf-step"><i>${pad2(i + 1)}</i>${esc(s)}</span>`).join('<span class="mf-arrow" aria-hidden="true">&rarr;</span>')}
-    </div>
+<section class="mf2-close">
+  <div class="wrap narrow">
     <p class="mf-punch">That is go-to-market. <em>A motion owned, repeatable, and yours.</em></p>
-  </section>
-
-  <section class="mf-beat mf-laws">
-    <p class="section-label">What go-to-market actually means</p>
-    ${laws.map(l => `<div class="mf-law">
-      <span class="mf-law-n">${l.n}</span>
-      <h3 class="mf-law-h"><em>${esc(l.is)}.</em> <span class="mf-not">Not ${esc(l.not)}.</span></h3>
-      <p class="mf-law-b">${esc(l.body)}</p>
-    </div>`).join('')}
-  </section>
-
-  <section class="mf-beat mf-close">
-    <span class="mf-tag">Customer</span>
     <h2 class="mf-fork mf-fork-sm"><span class="mf-market">Go to market.</span><span class="mf-home">Or go home.</span></h2>
     <p class="hero-cta"><a class="btn btn-solid" href="${esc(data.links.apply)}">Own your motion</a></p>
-  </section>
-</div>
+  </div>
+</section>
 
 <section class="band">
   <div class="wrap">
@@ -369,22 +380,14 @@ function manifestoPage(opts = {}) {
 
 <script>
 (function(){
-  var mf=document.querySelector('.mf'); if(!mf) return;
-  var fill=document.getElementById('mfFill'), dot=document.getElementById('mfDot');
-  var beats=[].slice.call(mf.querySelectorAll('.mf-beat'));
+  var rig=document.getElementById('rig'); if(!rig) return;
   var reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-  if('IntersectionObserver' in window && !reduce){
-    mf.classList.add('reveal');
-    var io=new IntersectionObserver(function(es){es.forEach(function(e){ if(e.isIntersecting) e.target.classList.add('is-in'); });},{threshold:0.2});
-    beats.forEach(function(b){ io.observe(b); });
-  }
-  function frame(){
-    var r=mf.getBoundingClientRect(), vh=window.innerHeight, h=mf.offsetHeight;
-    var p=(vh*0.5 - r.top)/h; if(p<0)p=0; if(p>1)p=1;
-    var s=(p*100).toFixed(2)+'%'; fill.style.height=s; dot.style.top=s;
-  }
-  if(reduce){ fill.style.height='100%'; dot.style.top='100%'; }
-  else { frame(); addEventListener('scroll',frame,{passive:true}); addEventListener('resize',frame); }
+  if(reduce){ rig.setAttribute('data-stage','4'); return; }
+  var steps=[].slice.call(document.querySelectorAll('.build-steps .step'));
+  var io=new IntersectionObserver(function(es){
+    es.forEach(function(e){ if(e.isIntersecting){ rig.setAttribute('data-stage', e.target.getAttribute('data-stage')); } });
+  },{rootMargin:'-48% 0px -48% 0px', threshold:0});
+  steps.forEach(function(s){ io.observe(s); });
 })();
 </script>`;
   return layout({
